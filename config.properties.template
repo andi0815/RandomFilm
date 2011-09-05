@@ -1,0 +1,23 @@
+################ Configure File-Extensions: ###############
+#
+#extension.avi=
+#extension.mpg=
+#extension.mpeg=
+#extension.mov=
+#extension.flv=
+#extension.divx=
+#extension.xvid=
+#extension.ifo=
+#extension.vob=
+# DVD-Folder
+#extension.dvd=
+
+# Height of Window = ScreenHeight - GUI.frameHeghtDelta
+#GUI.frameHeightDelta=50
+
+# Define the location of the System WebBrowser
+browser.path=C:/Program Files (x86)/Mozilla Firefox/firefox.exe
+
+# TMDB config
+tmdb.baseurl=http://api.themoviedb.org/2.1/
+tmdb.apikey=<Add API-KEY here>
