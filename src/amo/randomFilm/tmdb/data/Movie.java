@@ -11,36 +11,36 @@ import org.apache.log4j.Logger;
  */
 public class Movie {
     
-    private static final double UNKNOWN_DOUBLE   = -1d;
+    private static final double UNKNOWN_DOUBLE = -1d;
     
-    private static final int    UNKNOWN_INT      = -1;
+    private static final int UNKNOWN_INT = -1;
     
-    private static final String UNKNOWN          = "UNKNOWN";
+    private static final String UNKNOWN = "UNKNOWN";
     
-    private static final Logger logger           = Logger.getLogger(Movie.class);
+    private static final Logger logger = Logger.getLogger(Movie.class);
     
-    private final double        score            = UNKNOWN_DOUBLE;
+    private final double score = UNKNOWN_DOUBLE;
     
-    private final double        popularity       = UNKNOWN_DOUBLE;
+    private final double popularity = UNKNOWN_DOUBLE;
     
-    private final boolean       translated       = false;
+    private final boolean translated = false;
     
-    private final boolean       adult            = false;
+    private final boolean adult = false;
     
-    private String              language         = UNKNOWN;
+    private String language = UNKNOWN;
     
-    private String              original_name    = UNKNOWN;
-    private String              name             = UNKNOWN;
-    private String              alternative_name = UNKNOWN;
-    private String              type             = UNKNOWN;
-    private String              id               = UNKNOWN;
-    private String              imdb_id          = UNKNOWN;
-    private String              url              = UNKNOWN;
-    private int                 votes            = UNKNOWN_INT;
-    private double              rating           = UNKNOWN_DOUBLE;
-    private String              certification    = UNKNOWN;
-    private String              overview         = UNKNOWN;
-    private String              released         = UNKNOWN;
+    private String original_name = UNKNOWN;
+    private String name = UNKNOWN;
+    private String alternative_name = UNKNOWN;
+    private String type = UNKNOWN;
+    private String id = UNKNOWN;
+    private String imdb_id = UNKNOWN;
+    private String url = UNKNOWN;
+    private int votes = UNKNOWN_INT;
+    private double rating = UNKNOWN_DOUBLE;
+    private String certification = UNKNOWN;
+    private String overview = UNKNOWN;
+    private String released = UNKNOWN;
     // private List<images> = null;
     // <image type="poster"
     // url="http://hwcdn.themoviedb.org/posters/304/4bc91347017a3c57fe007304/transformers-original.jpg"
@@ -64,7 +64,7 @@ public class Movie {
     // url="http://hwcdn.themoviedb.org/backdrops/2ce/4bc91339017a3c57fe0072ce/transformers-thumb.jpg"
     // size="thumb" id="4bc91339017a3c57fe0072ce"/>
     // </images>
-    private String              last_modified_at = UNKNOWN;
+    private String last_modified_at = UNKNOWN;
     
     @Override
     public String toString() {
@@ -92,9 +92,86 @@ public class Movie {
     }
     
     private void addIfNotEmpty(StringBuilder builder, String name, Object value) {
-        if (value != null && value != UNKNOWN && !Integer.valueOf(UNKNOWN_INT).equals(value) && !Double.valueOf(UNKNOWN_DOUBLE).equals(value)) {
+        if (value != null && value != UNKNOWN && !Integer.valueOf(UNKNOWN_INT).equals(value)
+                && !Double.valueOf(UNKNOWN_DOUBLE).equals(value)) {
             builder.append(name).append("=").append(value).append(", ");
         }
+    }
+    
+    public static Logger getLogger() {
+        return logger;
+    }
+    
+    public double getScore() {
+        return score;
+    }
+    
+    public double getPopularity() {
+        return popularity;
+    }
+    
+    public boolean isTranslated() {
+        return translated;
+    }
+    
+    public boolean isAdult() {
+        return adult;
+    }
+    
+    public String getLanguage() {
+        return language;
+    }
+    
+    public String getOriginal_name() {
+        return original_name;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getAlternative_name() {
+        return alternative_name;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public String getImdb_id() {
+        return imdb_id;
+    }
+    
+    public String getUrl() {
+        return url;
+    }
+    
+    public int getVotes() {
+        return votes;
+    }
+    
+    public double getRating() {
+        return rating;
+    }
+    
+    public String getCertification() {
+        return certification;
+    }
+    
+    public String getOverview() {
+        return overview;
+    }
+    
+    public String getReleased() {
+        return released;
+    }
+    
+    public String getLast_modified_at() {
+        return last_modified_at;
     }
     
 }

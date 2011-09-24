@@ -33,19 +33,21 @@ import com.google.gson.JsonParser;
  */
 public class TmdbSession {
     
-    private static final String BASE_URL       = Configuration.getInstance().getProperty("tmdb.baseurl");
+    private static final String BASE_URL = Configuration.getInstance().getProperty("tmdb.baseurl");
     
-    private static final String API_KEY        = Configuration.getInstance().getProperty("tmdb.apikey");
+    private static final String API_KEY = Configuration.getInstance().getProperty("tmdb.apikey");
     
     private static final String METHOD_GETAUTH = BASE_URL + "Auth.getToken/json/" + API_KEY;
     
-    private static final String METHOD_SEARCH  = BASE_URL + "Movie.search/de/json/" + API_KEY + "/";
+    private static final String METHOD_SEARCH = BASE_URL + "Movie.search/de/json/" + API_KEY + "/";
     
-    private static TmdbSession  instance       = null;
+    private static final String METHOD_INFO = BASE_URL + "Movie.getInfo/de/json/" + API_KEY + "/";
     
-    private static final Logger logger         = Logger.getLogger(TmdbSession.class);
+    private static TmdbSession instance = null;
     
-    private static final String encoding       = System.getProperty("file.encoding");
+    private static final Logger logger = Logger.getLogger(TmdbSession.class);
+    
+    private static final String encoding = System.getProperty("file.encoding");
     
     private TmdbSession() {
         
@@ -62,21 +64,19 @@ public class TmdbSession {
         doRequest(METHOD_GETAUTH);
     }
     
-    public List<Movie> searchMovie(String title) throws TmdbException {
-        if (title == null || title.isEmpty()) { return null; }
-        List<Movie> movies = new ArrayList<Movie>();
+    public static List<Movie> searchMovie(String title) throws TmdbException {
+        String urlEncodedTitle = urlEncodeParameter(title);
         
-        // prepare & execute Request
-        String urlEncodedTitle = null;
-        try {
-            urlEncodedTitle = URLEncoder.encode(title, encoding);
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new TmdbException("Could not URL-Encode: " + title, e);
-        }
         String jsonResult = doRequest(METHOD_SEARCH + urlEncodedTitle);
         logger.log(Level.DEBUG, "Got Search-Result: " + jsonResult);
         
+        List<Movie> movies = extractMoviesFromJson(jsonResult);
+        
+        return movies;
+    }
+    
+    private static List<Movie> extractMoviesFromJson(String jsonResult) {
+        List<Movie> movies = new ArrayList<Movie>();
         // parse result
         JsonParser parser = new JsonParser();
         JsonArray array = parser.parse(jsonResult).getAsJsonArray();
@@ -89,16 +89,33 @@ public class TmdbSession {
                 logger.log(Level.DEBUG, "Found Movie: " + movie);
             }
         }
-        
         return movies;
     }
     
-    private String doRequest(String method) throws TmdbException {
+    private static String urlEncodeParameter(String parameter) throws TmdbException {
+        if (parameter == null || parameter.isEmpty()) {
+            throw new TmdbException("Imput Parameter is empty or null!");
+        }
+        // prepare & execute Request
+        String urlEncodedTitle = null;
+        try {
+            urlEncodedTitle = URLEncoder.encode(parameter, encoding);
+        } catch (UnsupportedEncodingException e) {
+            throw new TmdbException("Could not URL-Encode: " + parameter, e);
+        }
+        return urlEncodedTitle;
+    }
+    
+    public void getInfo(String tmdb_id) throws TmdbException {
+        String result = doRequest(METHOD_INFO + tmdb_id);
+        extractMoviesFromJson(result);
+    }
+    
+    private static String doRequest(String method) throws TmdbException {
         URL url = null;
         try {
             url = new URL(method);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new TmdbException("Could not generate URL for Method: " + method, e);
         }
         HttpURLConnection conn = new HttpURLConnection(url, null);
@@ -107,16 +124,25 @@ public class TmdbSession {
             conn.setConnectTimeout(3000);
             conn.setRequestMethod("GET");
             conn.connect();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new TmdbException("Could not connect to URL for Method: " + method, e);
+        }
+        
+        try {
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                throw new TmdbException("Server returned HTTP-Status: " + responseCode + " for Method: " + method);
+            }
+        }
+
+        catch (IOException e) {
+            throw new TmdbException("Could not get Response Code from URL for Method: " + method, e);
         }
         
         InputStream inputStream = null;
         try {
             inputStream = conn.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new TmdbException("Could not read from URL for Method: " + method, e);
         }
         
@@ -128,8 +154,7 @@ public class TmdbSession {
             while ((line = reader.readLine()) != null) {
                 msg.append(line);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new TmdbException("Could not read from InputStream of Method: " + method, e);
         }
         
