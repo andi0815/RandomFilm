@@ -1,7 +1,7 @@
 /**
  * 
  */
-package amo.randomFilm.tmdb;
+package amo.randomFilm.datasource.tmdb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +13,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.datasource.exception.TmdbException;
-import amo.randomFilm.datasource.tmdb.TmdbSession;
 import amo.randomFilm.datasource.tmdb.data.Movie;
 
 /**
- * @author andi
+ * @author Andreas Monger (andreas.monger@gmail.com)
+ * 
  */
 public class TmdbUtilsTest {
     
@@ -28,7 +28,7 @@ public class TmdbUtilsTest {
         // Set up a simple configuration that logs on the console.
         BasicConfigurator.configure();
         
-        TmdbSession session = TmdbSession.getInstance();
+        TmdbFacade session = TmdbFacade.getInstance();
         
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         String filmTitle = null;

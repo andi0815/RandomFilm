@@ -1,7 +1,7 @@
 /**
  * 
  */
-package amo.randomFilm.tmdb.data;
+package amo.randomFilm.datasource.tmdb.data;
 
 import java.util.Iterator;
 import java.util.List;

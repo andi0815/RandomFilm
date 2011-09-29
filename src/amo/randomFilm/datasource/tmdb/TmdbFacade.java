@@ -1,6 +1,3 @@
-/**
- * 
- */
 package amo.randomFilm.datasource.tmdb;
 
 import java.io.BufferedReader;
@@ -29,12 +26,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 /**
- * @author andi
+ * Offers Convenient Access to the TMDB Database.
+ * 
+ * @author Andreas Monger (andreas.monger@gmail.com)
  */
-public class TmdbSession {
+public class TmdbFacade {
     
+    /** the base URL for Requests to TMDB */
     private static final String BASE_URL = Configuration.getInstance().getProperty("tmdb.baseurl");
     
+    /** the current API-KEY to TMDB */
     private static final String API_KEY = Configuration.getInstance().getProperty("tmdb.apikey");
     
     private static final String METHOD_GETAUTH = BASE_URL + "Auth.getToken/json/" + API_KEY;
@@ -43,40 +44,76 @@ public class TmdbSession {
     
     private static final String METHOD_INFO = BASE_URL + "Movie.getInfo/de/json/" + API_KEY + "/";
     
-    private static final String METHOD_IMAGES = BASE_URL + "Movie.getImages/de/json/" + API_KEY + "/";
+    // private static final String METHOD_IMAGES = BASE_URL + "Movie.getImages/de/json/" + API_KEY +
+    // "/";
     
-    private static TmdbSession instance = null;
+    /** Reference to this Object Instance */
+    private static TmdbFacade instance = null;
     
-    private static final Logger logger = Logger.getLogger(TmdbSession.class);
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(TmdbFacade.class);
     
+    /** This System's file Encoding */
     private static final String encoding = System.getProperty("file.encoding");
     
-    private TmdbSession() {
-        
+    /**
+     * Hidden Constructor
+     */
+    private TmdbFacade() {
     }
     
-    public static TmdbSession getInstance() {
+    /**
+     * @return The instance of this object.
+     */
+    public static TmdbFacade getInstance() {
         if (instance == null) {
-            instance = new TmdbSession();
+            instance = new TmdbFacade();
         }
         return instance;
     }
     
+    /**
+     * Fetches a Authorization Token from TMDB for write Access. A Token lasts for 1 hour!
+     * 
+     * @throws TmdbException
+     *             in case the request was not successful.
+     */
     public void getAuthToken() throws TmdbException {
         doRequest(METHOD_GETAUTH);
     }
     
+    /**
+     * Returns a list of movies that match the given title or <code>null</code>, of nothing could be
+     * found.
+     * 
+     * @param title
+     *            the title to look for
+     * @return A List of movies that match the given title.
+     * @throws TmdbException
+     *             in case something unexpected happened
+     */
     public static List<Movie> searchMovie(String title) throws TmdbException {
         String urlEncodedTitle = urlEncodeParameter(title);
         
         String jsonResult = doRequest(METHOD_SEARCH + urlEncodedTitle);
         logger.log(Level.DEBUG, "Got Search-Result: " + jsonResult);
         
+        if (jsonResult.equals("Nothing found.")) {
+            return null;
+        }
+        
         List<Movie> movies = extractMoviesFromJson(jsonResult);
         
         return movies;
     }
     
+    /**
+     * Extracts Movies from JSON text data.
+     * 
+     * @param jsonResult
+     *            the JSON data to extract
+     * @return the List of Movies found
+     */
     private static List<Movie> extractMoviesFromJson(String jsonResult) {
         List<Movie> movies = new ArrayList<Movie>();
         // parse result
@@ -94,31 +131,47 @@ public class TmdbSession {
         return movies;
     }
     
+    /**
+     * URL-Encodes a given Parameter.
+     * 
+     * @throws TmdbException
+     *             in case the parameter is null
+     */
     private static String urlEncodeParameter(String parameter) throws TmdbException {
         if (parameter == null || parameter.isEmpty()) {
-            throw new TmdbException("Imput Parameter is empty or null!");
+            throw new TmdbException("Input is empty or null and cannot be URL-encoded!");
         }
-        // prepare & execute Request
-        String urlEncodedTitle = null;
+        String urlEncodedParam = null;
         try {
-            urlEncodedTitle = URLEncoder.encode(parameter, encoding);
+            urlEncodedParam = URLEncoder.encode(parameter, encoding);
         } catch (UnsupportedEncodingException e) {
             throw new TmdbException("Could not URL-Encode: " + parameter, e);
         }
-        return urlEncodedTitle;
+        return urlEncodedParam;
     }
     
+    /**
+     * Fetches a Movie-Info identified by a given TMDB-ID.
+     * 
+     * @param tmdb_id
+     *            the TMDB-ID of the Movie
+     * @throws TmdbException
+     *             in case the Request was not sucessful
+     */
     public void getInfo(String tmdb_id) throws TmdbException {
         String result = doRequest(METHOD_INFO + tmdb_id);
         extractMoviesFromJson(result);
     }
     
-    public byte[] getImage(String tmdb_id) throws TmdbException {
-        String result = doRequest(METHOD_IMAGES + tmdb_id);
-        logger.error("GET_IMAGE not implemented, yet. GOT: " + result);
-        return null;
-    }
-    
+    /**
+     * Convienence Method for HTTP-GET requests to TMDB.
+     * 
+     * @param method
+     *            the method to append to the base URL
+     * @return the result returned by TMDB
+     * @throws TmdbException
+     *             in case the request was not successful
+     */
     private static String doRequest(String method) throws TmdbException {
         URL url = null;
         try {
