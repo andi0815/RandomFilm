@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import amo.randomFilm.util.Dialogs;
+import amo.randomFilm.gui.util.Dialogs;
 
 /**
  * @author andi

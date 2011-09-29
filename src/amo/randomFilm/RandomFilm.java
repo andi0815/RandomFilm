@@ -8,6 +8,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.BasicConfigurator;
 
 import amo.randomFilm.configuration.Configuration;
+import amo.randomFilm.gui.MainFrame;
+import amo.randomFilm.gui.SplashScreen;
 
 public class RandomFilm {
     
