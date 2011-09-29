@@ -12,8 +12,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.tmdb.data.Movie;
-import amo.randomFilm.tmdb.exception.TmdbException;
+import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.tmdb.TmdbSession;
+import amo.randomFilm.datasource.tmdb.data.Movie;
 
 /**
  * @author andi

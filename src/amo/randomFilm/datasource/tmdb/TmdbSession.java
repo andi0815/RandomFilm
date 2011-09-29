@@ -1,7 +1,7 @@
 /**
  * 
  */
-package amo.randomFilm.tmdb;
+package amo.randomFilm.datasource.tmdb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
-import amo.randomFilm.tmdb.data.Movie;
-import amo.randomFilm.tmdb.exception.TmdbException;
+import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.tmdb.data.Movie;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -42,6 +42,8 @@ public class TmdbSession {
     private static final String METHOD_SEARCH = BASE_URL + "Movie.search/de/json/" + API_KEY + "/";
     
     private static final String METHOD_INFO = BASE_URL + "Movie.getInfo/de/json/" + API_KEY + "/";
+    
+    private static final String METHOD_IMAGES = BASE_URL + "Movie.getImages/de/json/" + API_KEY + "/";
     
     private static TmdbSession instance = null;
     
@@ -109,6 +111,12 @@ public class TmdbSession {
     public void getInfo(String tmdb_id) throws TmdbException {
         String result = doRequest(METHOD_INFO + tmdb_id);
         extractMoviesFromJson(result);
+    }
+    
+    public byte[] getImage(String tmdb_id) throws TmdbException {
+        String result = doRequest(METHOD_IMAGES + tmdb_id);
+        logger.error("GET_IMAGE not implemented, yet. GOT: " + result);
+        return null;
     }
     
     private static String doRequest(String method) throws TmdbException {
