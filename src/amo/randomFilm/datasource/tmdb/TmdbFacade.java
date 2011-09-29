@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
 import amo.randomFilm.datasource.exception.TmdbException;
-import amo.randomFilm.datasource.tmdb.data.Movie;
+import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -92,7 +92,7 @@ public class TmdbFacade {
      * @throws TmdbException
      *             in case something unexpected happened
      */
-    public static List<Movie> searchMovie(String title) throws TmdbException {
+    public static List<TmdbMovie> searchMovie(String title) throws TmdbException {
         String urlEncodedTitle = urlEncodeParameter(title);
         
         String jsonResult = doRequest(METHOD_SEARCH + urlEncodedTitle);
@@ -102,7 +102,7 @@ public class TmdbFacade {
             return null;
         }
         
-        List<Movie> movies = extractMoviesFromJson(jsonResult);
+        List<TmdbMovie> movies = extractMoviesFromJson(jsonResult);
         
         return movies;
     }
@@ -114,15 +114,15 @@ public class TmdbFacade {
      *            the JSON data to extract
      * @return the List of Movies found
      */
-    private static List<Movie> extractMoviesFromJson(String jsonResult) {
-        List<Movie> movies = new ArrayList<Movie>();
+    private static List<TmdbMovie> extractMoviesFromJson(String jsonResult) {
+        List<TmdbMovie> movies = new ArrayList<TmdbMovie>();
         // parse result
         JsonParser parser = new JsonParser();
         JsonArray array = parser.parse(jsonResult).getAsJsonArray();
         Gson gson = new Gson();
         Iterator<JsonElement> iterator = array.iterator();
         while (iterator.hasNext()) {
-            Movie movie = gson.fromJson(iterator.next(), Movie.class);
+            TmdbMovie movie = gson.fromJson(iterator.next(), TmdbMovie.class);
             if (movie != null) {
                 movies.add(movie);
                 logger.log(Level.DEBUG, "Found Movie: " + movie);

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package amo.randomFilm.datasource.tmdb;
 
 import java.io.BufferedReader;
@@ -13,7 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.datasource.exception.TmdbException;
-import amo.randomFilm.datasource.tmdb.data.Movie;
+import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -33,7 +30,7 @@ public class TmdbUtilsTest {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         String filmTitle = null;
         System.out.println("Type Film to find: ");
-        List<Movie> movies = null;
+        List<TmdbMovie> movies = null;
         while (!(filmTitle = input.readLine()).equals("q")) {
             try {
                 movies = session.searchMovie(filmTitle);
@@ -41,7 +38,7 @@ public class TmdbUtilsTest {
                 logger.log(Level.ERROR, e);
             }
             if (movies != null && movies.size() > 0) {
-                Movie movie = movies.get(0);
+                TmdbMovie movie = movies.get(0);
                 session.getInfo(movie.getId());
                 System.err.println("OHNE: " + movies.get(0));
                 System.err.println("MIT:  " + movie);

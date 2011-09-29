@@ -3,8 +3,10 @@
  */
 package amo.randomFilm.datasource.tmdb.data;
 
+import java.awt.Image;
 import java.util.List;
 
+import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.UnknownTypes;
 
 /**
@@ -13,7 +15,7 @@ import amo.randomFilm.datasource.UnknownTypes;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 05.09.2011
  */
-public class Movie extends GsonObject {
+public class TmdbMovie extends GsonObject implements Movie {
     
     // private static final Logger logger = Logger.getLogger(Movie.class);
     
@@ -51,7 +53,7 @@ public class Movie extends GsonObject {
     
     private String released = UnknownTypes.STRING;
     
-    private List<Image> posters = null;
+    private List<TmdbImage> posters = null;
     
     private String last_modified_at = UnknownTypes.STRING;
     
@@ -127,7 +129,7 @@ public class Movie extends GsonObject {
         return last_modified_at;
     }
     
-    public List<Image> getPosters() {
+    public List<TmdbImage> getPosters() {
         return posters;
     }
     
@@ -155,6 +157,38 @@ public class Movie extends GsonObject {
         addIfNotEmpty(representation, "overview", overview);
         addIfNotEmpty(representation, "posters", (posters != null ? posters.toString() : "NONE"));
         return representation.append("]").toString();
+    }
+    
+    @Override
+    public Image getMovieImage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
+    public int getMovieLength() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
+    @Override
+    public double getMovieRating() {
+        return rating;
+    }
+    
+    @Override
+    public String getMovieShortDescription() {
+        return overview;
+    }
+    
+    @Override
+    public String getMovieTitle() {
+        return name;
+    }
+    
+    @Override
+    public String getMovieYear() {
+        return released.substring(0, 3);
     }
     
 }

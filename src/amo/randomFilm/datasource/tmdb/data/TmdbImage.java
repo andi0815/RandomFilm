@@ -12,7 +12,7 @@ import amo.randomFilm.datasource.UnknownTypes;
  * @date 27.09.2011
  * 
  */
-public class Image extends GsonObject {
+public class TmdbImage extends GsonObject {
     
     private ImageData image = null;
     
