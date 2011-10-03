@@ -3,7 +3,13 @@
  */
 package amo.randomFilm.datasource.tmdb.data;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
+
+import amo.randomFilm.AbstractTestBase;
+import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 /**
  * 
@@ -11,10 +17,15 @@ import org.junit.Test;
  * @date 29.09.2011
  * 
  */
-public class TmdbMovieExtendedInfoTest {
+public class TmdbMovieExtendedInfoTest extends AbstractTestBase {
     
     @Test
-    public void testMovie() {
+    public void testMovie() throws TmdbException {
+        
+        TmdbMovieExtendedInfo info = TmdbFacade.getInfo("603");
+        // System.out.println("EXT-INFO: " + info);
+        Assert.assertEquals(136, info.getRuntime());
+        Assert.assertEquals("[Action, Abenteuer, Science Fiction, Thriller]", info.getGenres().toString());
         
     }
     

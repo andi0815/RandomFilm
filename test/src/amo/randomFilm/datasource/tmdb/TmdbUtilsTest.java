@@ -25,21 +25,19 @@ public class TmdbUtilsTest {
         // Set up a simple configuration that logs on the console.
         BasicConfigurator.configure();
         
-        TmdbFacade session = TmdbFacade.getInstance();
-        
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         String filmTitle = null;
         System.out.println("Type Film to find: ");
         List<TmdbMovie> movies = null;
         while (!(filmTitle = input.readLine()).equals("q")) {
             try {
-                movies = session.searchMovie(filmTitle);
+                movies = TmdbFacade.searchMovie(filmTitle);
             } catch (TmdbException e) {
                 logger.log(Level.ERROR, e);
             }
             if (movies != null && movies.size() > 0) {
                 TmdbMovie movie = movies.get(0);
-                session.getInfo(movie.getId());
+                TmdbFacade.getInfo(movie.getId());
                 System.err.println("OHNE: " + movies.get(0));
                 System.err.println("MIT:  " + movie);
             }

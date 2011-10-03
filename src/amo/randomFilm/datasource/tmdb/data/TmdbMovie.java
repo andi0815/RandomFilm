@@ -6,8 +6,13 @@ package amo.randomFilm.datasource.tmdb.data;
 import java.awt.Image;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 /**
  * TMDB Data Object that represents a movie.
@@ -17,7 +22,7 @@ import amo.randomFilm.datasource.UnknownTypes;
  */
 public class TmdbMovie extends GsonObject implements Movie {
     
-    // private static final Logger logger = Logger.getLogger(Movie.class);
+    private static final Logger logger = Logger.getLogger(TmdbMovie.class);
     
     private double score = UnknownTypes.DOUBLE;
     
@@ -56,6 +61,8 @@ public class TmdbMovie extends GsonObject implements Movie {
     private List<TmdbImage> posters = null;
     
     private String last_modified_at = UnknownTypes.STRING;
+    
+    private TmdbMovieExtendedInfo extInfo = null;
     
     public double getScore() {
         return score;
@@ -166,9 +173,15 @@ public class TmdbMovie extends GsonObject implements Movie {
     }
     
     @Override
-    public int getMovieLength() {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getMovieRuntime() {
+        if (extInfo == null) {
+            try {
+                extInfo = TmdbFacade.getInfo(id);
+            } catch (TmdbException e) {
+                logger.log(Priority.WARN, "Encountered problems fetching extended Movie Info: " + e.getMessage());
+            }
+        }
+        return extInfo.getRuntime();
     }
     
     @Override
@@ -189,6 +202,18 @@ public class TmdbMovie extends GsonObject implements Movie {
     @Override
     public String getMovieYear() {
         return released.substring(0, 3);
+    }
+    
+    @Override
+    public List<String> getMovieGenres() {
+        if (extInfo == null) {
+            try {
+                extInfo = TmdbFacade.getInfo(id);
+            } catch (TmdbException e) {
+                logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
+            }
+        }
+        return extInfo.getGenres();
     }
     
 }

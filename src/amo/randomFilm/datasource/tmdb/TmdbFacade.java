@@ -14,11 +14,13 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
 import amo.randomFilm.datasource.exception.TmdbException;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
+import amo.randomFilm.datasource.tmdb.data.TmdbMovieExtendedInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -62,15 +64,15 @@ public class TmdbFacade {
     private TmdbFacade() {
     }
     
-    /**
-     * @return The instance of this object.
-     */
-    public static TmdbFacade getInstance() {
-        if (instance == null) {
-            instance = new TmdbFacade();
-        }
-        return instance;
-    }
+    // /**
+    // * @return The instance of this object.
+    // */
+    // public static TmdbFacade getInstance() {
+    // if (instance == null) {
+    // instance = new TmdbFacade();
+    // }
+    // return instance;
+    // }
     
     /**
      * Fetches a Authorization Token from TMDB for write Access. A Token lasts for 1 hour!
@@ -78,7 +80,7 @@ public class TmdbFacade {
      * @throws TmdbException
      *             in case the request was not successful.
      */
-    public void getAuthToken() throws TmdbException {
+    private void getAuthToken() throws TmdbException {
         doRequest(METHOD_GETAUTH);
     }
     
@@ -156,15 +158,19 @@ public class TmdbFacade {
      * @param tmdb_id
      *            the TMDB-ID of the Movie
      * @throws TmdbException
-     *             in case the Request was not sucessful
+     *             in case the Request was not successful
      */
-    public void getInfo(String tmdb_id) throws TmdbException {
+    public static TmdbMovieExtendedInfo getInfo(String tmdb_id) throws TmdbException {
         String result = doRequest(METHOD_INFO + tmdb_id);
-        extractMoviesFromJson(result);
+        logger.log(Priority.DEBUG, "Got EXT TMDB-Movie Info: " + result);
+        JsonParser parser = new JsonParser();
+        JsonArray array = parser.parse(result).getAsJsonArray();
+        Gson gson = new Gson();
+        return gson.fromJson(array.get(0), TmdbMovieExtendedInfo.class);
     }
     
     /**
-     * Convienence Method for HTTP-GET requests to TMDB.
+     * Convenience Method for HTTP-GET requests to TMDB.
      * 
      * @param method
      *            the method to append to the base URL
@@ -180,7 +186,7 @@ public class TmdbFacade {
             throw new TmdbException("Could not generate URL for Method: " + method, e);
         }
         HttpURLConnection conn = new HttpURLConnection(url, null);
-        logger.log(Level.INFO, "Connecting to URL: " + conn);
+        logger.info("Connecting to URL: " + conn);
         try {
             conn.setConnectTimeout(3000);
             conn.setRequestMethod("GET");
@@ -195,7 +201,7 @@ public class TmdbFacade {
                 throw new TmdbException("Server returned HTTP-Status: " + responseCode + " for Method: " + method);
             }
         }
-
+        
         catch (IOException e) {
             throw new TmdbException("Could not get Response Code from URL for Method: " + method, e);
         }

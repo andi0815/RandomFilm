@@ -4,6 +4,7 @@
 package amo.randomFilm.datasource;
 
 import java.awt.Image;
+import java.util.List;
 
 /**
  * Interface for movies.
@@ -25,9 +26,9 @@ public interface Movie {
     public double getMovieRating();
     
     /**
-     * @return the movie's length in minutes.
+     * @return the movie's runtime length in minutes.
      */
-    public int getMovieLength();
+    public int getMovieRuntime();
     
     /**
      * @return the movie's image / poster.
@@ -43,4 +44,11 @@ public interface Movie {
      * @return the movie's production year.
      */
     public String getMovieYear();
+    
+    /**
+     * @return A list of genres for this movie, or <code>null</code>, if there are no genres
+     *         available.
+     */
+    public List<String> getMovieGenres();
+    
 }
