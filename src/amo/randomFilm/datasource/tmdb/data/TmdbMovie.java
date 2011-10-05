@@ -58,11 +58,13 @@ public class TmdbMovie extends GsonObject implements Movie {
     
     private String released = UnknownTypes.STRING;
     
-    private List<TmdbImage> posters = null;
+    private List<TmdbPoster> posters = null;
     
     private String last_modified_at = UnknownTypes.STRING;
     
     private TmdbMovieExtendedInfo extInfo = null;
+    
+    private Image image = null;
     
     public double getScore() {
         return score;
@@ -136,7 +138,7 @@ public class TmdbMovie extends GsonObject implements Movie {
         return last_modified_at;
     }
     
-    public List<TmdbImage> getPosters() {
+    public List<TmdbPoster> getPosters() {
         return posters;
     }
     
@@ -168,8 +170,16 @@ public class TmdbMovie extends GsonObject implements Movie {
     
     @Override
     public Image getMovieImage() {
-        // TODO Auto-generated method stub
-        return null;
+        if (image == null) {
+            try {
+                TmdbImage tmdbImage = TmdbFacade.getImage(this.id);
+                image = tmdbImage.getImage();
+                
+            } catch (TmdbException e) {
+                logger.error("Could not fetch image for movie " + name, e);
+            }
+        }
+        return image;
     }
     
     @Override

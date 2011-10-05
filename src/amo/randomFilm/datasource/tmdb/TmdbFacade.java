@@ -19,6 +19,7 @@ import org.apache.log4j.Priority;
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
 import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.tmdb.data.TmdbImage;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovieExtendedInfo;
 
@@ -46,8 +47,7 @@ public class TmdbFacade {
     
     private static final String METHOD_INFO = BASE_URL + "Movie.getInfo/de/json/" + API_KEY + "/";
     
-    // private static final String METHOD_IMAGES = BASE_URL + "Movie.getImages/de/json/" + API_KEY +
-    // "/";
+    private static final String METHOD_IMAGES = BASE_URL + "Movie.getImages/de/json/" + API_KEY + "/";
     
     /** Reference to this Object Instance */
     private static TmdbFacade instance = null;
@@ -63,16 +63,6 @@ public class TmdbFacade {
      */
     private TmdbFacade() {
     }
-    
-    // /**
-    // * @return The instance of this object.
-    // */
-    // public static TmdbFacade getInstance() {
-    // if (instance == null) {
-    // instance = new TmdbFacade();
-    // }
-    // return instance;
-    // }
     
     /**
      * Fetches a Authorization Token from TMDB for write Access. A Token lasts for 1 hour!
@@ -167,6 +157,23 @@ public class TmdbFacade {
         JsonArray array = parser.parse(result).getAsJsonArray();
         Gson gson = new Gson();
         return gson.fromJson(array.get(0), TmdbMovieExtendedInfo.class);
+    }
+    
+    /**
+     * Fetches a Movie-Image identified by a given TMDB-ID.
+     * 
+     * @param tmdb_id
+     *            the TMDB-ID of the Movie
+     * @throws TmdbException
+     *             in case the Request was not successful
+     */
+    public static TmdbImage getImage(String tmdb_id) throws TmdbException {
+        String result = doRequest(METHOD_IMAGES + tmdb_id);
+        logger.debug("Got TMDB Image Info: " + result);
+        JsonParser parser = new JsonParser();
+        JsonArray array = parser.parse(result).getAsJsonArray();
+        Gson gson = new Gson();
+        return gson.fromJson(array.get(0), TmdbImage.class);
     }
     
     /**
