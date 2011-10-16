@@ -3,19 +3,13 @@ package amo.randomFilm.gui.panels;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -67,25 +61,10 @@ public class MoviePanel extends JPanel implements MouseListener {
         componentWidth = width - 2;
         imageHeight = height - 4;
         imageWidth = (int) (imageHeight * 1.5);
-        resizeImage();
         
         file = f;
         
-        // // get icon of player app:
-        // ShellFolder shellFolder;
-        // try {
-        // shellFolder = ShellFolder.getShellFolder(file);
-        // execType = shellFolder.getExecutableType();
-        // Icon icon = new ImageIcon(shellFolder.getIcon(true));
-        // myImage = iconToImage(icon);
-        // hasIcon = true;
-        // } catch (FileNotFoundException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        
         addMouseListener(this);
-        
         setLayout(null);
         
         // // add Filmstarts Button
@@ -107,28 +86,6 @@ public class MoviePanel extends JPanel implements MouseListener {
         
     }
     
-    public void resizeImage() {
-        Image movieImage = selectedMovie.getMovieImage();
-        resizedImage = movieImage.getScaledInstance(-1, (int) (imageHeight * 0.5), Image.SCALE_SMOOTH);
-    }
-    
-    static Image iconToImage(Icon icon) {
-        if (icon instanceof ImageIcon) {
-            return ((ImageIcon) icon).getImage();
-        } else {
-            int w = icon.getIconWidth();
-            int h = icon.getIconHeight();
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gd = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gd.getDefaultConfiguration();
-            BufferedImage image = gc.createCompatibleImage(w, h);
-            Graphics2D g = image.createGraphics();
-            icon.paintIcon(null, g, 0, 0);
-            g.dispose();
-            return image;
-        }
-    }
-    
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -139,13 +96,6 @@ public class MoviePanel extends JPanel implements MouseListener {
             
             g.setColor(Color.BLACK);
         }
-        
-        // g.drawString( file.getAbsolutePath(), imageWidth + 4, (int)
-        // (imageHeight * 0.6) );
-        // if (hasIcon) g.drawImage( image.getImage() , 0, 1, imageWidth,
-        // imageHeight, 0, 1, imageWidth, imageHeight, image.getImageObserver()
-        // );
-        // g.drawLine(0, getHeight()-1, componentWidth-1, getHeight()-1);
         
         // small filepath
         g.drawString(file.getAbsolutePath(), imageWidth + 24, imageHeight - 2);
