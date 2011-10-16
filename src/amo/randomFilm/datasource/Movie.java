@@ -21,7 +21,7 @@ public interface Movie {
     public String getMovieTitle();
     
     /**
-     * @return the movie's rating as a floating point number between: [0,10].
+     * @return the movie's rating as a floating point number between: [0,1].
      */
     public double getMovieRating();
     

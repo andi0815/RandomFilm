@@ -18,7 +18,8 @@ import org.apache.log4j.Priority;
 
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
-import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.MovieDataProvider;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.data.TmdbImage;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovieExtendedInfo;
@@ -33,7 +34,7 @@ import com.google.gson.JsonParser;
  * 
  * @author Andreas Monger (andreas.monger@gmail.com)
  */
-public class TmdbFacade {
+public class TmdbFacade implements MovieDataProvider {
     
     /** the base URL for Requests to TMDB */
     private static final String BASE_URL = Configuration.getInstance().getProperty("tmdb.baseurl");
@@ -65,12 +66,22 @@ public class TmdbFacade {
     }
     
     /**
+     * @return Reference to the unique {@link TmdbFacade} instance.
+     */
+    public static TmdbFacade getInstance() {
+        if (instance == null) {
+            instance = new TmdbFacade();
+        }
+        return instance;
+    }
+    
+    /**
      * Fetches a Authorization Token from TMDB for write Access. A Token lasts for 1 hour!
      * 
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case the request was not successful.
      */
-    private void getAuthToken() throws TmdbException {
+    private void getAuthToken() throws MovieDataProviderException {
         doRequest(METHOD_GETAUTH);
     }
     
@@ -81,17 +92,17 @@ public class TmdbFacade {
      * @param title
      *            the title to look for
      * @return A List of movies that match the given title.
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case something unexpected happened
      */
-    public static List<TmdbMovie> searchMovie(String title) throws TmdbException {
+    public List<TmdbMovie> searchMovie(String title) throws MovieDataProviderException {
         String urlEncodedTitle = urlEncodeParameter(title);
         
         String jsonResult = doRequest(METHOD_SEARCH + urlEncodedTitle);
         logger.log(Level.DEBUG, "Got Search-Result: " + jsonResult);
         
-        if (jsonResult.equals("Nothing found.")) {
-            return null;
+        if (jsonResult.equals("[\"Nothing found.\"]")) {
+            throw new MovieDataProviderException("Nothing Found.");
         }
         
         List<TmdbMovie> movies = extractMoviesFromJson(jsonResult);
@@ -126,18 +137,18 @@ public class TmdbFacade {
     /**
      * URL-Encodes a given Parameter.
      * 
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case the parameter is null
      */
-    private static String urlEncodeParameter(String parameter) throws TmdbException {
+    private static String urlEncodeParameter(String parameter) throws MovieDataProviderException {
         if (parameter == null || parameter.isEmpty()) {
-            throw new TmdbException("Input is empty or null and cannot be URL-encoded!");
+            throw new MovieDataProviderException("Input is empty or null and cannot be URL-encoded!");
         }
         String urlEncodedParam = null;
         try {
             urlEncodedParam = URLEncoder.encode(parameter, encoding);
         } catch (UnsupportedEncodingException e) {
-            throw new TmdbException("Could not URL-Encode: " + parameter, e);
+            throw new MovieDataProviderException("Could not URL-Encode: " + parameter, e);
         }
         return urlEncodedParam;
     }
@@ -147,10 +158,10 @@ public class TmdbFacade {
      * 
      * @param tmdb_id
      *            the TMDB-ID of the Movie
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case the Request was not successful
      */
-    public static TmdbMovieExtendedInfo getInfo(String tmdb_id) throws TmdbException {
+    public static TmdbMovieExtendedInfo getInfo(String tmdb_id) throws MovieDataProviderException {
         String result = doRequest(METHOD_INFO + tmdb_id);
         logger.log(Priority.DEBUG, "Got EXT TMDB-Movie Info: " + result);
         JsonParser parser = new JsonParser();
@@ -164,10 +175,10 @@ public class TmdbFacade {
      * 
      * @param tmdb_id
      *            the TMDB-ID of the Movie
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case the Request was not successful
      */
-    public static TmdbImage getImage(String tmdb_id) throws TmdbException {
+    public static TmdbImage getImage(String tmdb_id) throws MovieDataProviderException {
         String result = doRequest(METHOD_IMAGES + tmdb_id);
         logger.debug("Got TMDB Image Info: " + result);
         JsonParser parser = new JsonParser();
@@ -182,15 +193,15 @@ public class TmdbFacade {
      * @param method
      *            the method to append to the base URL
      * @return the result returned by TMDB
-     * @throws TmdbException
+     * @throws MovieDataProviderException
      *             in case the request was not successful
      */
-    private static String doRequest(String method) throws TmdbException {
+    private static String doRequest(String method) throws MovieDataProviderException {
         URL url = null;
         try {
             url = new URL(method);
         } catch (MalformedURLException e) {
-            throw new TmdbException("Could not generate URL for Method: " + method, e);
+            throw new MovieDataProviderException("Could not generate URL for Method: " + method, e);
         }
         HttpURLConnection conn = new HttpURLConnection(url, null);
         logger.info("Connecting to URL: " + conn);
@@ -199,25 +210,26 @@ public class TmdbFacade {
             conn.setRequestMethod("GET");
             conn.connect();
         } catch (IOException e) {
-            throw new TmdbException("Could not connect to URL for Method: " + method, e);
+            throw new MovieDataProviderException("Could not connect to URL for Method: " + method, e);
         }
         
         try {
             int responseCode = conn.getResponseCode();
             if (responseCode != 200) {
-                throw new TmdbException("Server returned HTTP-Status: " + responseCode + " for Method: " + method);
+                throw new MovieDataProviderException("Server returned HTTP-Status: " + responseCode + " for Method: "
+                        + method);
             }
         }
         
         catch (IOException e) {
-            throw new TmdbException("Could not get Response Code from URL for Method: " + method, e);
+            throw new MovieDataProviderException("Could not get Response Code from URL for Method: " + method, e);
         }
         
         InputStream inputStream = null;
         try {
             inputStream = conn.getInputStream();
         } catch (IOException e) {
-            throw new TmdbException("Could not read from URL for Method: " + method, e);
+            throw new MovieDataProviderException("Could not read from URL for Method: " + method, e);
         }
         
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -229,7 +241,7 @@ public class TmdbFacade {
                 msg.append(line);
             }
         } catch (IOException e) {
-            throw new TmdbException("Could not read from InputStream of Method: " + method, e);
+            throw new MovieDataProviderException("Could not read from InputStream of Method: " + method, e);
         }
         
         logger.log(Level.INFO, "Received Message: " + msg);

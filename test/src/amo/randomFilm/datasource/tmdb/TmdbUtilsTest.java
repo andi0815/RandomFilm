@@ -9,7 +9,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 
 /**
@@ -20,7 +20,7 @@ public class TmdbUtilsTest {
     
     private static final Logger logger = Logger.getLogger(TmdbUtilsTest.class);
     
-    public static void main(String[] args) throws TmdbException, IOException {
+    public static void main(String[] args) throws MovieDataProviderException, IOException {
         
         // Set up a simple configuration that logs on the console.
         BasicConfigurator.configure();
@@ -31,8 +31,8 @@ public class TmdbUtilsTest {
         List<TmdbMovie> movies = null;
         while (!(filmTitle = input.readLine()).equals("q")) {
             try {
-                movies = TmdbFacade.searchMovie(filmTitle);
-            } catch (TmdbException e) {
+                movies = TmdbFacade.getInstance().searchMovie(filmTitle);
+            } catch (MovieDataProviderException e) {
                 logger.log(Level.ERROR, e);
             }
             if (movies != null && movies.size() > 0) {

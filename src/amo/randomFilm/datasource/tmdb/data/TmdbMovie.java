@@ -11,7 +11,7 @@ import org.apache.log4j.Priority;
 
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.UnknownTypes;
-import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 /**
@@ -175,7 +175,7 @@ public class TmdbMovie extends GsonObject implements Movie {
                 TmdbImage tmdbImage = TmdbFacade.getImage(this.id);
                 image = tmdbImage.getImage();
                 
-            } catch (TmdbException e) {
+            } catch (MovieDataProviderException e) {
                 logger.error("Could not fetch image for movie " + name, e);
             }
         }
@@ -187,7 +187,7 @@ public class TmdbMovie extends GsonObject implements Movie {
         if (extInfo == null) {
             try {
                 extInfo = TmdbFacade.getInfo(id);
-            } catch (TmdbException e) {
+            } catch (MovieDataProviderException e) {
                 logger.log(Priority.WARN, "Encountered problems fetching extended Movie Info: " + e.getMessage());
             }
         }
@@ -196,7 +196,7 @@ public class TmdbMovie extends GsonObject implements Movie {
     
     @Override
     public double getMovieRating() {
-        return rating;
+        return rating / 10;
     }
     
     @Override
@@ -219,7 +219,7 @@ public class TmdbMovie extends GsonObject implements Movie {
         if (extInfo == null) {
             try {
                 extInfo = TmdbFacade.getInfo(id);
-            } catch (TmdbException e) {
+            } catch (MovieDataProviderException e) {
                 logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
             }
         }

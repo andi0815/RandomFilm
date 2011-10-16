@@ -40,39 +40,51 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 import amo.randomFilm.RandomFilm;
 import amo.randomFilm.configuration.Configuration;
+import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.datasource.MovieDataProvider;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
+import amo.randomFilm.datasource.tmdb.TmdbFacade;
 import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.gui.util.FileListHandler;
 
-public class DropPanel extends JPanel implements DropTargetListener,
-        DragSourceListener, DragGestureListener, ActionListener {
+public class DropPanel extends JPanel implements DropTargetListener, DragSourceListener, DragGestureListener,
+        ActionListener {
+    
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(DropPanel.class);
     
     // FIXME: in Config-File auslagern ...
-    private static final String PATH_TO_BROWSER      = "\"" + Configuration.getInstance().getProperty("browser.path") + "\"";
+    private static final String PATH_TO_BROWSER = "\"" + Configuration.getInstance().getProperty("browser.path") + "\"";
     
     private static final String FILMSTARTS_QUERY_URL = "http://www.filmstarts.de/suche/?q=";
     
     /**
      * default Serial version id
      */
-    private static final long   serialVersionUID     = 1L;
+    private static final long serialVersionUID = 1L;
     
-    private int                 width                = 100;
-    private int                 height               = 100;
+    private int width = 100;
+    private int height = 100;
     
-    private final int           itemHeight           = 50;
+    private final int itemHeight = 50;
     
-    private static final Font   dropperFont          = new Font("SansSerif", Font.BOLD, 20);
+    private static final Font dropperFont = new Font("SansSerif", Font.BOLD, 20);
     
-    private FileListHandler     listHandler          = new FileListHandler();
+    private FileListHandler listHandler = new FileListHandler();
     
-    DropTarget                  dropTarget           = new DropTarget(this, this);
-    DragSource                  dragSource           = DragSource.getDefaultDragSource();
+    DropTarget dropTarget = new DropTarget(this, this);
+    DragSource dragSource = DragSource.getDefaultDragSource();
     
-    private final String        thumbsDb             = "Thumbs.db";
+    private final String thumbsDb = "Thumbs.db";
     
-    JFrame                      parent               = null;
+    JFrame parent = null;
+    
+    // FIXME: add dynamically ...
+    MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
     // private MainFrame mainFrame;
     //
@@ -118,8 +130,7 @@ public class DropPanel extends JPanel implements DropTargetListener,
             int halfheight = (int) (height / 2.0);
             g.setColor(Color.BLACK);
             g.setFont(dropperFont);
-            g.drawString("Bewirf mich mit Dateien!", halfWidth - 120,
-                    halfheight + 5);
+            g.drawString("Bewirf mich mit Dateien!", halfWidth - 120, halfheight + 5);
             
             // rahmen
             g.drawRect(0, 0, width - 1, height - 1);
@@ -131,8 +142,8 @@ public class DropPanel extends JPanel implements DropTargetListener,
      */
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
         Transferable tr = dropTargetDragEvent.getTransferable();
-        if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) dropTargetDragEvent
-                .acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+        if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+            dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
         else
             dropTargetDragEvent.rejectDrag();
         
@@ -159,21 +170,20 @@ public class DropPanel extends JPanel implements DropTargetListener,
         try {
             Transferable tr = dropTargetDropEvent.getTransferable();
             if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                dropTargetDropEvent
-                        .acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-                fileList = (java.util.List) tr
-                        .getTransferData(DataFlavor.javaFileListFlavor);
+                dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
                 
                 // fileList = prepareListOfFiles(fileList);
-                //				
+                //
                 // if (fileList.size() > 0) {
                 addItems(fileList);
-                if (RandomFilm.DEBUG) System.out.println("DROPPER: finished adding items!");
+                if (RandomFilm.DEBUG)
+                    System.out.println("DROPPER: finished adding items!");
                 // } else {
                 // if ( RandomFilm.DEBUG )
                 // System.out.println("DROPPER: No fitting items found ...");
                 // }
-                //				
+                //
                 dropTargetDropEvent.getDropTargetContext().dropComplete(true);
                 
             } else {
@@ -190,24 +200,25 @@ public class DropPanel extends JPanel implements DropTargetListener,
         
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         listHandler.sort();
-        if (RandomFilm.DEBUG) listHandler.debugOut();
+        if (RandomFilm.DEBUG)
+            listHandler.debugOut();
         resizePanel();
         repaint();
     }
     
     // private List prepareListOfFiles( List<File> fileList){
-    //		
+    //
     // for ( File file : fileList ) {
     // if (file.isDirectory()) {
-    //				
+    //
     // } else { // is File:
     // String extension = getExtension(file);
     // System.out.println("FILE: '"+file+"'extension: "+ extension);
     // // String fileName = file.getName();
     // }
-    //			
+    //
     // }
-    //		
+    //
     // return fileList;
     // }
     
@@ -241,8 +252,7 @@ public class DropPanel extends JPanel implements DropTargetListener,
     }
     
     protected void resizePanel() {
-        setPreferredSize(new Dimension(getWidth(),
-                (getComponentCount() * (itemHeight)) + 2));
+        setPreferredSize(new Dimension(getWidth(), (getComponentCount() * (itemHeight)) + 2));
         revalidate();
         
     }
@@ -267,14 +277,18 @@ public class DropPanel extends JPanel implements DropTargetListener,
                         || ext.equals("flv") || ext.equals("divx") || ext.equals("ifo") || ext.equals("vob")
                         || ext.equals("xvid") || ext.equals("wmv")) {
                     
-                    ListItem item = new ListItem(file, filmName, ext, getWidth(), itemHeight, this);
-                    item.setBounds(2, (getComponentCount() * itemHeight) + 2, getWidth() - 4, itemHeight);
-                    
-                    if (listHandler.insertItem(item)) add(item);
-                    
-                    // if (RandomFilm.DEBUG || false)
-                    // System.out.println(file.getAbsolutePath() + " "
-                    // + getComponentCount());
+                    List<? extends Movie> moviesFound;
+                    try {
+                        moviesFound = movieDataProvider.searchMovie(filmName);
+                        MoviePanel item = new MoviePanel(file, moviesFound, ext, getWidth(), itemHeight, this);
+                        item.setBounds(2, (getComponentCount() * itemHeight) + 2, getWidth() - 4, itemHeight);
+                        
+                        if (listHandler.insertItem(item))
+                            add(item);
+                        
+                    } catch (MovieDataProviderException e) {
+                        logger.warn("Could not find Movie with title: " + filmName, e);
+                    }
                 }
             }
         }
@@ -324,14 +338,19 @@ public class DropPanel extends JPanel implements DropTargetListener,
                     // System.out.println("parentPath: " + parentPath);
                 }
                 
-                ListItem item = new ListItem(dvdVideoTsIfo, parentPath, "dvd",
-                        getWidth(), itemHeight, this);
-                item.setBounds(2, (getComponentCount() * itemHeight) + 2,
-                        getWidth() - 4, itemHeight);
-                if (listHandler.insertItem(item)) add(item);
-                
-                if (RandomFilm.DEBUG) System.out.println(file.getAbsolutePath() + " "
-                            + getComponentCount());
+                List<? extends Movie> moviesFound;
+                try {
+                    moviesFound = movieDataProvider.searchMovie(parentPath);
+                    MoviePanel item = new MoviePanel(dvdVideoTsIfo, moviesFound, "dvd", getWidth(), itemHeight, this);
+                    item.setBounds(2, (getComponentCount() * itemHeight) + 2, getWidth() - 4, itemHeight);
+                    if (listHandler.insertItem(item))
+                        add(item);
+                    
+                    if (RandomFilm.DEBUG)
+                        System.out.println(file.getAbsolutePath() + " " + getComponentCount());
+                } catch (MovieDataProviderException e) {
+                    logger.warn("Could not find Movie with title: " + parentPath, e);
+                }
                 
             }
             // String parentPath = folderNames[size - 2];
@@ -410,7 +429,7 @@ public class DropPanel extends JPanel implements DropTargetListener,
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ask filmstarts")) {
             
-            ListItem item = (ListItem) ((JButton) e.getSource()).getParent();
+            MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
             String filmName = item.getFilmName();
             filmName = filmName.trim();
             filmName = filmName.replace('.', ' ');
@@ -427,13 +446,14 @@ public class DropPanel extends JPanel implements DropTargetListener,
             try {
                 Runtime.getRuntime().exec(PATH_TO_BROWSER + " " + filmstartsQueryUrl);
             } catch (IOException e1) {
-                Dialogs.showWarning("Could send URL '" + filmstartsQueryUrl + "' to " + PATH_TO_BROWSER + ".\n Cause: \n" + e1.getCause(), this);
+                Dialogs.showWarning("Could send URL '" + filmstartsQueryUrl + "' to " + PATH_TO_BROWSER
+                        + ".\n Cause: \n" + e1.getCause(), this);
             }
             
         } else if (e.getActionCommand().equals("löschen")) {
             // System.out
             // .println(((JButton) e.getSource()).getParent().getClass());
-            ListItem item = (ListItem) ((JButton) e.getSource()).getParent();
+            MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
             
             remove(item);
             listHandler.remove(item);
@@ -444,28 +464,29 @@ public class DropPanel extends JPanel implements DropTargetListener,
         } else if (e.getActionCommand().equals("Alles markieren")) {
             Iterator iter = listHandler.getList().iterator();
             while (iter.hasNext()) {
-                ((ListItem) iter.next()).setSelected(true);
+                ((MoviePanel) iter.next()).setSelected(true);
             }
             repaint();
             
         } else if (e.getActionCommand().equals("Nichts markieren")) {
             Iterator iter = listHandler.getList().iterator();
             while (iter.hasNext()) {
-                ((ListItem) iter.next()).setSelected(false);
+                ((MoviePanel) iter.next()).setSelected(false);
             }
             repaint();
             
         } else if (e.getActionCommand().equals("Markiertes löschen")) {
             removeAll();
             
-            ListItem item;
+            MoviePanel item;
             FileListHandler fileListHandler = new FileListHandler();
             Iterator iter = listHandler.getList().iterator();
             
             while (iter.hasNext()) {
-                item = (ListItem) iter.next();
+                item = (MoviePanel) iter.next();
                 if (!item.isSelected()) {
-                    if (fileListHandler.insertItem(item)) add(item);
+                    if (fileListHandler.insertItem(item))
+                        add(item);
                 }
             }
             
@@ -486,8 +507,7 @@ public class DropPanel extends JPanel implements DropTargetListener,
             if (listOfItems.size() > 0) {
                 Random random = new Random(new Date().getTime());
                 
-                ListItem listItem = (ListItem) listOfItems.get(random
-                        .nextInt(listOfItems.size()));
+                MoviePanel listItem = (MoviePanel) listOfItems.get(random.nextInt(listOfItems.size()));
                 
                 String filmName = listItem.getFilmName();
                 String filmPath = listItem.getFile().getPath();
@@ -508,8 +528,8 @@ public class DropPanel extends JPanel implements DropTargetListener,
                         try {
                             Process child = Runtime.getRuntime().exec(command);
                         } catch (IOException e1) {
-                            Dialogs.showWarning("Kann Datei: " + filmPath + " nicht starten.\nGrund:\n"
-                                    + e1.getMessage(), this);
+                            Dialogs.showWarning(
+                                    "Kann Datei: " + filmPath + " nicht starten.\nGrund:\n" + e1.getMessage(), this);
                         }
                     }
                 } else {

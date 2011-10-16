@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import amo.randomFilm.RandomFilm;
-import amo.randomFilm.gui.panels.ListItem;
+import amo.randomFilm.gui.panels.MoviePanel;
 
 public class FileListHandler implements Comparator {
 
@@ -17,7 +17,7 @@ public class FileListHandler implements Comparator {
 	}
 	
 	
-	public boolean insertItem ( ListItem item ) {
+	public boolean insertItem ( MoviePanel item ) {
 		
 		if ( !contains(item) ) {
 			list.add( item );
@@ -30,10 +30,10 @@ public class FileListHandler implements Comparator {
 		
 	}
 	
-	public boolean contains( ListItem item ){
+	public boolean contains( MoviePanel item ){
 		Iterator iter = list.iterator();
 		while(iter.hasNext()){
-			if ( ((ListItem) iter.next()).getFile().equals(item.getFile()) ) 
+			if ( ((MoviePanel) iter.next()).getFile().equals(item.getFile()) ) 
 				return true;
 		}
 		
@@ -46,8 +46,8 @@ public class FileListHandler implements Comparator {
 
 	public int compare(Object o1, Object o2) {
 		
-		File file1 = ((ListItem) o1).getFile();
-		File file2 = ((ListItem) o2).getFile();
+		File file1 = ((MoviePanel) o1).getFile();
+		File file2 = ((MoviePanel) o2).getFile();
 		
 		return file1.compareTo( file2 );
 	}
@@ -65,7 +65,7 @@ public class FileListHandler implements Comparator {
 		list.clear();
 	}
 	
-	public void remove(ListItem item){
+	public void remove(MoviePanel item){
 		list.remove( item );
 	}
 	
@@ -75,7 +75,7 @@ public class FileListHandler implements Comparator {
 		System.out.println("Size: "+list.size()); 
 		
 		while (iterator.hasNext()) {
-			System.out.println("> "+  ( (ListItem)iterator.next() ).getFile().getAbsolutePath() );
+			System.out.println("> "+  ( (MoviePanel)iterator.next() ).getFile().getAbsolutePath() );
 		}
 	}
 	

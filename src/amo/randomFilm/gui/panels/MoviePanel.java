@@ -8,11 +8,12 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -20,90 +21,95 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import amo.randomFilm.RandomFilm;
+import amo.randomFilm.datasource.Movie;
 
-import sun.awt.shell.ShellFolder;
-
-public class ListItem extends JPanel implements MouseListener {
+public class MoviePanel extends JPanel implements MouseListener {
     
-    private static final String IMAGE_DELETE     = "images\\Delete.png";
-    private static final String IMAGE_FILMSTARTS = "images\\Filmstarts.png";
+    private static final String LABEL_DELETE = "löschen";
     
     /**
      * default Serial version id
      */
-    private static final long   serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
-    private final File          file;
-    private Image               myImage          = null;
-    private String              filmName         = "";
-    private String              extension        = "";
-    private String              execType         = "";
+    private static final Color BG_COLOR = Color.white;
     
-    private static int          imageHeight;
-    private static int          imageWidth;
-    private static int          componentWidth;
+    private static final String IMAGE_DELETE = "images\\Delete.png";
+    // private static final String IMAGE_FILMSTARTS = "images\\Filmstarts.png";
     
-    private boolean             isSelected       = false;
+    private final File file;
+    private String extension = "";
+    private String execType = "";
     
-    private boolean             hasIcon          = false;
+    private static int imageHeight;
+    private static int imageWidth;
+    private static int componentWidth;
     
-    // private DropPanel parent;
+    private boolean isSelected = false;
     
-    // TODO: Show Big name & Small Path !!!
-    public ListItem(File f, String filmName, String extension, int width,
-            int height, DropPanel parent) {
+    private boolean hasIcon = false;
+    private final List<? extends Movie> movieAlternatives;
+    private Movie selectedMovie = null;
+    private Image resizedImage = null;
+    
+    public MoviePanel(File f, List<? extends Movie> movieAlternatives, String extension, int width, int height,
+            ActionListener myActionListener) {
         super();
         
-        this.filmName = filmName;
+        this.movieAlternatives = movieAlternatives;
+        selectedMovie = movieAlternatives != null && movieAlternatives.size() > 0 ? movieAlternatives.get(0) : null;
+        
+        // FIXME:
+        hasIcon = true;
+        
         this.extension = extension;
         
         componentWidth = width - 2;
         imageHeight = height - 4;
         imageWidth = (int) (imageHeight * 1.5);
-        
-        // this.parent = parent;
+        resizeImage();
         
         file = f;
-        // if ( MainFrame.showPreviewImages() ) {
-        // hasIcon = loadIcon();
+        
+        // // get icon of player app:
+        // ShellFolder shellFolder;
+        // try {
+        // shellFolder = ShellFolder.getShellFolder(file);
+        // execType = shellFolder.getExecutableType();
+        // Icon icon = new ImageIcon(shellFolder.getIcon(true));
+        // myImage = iconToImage(icon);
+        // hasIcon = true;
+        // } catch (FileNotFoundException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
         // }
-        
-        // FileSystemView view = FileSystemView.getFileSystemView();
-        // Icon icon = view.getSystemIcon(file);
-        
-        ShellFolder shellFolder;
-        try {
-            shellFolder = ShellFolder.getShellFolder(file);
-            execType = shellFolder.getExecutableType();
-            Icon icon = new ImageIcon(shellFolder.getIcon(true));
-            myImage = iconToImage(icon);
-            hasIcon = true;
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
         addMouseListener(this);
         
         setLayout(null);
         
-        JButton btnFilmstarts = new JButton(new ImageIcon(IMAGE_FILMSTARTS));
-        btnFilmstarts.setActionCommand("ask filmstarts");
-        btnFilmstarts.addActionListener(parent);
-        btnFilmstarts.setBounds(componentWidth - 60, ((imageHeight - 26) / 2), 26,
-                26);
-        add(btnFilmstarts);
+        // // add Filmstarts Button
+        // JButton btnFilmstarts = new JButton(new ImageIcon(IMAGE_FILMSTARTS));
+        // btnFilmstarts.setActionCommand("ask filmstarts");
+        // btnFilmstarts.addActionListener(parent);
+        // btnFilmstarts.setBounds(componentWidth - 60, ((imageHeight - 26) / 2), 26, 26);
+        // add(btnFilmstarts);
         
         JButton btnDelete = new JButton(new ImageIcon(IMAGE_DELETE));
-        btnDelete.setActionCommand("löschen");
-        btnDelete.addActionListener(parent);
-        btnDelete.setBounds(componentWidth - 30, ((imageHeight - 26) / 2), 26,
-                26);
+        btnDelete.setActionCommand(LABEL_DELETE);
+        btnDelete.addActionListener(myActionListener);
+        btnDelete.setBounds(componentWidth - 30, ((imageHeight - 26) / 2), 26, 26);
         add(btnDelete);
         
-        setBackground(Color.white);
+        setBackground(BG_COLOR);
+        // setPreferredSize(new Dimension(width, height));
         setVisible(true);
         
+    }
+    
+    public void resizeImage() {
+        Image movieImage = selectedMovie.getMovieImage();
+        resizedImage = movieImage.getScaledInstance(-1, (int) (imageHeight * 0.5), Image.SCALE_SMOOTH);
     }
     
     static Image iconToImage(Icon icon) {
@@ -112,8 +118,7 @@ public class ListItem extends JPanel implements MouseListener {
         } else {
             int w = icon.getIconWidth();
             int h = icon.getIconHeight();
-            GraphicsEnvironment ge = GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice gd = ge.getDefaultScreenDevice();
             GraphicsConfiguration gc = gd.getDefaultConfiguration();
             BufferedImage image = gc.createCompatibleImage(w, h);
@@ -147,13 +152,13 @@ public class ListItem extends JPanel implements MouseListener {
         
         // Big Film Name
         g.setFont(new Font("Sans-Serif", Font.BOLD, 18));
-        g.drawString(this.filmName, imageWidth + 4, 20);
+        g.drawString(this.selectedMovie.getMovieTitle(), imageWidth + 4, 20);
         
         // draw icon
-        if (hasIcon) g.drawImage(myImage,
-                    10, 10, imageWidth, imageHeight,
-                    0, 0, imageWidth, imageHeight,
-                    null);
+        // if (hasIcon)
+        // g.drawImage(resizedImage, 10, 10, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight,
+        // null);
+        g.drawImage(resizedImage, 10, 10, null);
         // g.drawImage( myIcon, 0, 1, imageWidth, imageHeight, 0, 1, imageWidth,
         // imageHeight, myIcon.get);
         
@@ -173,20 +178,20 @@ public class ListItem extends JPanel implements MouseListener {
     // e.printStackTrace();
     // return false;
     // }
-    //		
+    //
     // return true;
     // }
-    //	
+    //
     public File getFile() {
         return file;
     }
     
     public String getFilmName() {
-        return filmName;
+        return selectedMovie.getMovieTitle();
     }
     
     public Image getIconImage() {
-        return myImage;
+        return selectedMovie.getMovieImage();
     }
     
     public String getExecutableName() {
@@ -215,7 +220,8 @@ public class ListItem extends JPanel implements MouseListener {
     
     public void mousePressed(MouseEvent arg0) {
         isSelected = !isSelected;
-        if (RandomFilm.DEBUG) System.out.println(file.getName() + " has been Pressed on");
+        if (RandomFilm.DEBUG)
+            System.out.println(file.getName() + " has been Pressed on");
         repaint();
     }
     

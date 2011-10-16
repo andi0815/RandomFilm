@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 
 import sun.net.www.protocol.http.HttpURLConnection;
-import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
 
 /**
  * Class that represents a result of a TMDB image-request containing multiple posters.
@@ -41,7 +41,7 @@ public class TmdbImage extends GsonObject {
                 if (poster.getType().equals("poster") && poster.getSize().equals("original")) {
                     try {
                         image = getPoster(poster.getUrl());
-                    } catch (TmdbException e) {
+                    } catch (MovieDataProviderException e) {
                         logger.error("Could not fetch image from URL: " + poster.getUrl());
                     }
                     break;
@@ -51,14 +51,14 @@ public class TmdbImage extends GsonObject {
         return image;
     }
     
-    private Image getPoster(String urlString) throws TmdbException {
+    private Image getPoster(String urlString) throws MovieDataProviderException {
         
         // generate URL
         URL urlToUse = null;
         try {
             urlToUse = new URL(urlString);
         } catch (MalformedURLException e) {
-            throw new TmdbException("Could not generate image URL: " + urlString, e);
+            throw new MovieDataProviderException("Could not generate image URL: " + urlString, e);
         }
         
         // get Data
@@ -69,17 +69,17 @@ public class TmdbImage extends GsonObject {
             conn.setRequestMethod("GET");
             conn.connect();
         } catch (IOException e) {
-            throw new TmdbException("Could not connect to image URL: " + urlString, e);
+            throw new MovieDataProviderException("Could not connect to image URL: " + urlString, e);
         }
         
         // validate
         try {
             int responseCode = conn.getResponseCode();
             if (responseCode != 200) {
-                throw new TmdbException("Server returned HTTP-Status: " + responseCode + " for image URL: " + urlString);
+                throw new MovieDataProviderException("Server returned HTTP-Status: " + responseCode + " for image URL: " + urlString);
             }
         } catch (IOException e) {
-            throw new TmdbException("Could not get Response Code from image URL: " + urlString, e);
+            throw new MovieDataProviderException("Could not get Response Code from image URL: " + urlString, e);
         }
         
         // get Image Data
@@ -87,7 +87,7 @@ public class TmdbImage extends GsonObject {
         try {
             inputStream = conn.getInputStream();
         } catch (IOException e) {
-            throw new TmdbException("Could not read from image URL: " + urlString, e);
+            throw new MovieDataProviderException("Could not read from image URL: " + urlString, e);
         }
         int bufsize = 4096;
         Map headerFields = conn.getHeaderFields();
@@ -105,7 +105,7 @@ public class TmdbImage extends GsonObject {
                 numBytesRead = inputStream.read(buffer, receivedBytes, bufsize - receivedBytes);
                 receivedBytes += numBytesRead;
             } catch (IOException e) {
-                throw new TmdbException("Could not read from HTTP input stream of image URL: " + urlString);
+                throw new MovieDataProviderException("Could not read from HTTP input stream of image URL: " + urlString);
             }
         } while (receivedBytes < bufsize);
         
@@ -120,7 +120,7 @@ public class TmdbImage extends GsonObject {
         try {
             image = ImageIO.read(new ByteArrayInputStream(buffer));
         } catch (IOException e) {
-            throw new TmdbException("Could not convert input bytes to Image of image URL: " + urlString);
+            throw new MovieDataProviderException("Could not convert input bytes to Image of image URL: " + urlString);
         }
         
         return image;

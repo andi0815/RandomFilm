@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.datasource.exception.TmdbException;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 /**
@@ -20,7 +20,7 @@ import amo.randomFilm.datasource.tmdb.TmdbFacade;
 public class TmdbMovieExtendedInfoTest extends AbstractTestBase {
     
     @Test
-    public void testMovie() throws TmdbException {
+    public void testMovie() throws MovieDataProviderException {
         
         TmdbMovieExtendedInfo info = TmdbFacade.getInfo("603");
         // System.out.println("EXT-INFO: " + info);
