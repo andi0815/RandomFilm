@@ -12,7 +12,8 @@ public class PathPanel extends JLabel {
     
     public PathPanel(String path) {
         setFont(new Font("Sans-Serif", Font.ITALIC, 12));
-        setText("PATH: " + path);
+        // setText("PATH: " + path);
+        setText(path);
     }
     
 }

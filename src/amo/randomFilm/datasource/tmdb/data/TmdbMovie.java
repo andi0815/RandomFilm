@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.UnknownTypes;
@@ -188,7 +187,8 @@ public class TmdbMovie extends GsonObject implements Movie {
             try {
                 extInfo = TmdbFacade.getInfo(id);
             } catch (MovieDataProviderException e) {
-                logger.log(Priority.WARN, "Encountered problems fetching extended Movie Info: " + e.getMessage());
+                logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
+                return UnknownTypes.INT;
             }
         }
         return extInfo.getRuntime();
@@ -211,7 +211,7 @@ public class TmdbMovie extends GsonObject implements Movie {
     
     @Override
     public String getMovieYear() {
-        return released.substring(0, 3);
+        return released.substring(0, 4);
     }
     
     @Override

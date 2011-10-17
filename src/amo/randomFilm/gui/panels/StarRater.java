@@ -232,6 +232,7 @@ public class StarRater extends JPanel {
         int h = STAR_BACKGROUND_IMAGE.getHeight(null);
         int x = 0;
         float relativeRating = this.rating * this.stars;
+        
         for (int i = 0; i < stars; i++) {
             g.drawImage(STAR_BACKGROUND_IMAGE, x, 0, null);
             if (relativeRating > i) {

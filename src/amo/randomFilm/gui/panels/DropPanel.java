@@ -70,7 +70,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     private int width = 100;
     private int height = 100;
     
-    private final int itemHeight = 50;
+    private final int itemHeight = 110;
     
     private static final Font dropperFont = new Font("SansSerif", Font.BOLD, 20);
     
@@ -257,7 +257,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         
     }
     
-    private void addItems(List fileList) {
+    void addItems(List fileList) {
         Iterator iterator = fileList.iterator();
         // System.out.println("addItems: " + fileList);
         
@@ -328,7 +328,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                 
                 // System.out.println("parentPath: " + parentPath);
                 
-                if (parentPath.equals("VIDEO_TS") && size >= 3) { // get parent
+                if (parentPath.toUpperCase().equals("VIDEO_TS") && size >= 3) { // get parent
                     // Folder
                     // Name
                     // int indexOfParentPath2 =

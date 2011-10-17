@@ -13,11 +13,11 @@ import amo.randomFilm.gui.SplashScreen;
 
 public class RandomFilm {
     
-    public static final int     frameWidth       = 500;
+    public static final int frameWidth = 500;
     // public static final int frameHeight = 600;
-    public static final int     frameHeightDelta = 50;
+    public static final int frameHeightDelta = 50;
     
-    public static final boolean DEBUG            = false;
+    public static final boolean DEBUG = true;
     
     /**
      * @param args

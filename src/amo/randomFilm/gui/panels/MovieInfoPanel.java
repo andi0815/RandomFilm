@@ -1,8 +1,5 @@
 package amo.randomFilm.gui.panels;
 
-import java.awt.BorderLayout;
-
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -21,40 +18,33 @@ public class MovieInfoPanel extends JPanel {
         this.movie = movie;
         this.path = path;
         
-        // switch to BoxLayout ...
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         
-        // title & rating
+        // title
+        // constraints.gridwidth = 2;
         TitlePanel titlePanel = new TitlePanel(movie.getMovieTitle());
-        add(titlePanel, BorderLayout.PAGE_START);
+        add(titlePanel);
+        
+        // rating
+        StarRater starRater = new StarRater(10);
+        starRater.setRating((float) movie.getMovieRating());
+        add(starRater);
         
         // runtime & rating
         RuntimePanel runtimePanel = new RuntimePanel(movie.getMovieRuntime());
-        StarRater starRater = new StarRater(10);
-        starRater.setRating((float) movie.getMovieRating());
-        JPanel timeAndRating = new JPanel();
-        timeAndRating.setLayout(new BoxLayout(timeAndRating, BoxLayout.LINE_AXIS));
-        timeAndRating.add(runtimePanel);
-        timeAndRating.add(Box.createHorizontalGlue());
-        timeAndRating.add(starRater);
+        add(runtimePanel);
         
+        // year
         YearPanel yearPanel = new YearPanel(movie.getMovieYear());
-        JPanel infoLines = new JPanel(new BorderLayout());
-        infoLines.add(timeAndRating, BorderLayout.NORTH);
-        infoLines.add(yearPanel, BorderLayout.PAGE_END);
+        add(yearPanel);
         
         // genres
         GenrePanel genrePanel = new GenrePanel(movie.getMovieGenres());
-        // add(genrePanel, BorderLayout.CENTER);
-        infoLines.add(genrePanel, BorderLayout.CENTER);
-        add(infoLines, BorderLayout.LINE_START);
+        add(genrePanel);
         
         // path
         PathPanel pathPanel = new PathPanel(path);
-        add(pathPanel, BorderLayout.PAGE_END);
-        
-        System.out.println("infoLines: " + infoLines.getSize());
-        System.out.println("timeAndRating: " + timeAndRating.getSize());
+        add(pathPanel);
         
     }
 }
