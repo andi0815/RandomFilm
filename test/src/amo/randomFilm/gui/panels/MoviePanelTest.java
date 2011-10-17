@@ -1,6 +1,5 @@
 package amo.randomFilm.gui.panels;
 
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -15,15 +14,15 @@ import amo.randomFilm.AbstractTestBase;
  */
 public class MoviePanelTest extends AbstractTestBase {
     
-    // @Test
+    @Test
     public void testIt() {
-        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), getDummyMovieList(), ".mp4", 500, 50, null);
-        moviePanel.setPreferredSize(new Dimension(500, 50));
+        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), getDummyMovieList(), ".mp4", 500, 60, null);
+        // moviePanel.setPreferredSize(new Dimension(500, 50));
         // moviePanel.invalidate();
-        // showComponent(moviePanel, 3000);
+        showComponent(moviePanel, 10000);
     }
     
-    @Test
+    // @Test
     public void testResize() throws InterruptedException {
         Image movieImage = getDummyMovie().getMovieImage();
         MyImageObserver imageObserver = new MyImageObserver();

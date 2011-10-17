@@ -23,7 +23,7 @@ public class PosterPanel extends JPanel {
     private static final Logger logger = Logger.getLogger(PosterPanel.class);
     
     /** default initial size of this panel */
-    private static final Dimension INITIAL_SIZE = new Dimension(50, 100);
+    private static final Dimension INITIAL_SIZE = new Dimension(60, 80);
     
     // FIXME: set default image
     private static Image NO_IMAGE_AVAILABLE = null;
@@ -41,6 +41,7 @@ public class PosterPanel extends JPanel {
     
     public PosterPanel(Image image) {
         setPreferredSize(INITIAL_SIZE);
+        // setMinimumSize(new Dimension(50, 50));
         setImage(image);
     }
     
