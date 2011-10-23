@@ -9,15 +9,18 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 /**
+ * This class provides functions to filter movie files and trying to guess the correctly formatted
+ * movie title.
+ * 
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 21.10.2011
  */
 public class FilenameFilter {
     
     // TODO: Extract to config file ?!
-    private static Pattern KNWON_EXTENSIONS = Pattern.compile("avi|mpg|mpeg|mov|flv|divx|xvid|ifo|vob|wmv");
+    private static final Pattern KNWON_EXTENSIONS = Pattern.compile("avi|mpg|mpeg|mov|flv|divx|xvid|ifo|vob|wmv");
     
-    private static String FILE_SEPARATOR = System.getProperty("file.separator");
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(FilenameFilter.class);
@@ -26,7 +29,7 @@ public class FilenameFilter {
      * Hidden Constructor.
      */
     private FilenameFilter() {
-        
+        // never used!
     }
     
     /**
@@ -61,7 +64,6 @@ public class FilenameFilter {
         }
         
         logger.debug("Searching Movies in Files: " + Arrays.toString(fileList));
-        
         for (File file : fileList) {
             
             if (file == null) { // skip, if null
@@ -78,8 +80,8 @@ public class FilenameFilter {
                 String ext = getExtension(file);
                 
                 if (KNWON_EXTENSIONS.matcher(ext.toLowerCase()).matches()) {
-                    logger.debug("Adding File: " + file);
-                    movieTitleList.add(new MovieFile(file, getFilmName(file)));
+                    logger.debug("Adding movie file: " + file);
+                    movieTitleList.add(getFilmName(file));
                     
                 } else { // extension not known ...
                     logger.info("File " + file.getAbsolutePath() + " is not a Movie.");
@@ -110,15 +112,14 @@ public class FilenameFilter {
             if (file_sep.equals("\\"))
                 file_sep += "\\";
             String[] folderNames = folderPath.split(file_sep);
-            
-            String parentPath = folderNames[folderNames.length - 1]; // filename
+            String parentFolderName = folderNames[folderNames.length - 1]; // filename
             
             if (folderNames.length >= 2) { // real parent folder
-                parentPath = folderNames[folderNames.length - 2];
+                parentFolderName = folderNames[folderNames.length - 2];
                 
-                if (parentPath.toUpperCase().equals("VIDEO_TS") && folderNames.length >= 3) {
+                if (parentFolderName.toUpperCase().equals("VIDEO_TS") && folderNames.length >= 3) {
                     // use parent Folder name, if this one has VIDEO_TS as name
-                    parentPath = folderNames[folderNames.length - 3];
+                    parentFolderName = folderNames[folderNames.length - 3];
                 }
                 
                 //
@@ -128,8 +129,8 @@ public class FilenameFilter {
                 
             }
             
-            logger.info("Found Movie: " + parentPath);
-            moviesFound.add(getFilmName(file, parentPath));
+            logger.info("Found Movie: " + parentFolderName);
+            moviesFound.add(getFilmName(file, parentFolderName));
             
         } else { // no DVD Folder
             logger.debug("NO DVD found adding items ...");
@@ -179,19 +180,35 @@ public class FilenameFilter {
         
     }
     
+    /**
+     * Returns {@link MovieFile} for given movie file
+     * 
+     * @param file
+     *            file to use
+     * @param inputName
+     *            filename to use as search title
+     * @return MovieFile with formatted movie title
+     */
     protected static MovieFile getFilmName(File file, String inputName) {
         return new MovieFile(file, formatFileName(inputName));
         
     }
     
-    protected static String getFilmName(File file) {
+    /**
+     * Returns {@link MovieFile} for given movie file
+     * 
+     * @param file
+     *            file to use
+     * @return MovieFile with formatted movie title
+     */
+    protected static MovieFile getFilmName(File file) {
         String fileName = file.getName();
         int indexOfExtension = fileName.lastIndexOf('.');
         String result = fileName;
         if (indexOfExtension > 0) {
             result = fileName.substring(0, indexOfExtension);
         }
-        return formatFileName(result);
+        return new MovieFile(file, formatFileName(result));
         
     }
     
