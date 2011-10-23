@@ -13,7 +13,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
@@ -27,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -42,12 +39,11 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.RandomFilm;
-import amo.randomFilm.configuration.Configuration;
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.MovieDataProvider;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
+import amo.randomFilm.gui.GuiLabels;
 import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.gui.util.FileListHandler;
 import amo.randomFilm.model.FilenameFilter;
@@ -56,32 +52,31 @@ import amo.randomFilm.model.MovieFile;
 public class DropPanel extends JPanel implements DropTargetListener, DragSourceListener, DragGestureListener,
         ActionListener {
     
-    /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(DropPanel.class);
-    
-    // FIXME: in Config-File auslagern ...
-    private static final String PATH_TO_BROWSER = "\"" + Configuration.getInstance().getProperty("browser.path") + "\"";
-    
-    private static final String FILMSTARTS_QUERY_URL = "http://www.filmstarts.de/suche/?q=";
-    
     /**
      * default Serial version id
      */
     private static final long serialVersionUID = 1L;
     
-    private int width = 100;
-    private int height = 100;
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(DropPanel.class);
     
-    private final int itemHeight = 110;
+    /** Color of Font */
+    private static final Color DROPPER_FONT_COLOR = Color.BLACK;
     
-    private static final Font dropperFont = new Font("SansSerif", Font.BOLD, 20);
+    /** Label for empty drop panel */
+    private static final String TEXT_EMPTY_DROPPER = "Bewirf mich mit Dateien!";
     
+    /** font style for empty drop panel */
+    private static final Font EMPTY_DROPPER_FONT = new Font("SansSerif", Font.BOLD, 20);
+    
+    /** Background color */
+    private static final Color BG_COLOR = Color.WHITE;
+    
+    /** height of a MoviePanel */
+    private static final int ITEM_HEIGHT = 110;
+    
+    /** Manages the list of MoviePanels */
     private FileListHandler listHandler = new FileListHandler();
-    
-    DropTarget dropTarget = new DropTarget(this, this);
-    DragSource dragSource = DragSource.getDefaultDragSource();
-    
-    private final String thumbsDb = "Thumbs.db";
     
     JFrame parent = null;
     
@@ -92,44 +87,25 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         super();
         this.setName("DropPanel");
         this.parent = parent;
-    }
-    
-    public void init(int width, int height) {
-        this.setPreferredSize(new Dimension(width, height));
-        this.revalidate();
-        this.setBackground(Color.white);
-        this.width = width;
-        this.height = height;
+        this.setBackground(BG_COLOR);
+        this.setLayout(null); // do it yourself layout
         
-        this.setLayout(null);
-        
-        // dragSource.createDefaultDragGestureRecognizer( this,
-        // DnDConstants.ACTION_COPY_OR_MOVE, this);
-        // setDropTarget( dropTarget );
+        // create a new Drop Target and associate it with this component
+        new DropTarget(this, this);
         
     }
     
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        // int width = getPreferredSize().width;
-        // int height = getPreferredSize().height;
         
         if (this.listHandler.isEmpty()) {
-            // kreuze
-            g.setColor(Color.lightGray);
-            g.drawLine(0, 0, this.width, this.height);
-            g.drawLine(this.width, 0, 0, this.height);
-            
             // text
-            int halfWidth = (int) (this.width / 2.0);
-            int halfheight = (int) (this.height / 2.0);
-            g.setColor(Color.BLACK);
-            g.setFont(dropperFont);
-            g.drawString("Bewirf mich mit Dateien!", halfWidth - 120, halfheight + 5);
-            
-            // rahmen
-            g.drawRect(0, 0, this.width - 1, this.height - 1);
+            int halfWidth = (int) (this.getWidth() / 2.0);
+            int halfheight = (int) (this.getHeight() / 2.0);
+            g.setColor(DROPPER_FONT_COLOR);
+            g.setFont(EMPTY_DROPPER_FONT);
+            g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
         }
     }
     
@@ -147,6 +123,41 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     }
     
     /**
+     * Behandle einen Drop-Event.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void drop(DropTargetDropEvent dropTargetDropEvent) {
+        List<File> fileList = new ArrayList<File>();
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        try {
+            Transferable tr = dropTargetDropEvent.getTransferable();
+            if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                fileList = (java.util.List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
+                this.addItems(fileList);
+                logger.debug("finished adding items!");
+                dropTargetDropEvent.getDropTargetContext().dropComplete(true);
+                
+            } else {
+                logger.debug("Rejected adding items!");
+                dropTargetDropEvent.rejectDrop();
+            }
+        } catch (IOException io) {
+            io.printStackTrace();
+            dropTargetDropEvent.rejectDrop();
+        } catch (UnsupportedFlavorException ufe) {
+            ufe.printStackTrace();
+            dropTargetDropEvent.rejectDrop();
+        }
+        
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.listHandler.sort();
+        this.resizePanel();
+        this.repaint();
+    }
+    
+    /**
      * unbenutzt
      */
     @Override
@@ -161,78 +172,46 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     }
     
     /**
-     * Behandle einen Drop-Event.
+     * unbenutzt
      */
-    @Override
-    public void drop(DropTargetDropEvent dropTargetDropEvent) {
-        List fileList = new ArrayList();
-        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        try {
-            Transferable tr = dropTargetDropEvent.getTransferable();
-            if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-                fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
-                
-                // fileList = prepareListOfFiles(fileList);
-                //
-                // if (fileList.size() > 0) {
-                this.addItems(fileList);
-                if (RandomFilm.DEBUG)
-                    System.out.println("DROPPER: finished adding items!");
-                // } else {
-                // if ( RandomFilm.DEBUG )
-                // System.out.println("DROPPER: No fitting items found ...");
-                // }
-                //
-                dropTargetDropEvent.getDropTargetContext().dropComplete(true);
-                
-            } else {
-                System.err.println("Rejected");
-                dropTargetDropEvent.rejectDrop();
-            }
-        } catch (IOException io) {
-            io.printStackTrace();
-            dropTargetDropEvent.rejectDrop();
-        } catch (UnsupportedFlavorException ufe) {
-            ufe.printStackTrace();
-            dropTargetDropEvent.rejectDrop();
-        }
-        
-        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        this.listHandler.sort();
-        if (RandomFilm.DEBUG)
-            this.listHandler.debugOut();
-        this.resizePanel();
-        this.repaint();
-    }
-    
     @Override
     public void dragOver(DragSourceDragEvent arg0) {
         
     }
     
+    /**
+     * Automatically resizes this panel according to the number of movie items
+     */
     protected void resizePanel() {
-        this.setPreferredSize(new Dimension(this.getWidth(), (this.getComponentCount() * (this.itemHeight)) + 2));
+        this.setPreferredSize(new Dimension(this.getWidth(), (this.getComponentCount() * (this.ITEM_HEIGHT)) + 2));
         this.revalidate();
-        
     }
     
+    /**
+     * Tries to add given files to the list of movies.
+     * 
+     * @param fileList
+     *            the List of files to add
+     */
     void addItems(List<File> fileList) {
         List<MovieFile> movieFiles = FilenameFilter.getMovieNames(fileList);
         for (MovieFile movieFile : movieFiles) {
+            List<? extends Movie> moviesFound = null;
             try {
-                List<? extends Movie> moviesFound = this.movieDataProvider.searchMovie(movieFile.getTitle());
-                MoviePanel item = new MoviePanel(movieFile.getFile(), moviesFound, this.getWidth(), this.itemHeight,
-                        this);
-                item.setBounds(2, (this.getComponentCount() * this.itemHeight) + 2, this.getWidth() - 4,
-                        this.itemHeight);
-                
-                if (this.listHandler.insertItem(item))
-                    this.add(item);
+                moviesFound = this.movieDataProvider.searchMovie(movieFile.getTitle());
                 
             } catch (MovieDataProviderException e) {
                 logger.warn("Could not find Movie with title: " + movieFile.getTitle(), e);
+                List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
+                movieList.add(new SimpleMovie(movieFile.getTitle()));
+                moviesFound = movieList;
             }
+            
+            MoviePanel item = new MoviePanel(movieFile.getFile(), moviesFound, this.getWidth(), this.ITEM_HEIGHT, this);
+            item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4, this.ITEM_HEIGHT);
+            
+            if (this.listHandler.insertItem(item))
+                this.add(item);
         }
     }
     
@@ -266,30 +245,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("ask filmstarts")) {
-            
-            MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
-            String filmName = item.getFilmName();
-            filmName = filmName.trim();
-            filmName = filmName.replace('.', ' ');
-            filmName = filmName.replace('_', ' ');
-            
-            String filmstartsUrlStr = null;
-            try {
-                filmstartsUrlStr = URLEncoder.encode(filmName, "UTF-8");
-            } catch (UnsupportedEncodingException e1) {
-                Dialogs.showWarning("Could not URL-encode film: " + filmName + "\n Cause: \n" + e1.getCause(), this);
-            }
-            String filmstartsQueryUrl = FILMSTARTS_QUERY_URL + filmstartsUrlStr;
-            
-            try {
-                Runtime.getRuntime().exec(PATH_TO_BROWSER + " " + filmstartsQueryUrl);
-            } catch (IOException e1) {
-                Dialogs.showWarning("Could send URL '" + filmstartsQueryUrl + "' to " + PATH_TO_BROWSER
-                        + ".\n Cause: \n" + e1.getCause(), this);
-            }
-            
-        } else if (e.getActionCommand().equals("löschen")) {
+        if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_DELETE)) {
             // System.out
             // .println(((JButton) e.getSource()).getParent().getClass());
             MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
@@ -300,29 +256,29 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             this.resizePanel();
             this.repaint();
             
-        } else if (e.getActionCommand().equals("Alles markieren")) {
-            Iterator iter = this.listHandler.getList().iterator();
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_SELECT_ALL)) {
+            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
             while (iter.hasNext()) {
-                ((MoviePanel) iter.next()).setSelected(true);
+                iter.next().setSelected(true);
             }
             this.repaint();
             
-        } else if (e.getActionCommand().equals("Nichts markieren")) {
-            Iterator iter = this.listHandler.getList().iterator();
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_SELECT_NOTHING)) {
+            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
             while (iter.hasNext()) {
-                ((MoviePanel) iter.next()).setSelected(false);
+                iter.next().setSelected(false);
             }
             this.repaint();
             
-        } else if (e.getActionCommand().equals("Markiertes löschen")) {
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_REMOVE_SELECTED)) {
             this.removeAll();
             
             MoviePanel item;
             FileListHandler fileListHandler = new FileListHandler();
-            Iterator iter = this.listHandler.getList().iterator();
+            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
             
             while (iter.hasNext()) {
-                item = (MoviePanel) iter.next();
+                item = iter.next();
                 if (!item.isSelected()) {
                     if (fileListHandler.insertItem(item))
                         this.add(item);
@@ -334,31 +290,25 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             this.resizePanel();
             this.repaint();
             
-        } else if (e.getActionCommand().equals("Liste löschen")) {
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_REMOVE_ALL)) {
             this.removeAll();
             this.listHandler.clearList();
-            this.setPreferredSize(new Dimension(this.width, this.height));
             this.resizePanel();
             this.repaint();
             
-        } else if (e.getActionCommand().equals("Los geht's !")) {
-            ArrayList listOfItems = this.listHandler.getList();
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_GO)) {
+            List<MoviePanel> listOfItems = this.listHandler.getList();
             if (listOfItems.size() > 0) {
                 Random random = new Random(new Date().getTime());
                 
-                MoviePanel listItem = (MoviePanel) listOfItems.get(random.nextInt(listOfItems.size()));
+                MoviePanel listItem = listOfItems.get(random.nextInt(listOfItems.size()));
                 
                 String filmName = listItem.getFilmName();
                 String filmPath = listItem.getFile().getPath();
                 Image filmIcon = listItem.getIconImage();
                 
-                // Dialogs.showYesNoDialog(
-                // "FILM: " + listItem.getFile().getPath(), this);
-                // }
                 if (Dialogs.showStartFilmDialog(filmName, filmPath, filmIcon, this)) {
-                    System.out.println("START");
                     String executableName = listItem.getExecutableName();
-                    
                     this.parent.setAlwaysOnTop(false);
                     
                     if (executableName != null && !executableName.equals("")) {
@@ -372,14 +322,15 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                         }
                     }
                 } else {
-                    System.out.println("Doch nicht ...");
+                    logger.debug("Doch nicht ...");
                 }
             }
-        } else if (e.getActionCommand().equals(ButtonPanelDropper.DISABLE_ALWAYS_ON_TOP)) {
+            
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_DISABLE_ALWAYS_ON_TOP)) {
             this.parent.setAlwaysOnTop(false);
             ButtonPanelDropper.setAlwaysOnTopEnabled(false);
             
-        } else if (e.getActionCommand().equals(ButtonPanelDropper.ENABLE_ALWAYS_ON_TOP)) {
+        } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_ENABLE_ALWAYS_ON_TOP)) {
             this.parent.setAlwaysOnTop(true);
             ButtonPanelDropper.setAlwaysOnTopEnabled(true);
             
@@ -392,15 +343,15 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         JComponent component;
         Rectangle rect;
         
-        Iterator iter = this.listHandler.getList().iterator();
+        Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
         
         while (iter.hasNext()) {
-            component = (JComponent) iter.next();
+            component = iter.next();
             rect = component.getBounds();
             if (rect.getY() != nextY) {
-                component.setBounds(2, nextY, this.getWidth() - 4, this.itemHeight);
+                component.setBounds(2, nextY, this.getWidth() - 4, this.ITEM_HEIGHT);
             }
-            nextY += this.itemHeight;
+            nextY += this.ITEM_HEIGHT;
         }
         
     }

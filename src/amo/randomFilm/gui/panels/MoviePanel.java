@@ -18,9 +18,16 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 
 import sun.awt.shell.ShellFolder;
-import amo.randomFilm.RandomFilm;
 import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.datasource.MovieDataProvider;
 
+/**
+ * Class that contains iformation about a certain movie file. The information to display is provided
+ * by a {@link MovieDataProvider} within a {@link Movie} object.
+ * 
+ * @author Andreas Monger (andreas.monger@gmail.com)
+ * @date 23.10.2011
+ */
 public class MoviePanel extends JPanel implements MouseListener {
     
     /** Logger Object for this Class */
@@ -28,45 +35,29 @@ public class MoviePanel extends JPanel implements MouseListener {
     
     private static final String LABEL_DELETE = "löschen";
     
-    /**
-     * default Serial version id
-     */
-    private static final long serialVersionUID = 1L;
-    
-    private static final Color BG_COLOR = Color.white;
+    private static final Color BG_COLOR = Color.WHITE;
     
     private static final String IMAGE_DELETE = "images\\Delete.png";
     // private static final String IMAGE_FILMSTARTS = "images\\Filmstarts.png";
     
     private final File file;
     
-    private static int imageHeight;
-    private static int imageWidth;
-    private static int componentWidth;
-    
     private boolean isSelected = false;
     
     private final List<? extends Movie> movieAlternatives;
     private Movie selectedMovie = null;
-    private Image resizedImage = null;
     
     public MoviePanel(File f, List<? extends Movie> movieAlternatives, int width, int height,
             ActionListener myActionListener) {
         super();
         
         this.movieAlternatives = movieAlternatives;
-        selectedMovie = movieAlternatives != null && movieAlternatives.size() > 0 ? movieAlternatives.get(0) : null;
+        this.selectedMovie = movieAlternatives != null && movieAlternatives.size() > 0 ? movieAlternatives.get(0)
+                : null;
+        this.file = f;
         
-        // this.extension = extension;
-        
-        componentWidth = width - 2;
-        imageHeight = height - 4;
-        imageWidth = (int) (imageHeight * 1.5);
-        
-        file = f;
-        
-        addMouseListener(this);
-        setLayout(new BorderLayout());
+        this.addMouseListener(this);
+        this.setLayout(new BorderLayout());
         
         // // add Filmstarts Button
         // JButton btnFilmstarts = new JButton(new ImageIcon(IMAGE_FILMSTARTS));
@@ -76,26 +67,24 @@ public class MoviePanel extends JPanel implements MouseListener {
         // add(btnFilmstarts);
         
         // film image
-        PosterPanel poster = new PosterPanel(selectedMovie.getMovieImage());
-        add(poster, BorderLayout.LINE_START);
+        PosterPanel poster = new PosterPanel(this.selectedMovie.getMovieImage());
+        this.add(poster, BorderLayout.LINE_START);
         
         // film info
-        MovieInfoPanel movieInfoPanel = new MovieInfoPanel(selectedMovie, file.getAbsolutePath());
-        // TitlePanel title = new TitlePanel(selectedMovie.getMovieTitle());
-        add(movieInfoPanel, BorderLayout.CENTER);
+        MovieInfoPanel movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file.getAbsolutePath());
+        this.add(movieInfoPanel, BorderLayout.CENTER);
         
         // delete button
         JButton btnDelete = new JButton(new ImageIcon(IMAGE_DELETE));
         btnDelete.setActionCommand(LABEL_DELETE);
         btnDelete.addActionListener(myActionListener);
-        // btnDelete.setBounds(componentWidth - 30, ((imageHeight - 26) / 2), 26, 26);
-        add(btnDelete, BorderLayout.LINE_END);
+        // btnDelete.setBounds(this.getWidth() - 30, ((this.getHeight() - 26) / 2), 26, 26);
+        this.add(btnDelete, BorderLayout.LINE_END);
         
-        doLayout();
+        this.doLayout();
         
-        setBackground(BG_COLOR);
-        // setPreferredSize(new Dimension(width, height));
-        setVisible(true);
+        this.setBackground(BG_COLOR);
+        this.setVisible(true);
         
     }
     
@@ -111,20 +100,20 @@ public class MoviePanel extends JPanel implements MouseListener {
         // }
         
         // draw bottom border line
-        g.drawLine(0, getHeight() - 1, componentWidth - 1, getHeight() - 1);
+        g.drawLine(0, this.getHeight() - 1, this.getWidth(), this.getHeight() - 1);
         
     }
     
     public File getFile() {
-        return file;
+        return this.file;
     }
     
     public String getFilmName() {
-        return selectedMovie.getMovieTitle();
+        return this.selectedMovie.getMovieTitle();
     }
     
     public Image getIconImage() {
-        return selectedMovie.getMovieImage();
+        return this.selectedMovie.getMovieImage();
     }
     
     /**
@@ -133,47 +122,51 @@ public class MoviePanel extends JPanel implements MouseListener {
     public String getExecutableName() {
         String execType = null;
         try {
-            ShellFolder shellFolder = ShellFolder.getShellFolder(file);
+            ShellFolder shellFolder = ShellFolder.getShellFolder(this.file);
             execType = shellFolder.getExecutableType();
         } catch (FileNotFoundException e) {
-            logger.error("Could not find file: " + file);
+            logger.error("Could not find file: " + this.file);
         }
         return execType;
     }
     
     public void setSelected(boolean bool) {
-        isSelected = bool;
+        this.isSelected = bool;
     }
     
     public boolean isSelected() {
-        return isSelected;
+        return this.isSelected;
     }
     
+    @Override
     public void mouseReleased(MouseEvent arg0) {
     }
     
+    @Override
     public void mouseClicked(MouseEvent arg0) {
     }
     
+    @Override
     public void mouseEntered(MouseEvent arg0) {
     }
     
+    @Override
     public void mouseExited(MouseEvent arg0) {
     }
     
+    @Override
     public void mousePressed(MouseEvent arg0) {
-        isSelected = !isSelected;
-        if (isSelected) {
-            setBackground(new Color(200, 200, 255));
-            invalidate();
+        this.isSelected = !this.isSelected;
+        if (this.isSelected) {
+            this.setBackground(new Color(200, 200, 255));
+            this.invalidate();
         } else {
-            setBackground(Color.WHITE);
-            repaint();
-            invalidate();
+            this.setBackground(Color.WHITE);
+            this.repaint();
+            this.invalidate();
         }
-        if (RandomFilm.DEBUG)
-            System.out.println(file.getName() + " has been Pressed on");
-        repaint();
+        logger.debug(this.file.getName() + " has been Pressed on");
+        this.repaint();
     }
     
 }

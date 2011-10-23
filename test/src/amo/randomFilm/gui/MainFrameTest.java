@@ -42,7 +42,7 @@ public class MainFrameTest extends AbstractTestBase {
         // showComponent(scrollPane, 60000);
         
         MainFrame mainFrame = new MainFrame();
-        mainFrame.init(550, 50);
+        mainFrame.init(550);
         mainFrame.setMinimumSize(new Dimension(400, 500));
         mainFrame.setVisible(true);
         

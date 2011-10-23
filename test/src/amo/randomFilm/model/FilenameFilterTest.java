@@ -35,6 +35,7 @@ public class FilenameFilterTest extends AbstractTestBase {
         this.addFile("another DVD film" + FILE_SEPARATOR + "video_ts" + FILE_SEPARATOR + "video_ts.ifo",
                 "another DVD film");
         this.addFile("not a movie.test", null);
+        this.addFile("dontknow.thismovie.mpg", "dontknow thismovie");
         
         // create Folders
         File[] filesMade = this.makeTestFiles(BASEDIR);

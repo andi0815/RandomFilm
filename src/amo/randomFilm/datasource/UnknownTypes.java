@@ -3,6 +3,7 @@
  */
 package amo.randomFilm.datasource;
 
+import java.awt.Image;
 
 /**
  * 
@@ -21,5 +22,7 @@ public class UnknownTypes {
     public static final int INT = -1;
     
     public static final String STRING = "UNKNOWN";
+    
+    public static final Image IMAGE = null;
     
 }
