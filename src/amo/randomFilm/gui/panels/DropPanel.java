@@ -50,6 +50,8 @@ import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.gui.util.FileListHandler;
+import amo.randomFilm.model.FilenameFilter;
+import amo.randomFilm.model.MovieFile;
 
 public class DropPanel extends JPanel implements DropTargetListener, DragSourceListener, DragGestureListener,
         ActionListener {
@@ -86,26 +88,20 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     // FIXME: add dynamically ...
     MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
-    // private MainFrame mainFrame;
-    //
-    // public DropPanel( MainFrame mf ){
-    // this.mainFrame = mf;
-    // }
-    
     public DropPanel(JFrame parent) {
         super();
-        
+        this.setName("DropPanel");
         this.parent = parent;
     }
     
     public void init(int width, int height) {
-        setPreferredSize(new Dimension(width, height));
-        revalidate();
-        setBackground(Color.white);
+        this.setPreferredSize(new Dimension(width, height));
+        this.revalidate();
+        this.setBackground(Color.white);
         this.width = width;
         this.height = height;
         
-        setLayout(null);
+        this.setLayout(null);
         
         // dragSource.createDefaultDragGestureRecognizer( this,
         // DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -119,27 +115,28 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         // int width = getPreferredSize().width;
         // int height = getPreferredSize().height;
         
-        if (listHandler.isEmpty()) {
+        if (this.listHandler.isEmpty()) {
             // kreuze
             g.setColor(Color.lightGray);
-            g.drawLine(0, 0, width, height);
-            g.drawLine(width, 0, 0, height);
+            g.drawLine(0, 0, this.width, this.height);
+            g.drawLine(this.width, 0, 0, this.height);
             
             // text
-            int halfWidth = (int) (width / 2.0);
-            int halfheight = (int) (height / 2.0);
+            int halfWidth = (int) (this.width / 2.0);
+            int halfheight = (int) (this.height / 2.0);
             g.setColor(Color.BLACK);
             g.setFont(dropperFont);
             g.drawString("Bewirf mich mit Dateien!", halfWidth - 120, halfheight + 5);
             
             // rahmen
-            g.drawRect(0, 0, width - 1, height - 1);
+            g.drawRect(0, 0, this.width - 1, this.height - 1);
         }
     }
     
     /**
      * Teste, ob Dateien gedroppt werden dürfen (nur Dateien dürfen!)
      */
+    @Override
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
         Transferable tr = dropTargetDragEvent.getTransferable();
         if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
@@ -152,21 +149,24 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     /**
      * unbenutzt
      */
+    @Override
     public void dragExit(DropTargetEvent arg0) {
     }
     
     /**
      * unbenutzt
      */
+    @Override
     public void dragOver(DropTargetDragEvent arg0) {
     }
     
     /**
      * Behandle einen Drop-Event.
      */
+    @Override
     public void drop(DropTargetDropEvent dropTargetDropEvent) {
         List fileList = new ArrayList();
-        setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         try {
             Transferable tr = dropTargetDropEvent.getTransferable();
             if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
@@ -176,7 +176,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                 // fileList = prepareListOfFiles(fileList);
                 //
                 // if (fileList.size() > 0) {
-                addItems(fileList);
+                this.addItems(fileList);
                 if (RandomFilm.DEBUG)
                     System.out.println("DROPPER: finished adding items!");
                 // } else {
@@ -198,234 +198,73 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             dropTargetDropEvent.rejectDrop();
         }
         
-        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        listHandler.sort();
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.listHandler.sort();
         if (RandomFilm.DEBUG)
-            listHandler.debugOut();
-        resizePanel();
-        repaint();
+            this.listHandler.debugOut();
+        this.resizePanel();
+        this.repaint();
     }
     
-    // private List prepareListOfFiles( List<File> fileList){
-    //
-    // for ( File file : fileList ) {
-    // if (file.isDirectory()) {
-    //
-    // } else { // is File:
-    // String extension = getExtension(file);
-    // System.out.println("FILE: '"+file+"'extension: "+ extension);
-    // // String fileName = file.getName();
-    // }
-    //
-    // }
-    //
-    // return fileList;
-    // }
-    
-    private String getExtension(File file) {
-        String fileName = file.getName();
-        int indexOfExtension = fileName.lastIndexOf('.');
-        String result;
-        if (indexOfExtension > 0) {
-            result = fileName.substring(indexOfExtension + 1).toLowerCase();
-        } else {
-            result = "";
-        }
-        
-        return result;
-        
-    }
-    
-    private String getFilmName(File file) {
-        String fileName = file.getName();
-        int indexOfExtension = fileName.lastIndexOf('.');
-        String result = fileName;
-        if (indexOfExtension > 0) {
-            result = fileName.substring(0, indexOfExtension);
-        }
-        return result;
-        
-    }
-    
+    @Override
     public void dragOver(DragSourceDragEvent arg0) {
         
     }
     
     protected void resizePanel() {
-        setPreferredSize(new Dimension(getWidth(), (getComponentCount() * (itemHeight)) + 2));
-        revalidate();
+        this.setPreferredSize(new Dimension(this.getWidth(), (this.getComponentCount() * (this.itemHeight)) + 2));
+        this.revalidate();
         
     }
     
-    void addItems(List fileList) {
-        Iterator iterator = fileList.iterator();
-        // System.out.println("addItems: " + fileList);
-        
-        while (iterator.hasNext()) {
-            File file = (File) iterator.next();
-            
-            if (file.isDirectory()) {
-                addDirectory(file);
+    void addItems(List<File> fileList) {
+        List<MovieFile> movieFiles = FilenameFilter.getMovieNames(fileList);
+        for (MovieFile movieFile : movieFiles) {
+            try {
+                List<? extends Movie> moviesFound = this.movieDataProvider.searchMovie(movieFile.getTitle());
+                MoviePanel item = new MoviePanel(movieFile.getFile(), moviesFound, this.getWidth(), this.itemHeight,
+                        this);
+                item.setBounds(2, (this.getComponentCount() * this.itemHeight) + 2, this.getWidth() - 4,
+                        this.itemHeight);
                 
-            } else {
-                String ext = getExtension(file);
-                ext = ext.toLowerCase();
-                String filmName = getFilmName(file);
+                if (this.listHandler.insertItem(item))
+                    this.add(item);
                 
-                // System.out.println(file.getName() + "  has ext: " + ext);
-                if (ext.equals("avi") || ext.equals("mpg") || ext.equals("mpeg") || ext.equals("mov")
-                        || ext.equals("flv") || ext.equals("divx") || ext.equals("ifo") || ext.equals("vob")
-                        || ext.equals("xvid") || ext.equals("wmv")) {
-                    
-                    List<? extends Movie> moviesFound;
-                    try {
-                        moviesFound = movieDataProvider.searchMovie(filmName);
-                        MoviePanel item = new MoviePanel(file, moviesFound, ext, getWidth(), itemHeight, this);
-                        item.setBounds(2, (getComponentCount() * itemHeight) + 2, getWidth() - 4, itemHeight);
-                        
-                        if (listHandler.insertItem(item))
-                            add(item);
-                        
-                    } catch (MovieDataProviderException e) {
-                        logger.warn("Could not find Movie with title: " + filmName, e);
-                    }
-                }
+            } catch (MovieDataProviderException e) {
+                logger.warn("Could not find Movie with title: " + movieFile.getTitle(), e);
             }
         }
-    }
-    
-    private void addDirectory(File file) {
-        
-        // System.out.println("addDirectory: " + file);
-        
-        File dvdVideoTsIfo = getDvdIndex(file);
-        
-        if (dvdVideoTsIfo != null) {
-            // System.out.println("DVD found: " +
-            // dvdVideoTsIfo.getAbsolutePath());
-            
-            String folderPath = dvdVideoTsIfo.getAbsolutePath();
-            
-            // System.out.println("folderPath: " + folderPath);
-            
-            folderPath = folderPath.replace('\\', '/');
-            // System.out.println("folderPath: " + folderPath);
-            String[] folderNames = folderPath.split("/");
-            
-            int size = folderNames.length;
-            // System.out
-            // .println("folderNames: " + folderNames + " size: " + size);
-            
-            String parentPath = folderNames[size - 1];
-            
-            if (size >= 2) {
-                parentPath = folderNames[size - 2];
-                
-                // int indexOfParentPath =
-                // folderPath.lastIndexOf(File.separator);
-                // String parentPath =
-                // folderPath.substring(0,indexOfParentPath);
-                
-                // System.out.println("parentPath: " + parentPath);
-                
-                if (parentPath.toUpperCase().equals("VIDEO_TS") && size >= 3) { // get parent
-                    // Folder
-                    // Name
-                    // int indexOfParentPath2 =
-                    // folderPath.lastIndexOf(File.separator);
-                    // parentPath = parentPath.substring(indexOfParentPath);
-                    parentPath = folderNames[size - 3];
-                    // System.out.println("parentPath: " + parentPath);
-                }
-                
-                List<? extends Movie> moviesFound;
-                try {
-                    moviesFound = movieDataProvider.searchMovie(parentPath);
-                    MoviePanel item = new MoviePanel(dvdVideoTsIfo, moviesFound, "dvd", getWidth(), itemHeight, this);
-                    item.setBounds(2, (getComponentCount() * itemHeight) + 2, getWidth() - 4, itemHeight);
-                    if (listHandler.insertItem(item))
-                        add(item);
-                    
-                    if (RandomFilm.DEBUG)
-                        System.out.println(file.getAbsolutePath() + " " + getComponentCount());
-                } catch (MovieDataProviderException e) {
-                    logger.warn("Could not find Movie with title: " + parentPath, e);
-                }
-                
-            }
-            // String parentPath = folderNames[size - 2];
-            
-            // System.out.println(folderPath + " is DVD Folder with Name: "
-            // + parentPath);
-            
-        } else { // no DVD Folder
-            // System.out.println("NO DVD found adding items ...");
-            
-            File[] filesInFolder = file.listFiles();
-            List filesList = new ArrayList();
-            for (int i = 0; i < filesInFolder.length; i++) {
-                filesList.add(filesInFolder[i]);
-            }
-            addItems(filesList);
-        }
-        
-        // for (int i=0; i<fileList.length ;i++) {
-        //
-        // if ( fileList[i].isDirectory() ){
-        // addDirectory(fileList[i].listFiles());
-        // } else if ( fileList[i].getName().equals(thumbsDb) ) {
-        // continue;
-        //
-        // } else {
-        //
-        // ListItem item = new ListItem(fileList[i], getWidth(), itemHeight,
-        // this);
-        // item.setBounds(2,(getComponentCount()*itemHeight)+2, getWidth()-4,
-        // itemHeight);
-        //
-        // if ( listHandler.insertItem( item ) ) add( item );
-        //
-        // if ( RandomFilm.DEBUG || false ) System.out.println(
-        // fileList[i].getAbsolutePath() + " "+ getComponentCount() );
-        // }
-        //
-        // }
-    }
-    
-    private File getDvdIndex(File fileFolder) {
-        File[] filesInFolder = fileFolder.listFiles();
-        File videoTitleSetManagerInformation = null;
-        for (int i = 0; i < filesInFolder.length; i++) {
-            // System.out.println("getDvdIndex: " + filesInFolder[i].getName());
-            if (filesInFolder[i].getName().equals("VIDEO_TS.IFO")) {
-                videoTitleSetManagerInformation = filesInFolder[i];
-            }
-        }
-        return videoTitleSetManagerInformation;
     }
     
     public FileListHandler getFileListHandler() {
-        return listHandler;
+        return this.listHandler;
     }
     
+    @Override
     public void dropActionChanged(DropTargetDragEvent arg0) {
     }
     
+    @Override
     public void dragDropEnd(DragSourceDropEvent arg0) {
     }
     
+    @Override
     public void dragEnter(DragSourceDragEvent arg0) {
     }
     
+    @Override
     public void dragExit(DragSourceEvent arg0) {
     }
     
+    @Override
     public void dropActionChanged(DragSourceDragEvent arg0) {
     }
     
+    @Override
     public void dragGestureRecognized(DragGestureEvent arg0) {
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ask filmstarts")) {
             
@@ -455,55 +294,55 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             // .println(((JButton) e.getSource()).getParent().getClass());
             MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
             
-            remove(item);
-            listHandler.remove(item);
-            resetComponentBounds();
-            resizePanel();
-            repaint();
+            this.remove(item);
+            this.listHandler.remove(item);
+            this.resetComponentBounds();
+            this.resizePanel();
+            this.repaint();
             
         } else if (e.getActionCommand().equals("Alles markieren")) {
-            Iterator iter = listHandler.getList().iterator();
+            Iterator iter = this.listHandler.getList().iterator();
             while (iter.hasNext()) {
                 ((MoviePanel) iter.next()).setSelected(true);
             }
-            repaint();
+            this.repaint();
             
         } else if (e.getActionCommand().equals("Nichts markieren")) {
-            Iterator iter = listHandler.getList().iterator();
+            Iterator iter = this.listHandler.getList().iterator();
             while (iter.hasNext()) {
                 ((MoviePanel) iter.next()).setSelected(false);
             }
-            repaint();
+            this.repaint();
             
         } else if (e.getActionCommand().equals("Markiertes löschen")) {
-            removeAll();
+            this.removeAll();
             
             MoviePanel item;
             FileListHandler fileListHandler = new FileListHandler();
-            Iterator iter = listHandler.getList().iterator();
+            Iterator iter = this.listHandler.getList().iterator();
             
             while (iter.hasNext()) {
                 item = (MoviePanel) iter.next();
                 if (!item.isSelected()) {
                     if (fileListHandler.insertItem(item))
-                        add(item);
+                        this.add(item);
                 }
             }
             
-            listHandler = fileListHandler;
-            resetComponentBounds();
-            resizePanel();
-            repaint();
+            this.listHandler = fileListHandler;
+            this.resetComponentBounds();
+            this.resizePanel();
+            this.repaint();
             
         } else if (e.getActionCommand().equals("Liste löschen")) {
-            removeAll();
-            listHandler.clearList();
-            setPreferredSize(new Dimension(width, height));
-            resizePanel();
-            repaint();
+            this.removeAll();
+            this.listHandler.clearList();
+            this.setPreferredSize(new Dimension(this.width, this.height));
+            this.resizePanel();
+            this.repaint();
             
         } else if (e.getActionCommand().equals("Los geht's !")) {
-            ArrayList listOfItems = listHandler.getList();
+            ArrayList listOfItems = this.listHandler.getList();
             if (listOfItems.size() > 0) {
                 Random random = new Random(new Date().getTime());
                 
@@ -520,7 +359,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                     System.out.println("START");
                     String executableName = listItem.getExecutableName();
                     
-                    parent.setAlwaysOnTop(false);
+                    this.parent.setAlwaysOnTop(false);
                     
                     if (executableName != null && !executableName.equals("")) {
                         
@@ -537,11 +376,11 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                 }
             }
         } else if (e.getActionCommand().equals(ButtonPanelDropper.DISABLE_ALWAYS_ON_TOP)) {
-            parent.setAlwaysOnTop(false);
+            this.parent.setAlwaysOnTop(false);
             ButtonPanelDropper.setAlwaysOnTopEnabled(false);
             
         } else if (e.getActionCommand().equals(ButtonPanelDropper.ENABLE_ALWAYS_ON_TOP)) {
-            parent.setAlwaysOnTop(true);
+            this.parent.setAlwaysOnTop(true);
             ButtonPanelDropper.setAlwaysOnTopEnabled(true);
             
         }
@@ -553,15 +392,15 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         JComponent component;
         Rectangle rect;
         
-        Iterator iter = listHandler.getList().iterator();
+        Iterator iter = this.listHandler.getList().iterator();
         
         while (iter.hasNext()) {
             component = (JComponent) iter.next();
             rect = component.getBounds();
             if (rect.getY() != nextY) {
-                component.setBounds(2, nextY, getWidth() - 4, itemHeight);
+                component.setBounds(2, nextY, this.getWidth() - 4, this.itemHeight);
             }
-            nextY += itemHeight;
+            nextY += this.itemHeight;
         }
         
     }

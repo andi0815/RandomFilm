@@ -8,16 +8,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
+import sun.awt.shell.ShellFolder;
 import amo.randomFilm.RandomFilm;
 import amo.randomFilm.datasource.Movie;
 
 public class MoviePanel extends JPanel implements MouseListener {
+    
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(MoviePanel.class);
     
     private static final String LABEL_DELETE = "löschen";
     
@@ -32,8 +39,6 @@ public class MoviePanel extends JPanel implements MouseListener {
     // private static final String IMAGE_FILMSTARTS = "images\\Filmstarts.png";
     
     private final File file;
-    private String extension = "";
-    private String execType = "";
     
     private static int imageHeight;
     private static int imageWidth;
@@ -45,14 +50,14 @@ public class MoviePanel extends JPanel implements MouseListener {
     private Movie selectedMovie = null;
     private Image resizedImage = null;
     
-    public MoviePanel(File f, List<? extends Movie> movieAlternatives, String extension, int width, int height,
+    public MoviePanel(File f, List<? extends Movie> movieAlternatives, int width, int height,
             ActionListener myActionListener) {
         super();
         
         this.movieAlternatives = movieAlternatives;
         selectedMovie = movieAlternatives != null && movieAlternatives.size() > 0 ? movieAlternatives.get(0) : null;
         
-        this.extension = extension;
+        // this.extension = extension;
         
         componentWidth = width - 2;
         imageHeight = height - 4;
@@ -104,27 +109,9 @@ public class MoviePanel extends JPanel implements MouseListener {
         //
         // g.setColor(Color.BLACK);
         // }
-        //
-        // // small filepath
-        // g.drawString(file.getAbsolutePath(), imageWidth + 24, imageHeight - 2);
-        //
-        // // Big Film Name
-        // g.setFont(new Font("Sans-Serif", Font.BOLD, 18));
-        // g.drawString(this.selectedMovie.getMovieTitle(), imageWidth + 4, 20);
-        //
-        // // draw icon
-        // // if (hasIcon)
-        // // g.drawImage(resizedImage, 10, 10, imageWidth, imageHeight, 0, 0, imageWidth,
-        // imageHeight,
-        // // null);
-        // g.drawImage(resizedImage, 10, 10, null);
-        // // g.drawImage( myIcon, 0, 1, imageWidth, imageHeight, 0, 1, imageWidth,
-        // // imageHeight, myIcon.get);
         
         // draw bottom border line
         g.drawLine(0, getHeight() - 1, componentWidth - 1, getHeight() - 1);
-        
-        // paintComponents(g);
         
     }
     
@@ -140,7 +127,17 @@ public class MoviePanel extends JPanel implements MouseListener {
         return selectedMovie.getMovieImage();
     }
     
+    /**
+     * @return Path to application that is linked with this kind of file. Should be a Movie-Player.
+     */
     public String getExecutableName() {
+        String execType = null;
+        try {
+            ShellFolder shellFolder = ShellFolder.getShellFolder(file);
+            execType = shellFolder.getExecutableType();
+        } catch (FileNotFoundException e) {
+            logger.error("Could not find file: " + file);
+        }
         return execType;
     }
     

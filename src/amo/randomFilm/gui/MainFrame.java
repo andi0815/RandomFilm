@@ -12,22 +12,21 @@ import javax.swing.JScrollPane;
 import amo.randomFilm.RandomFilm;
 import amo.randomFilm.gui.panels.ButtonPanelDropper;
 import amo.randomFilm.gui.panels.DropPanel;
-import amo.randomFilm.gui.util.FileListHandler;
 
 public class MainFrame extends JFrame implements ComponentListener {
     
     /**
      * default Serial version id
      */
-    private static final long  serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
-    public static final String title            = "Random Film";
-    public static final String iconPath         = "images/logo.jpg";
+    public static final String title = "Random Film";
+    public static final String iconPath = "images/logo.jpg";
     
-    protected DropPanel        dropPane;
+    protected DropPanel dropPane;
     private ButtonPanelDropper btnPanelDropper;
-    private JScrollPane        scrollPane;
-    private int                width, height;
+    private JScrollPane scrollPane;
+    private int width, height;
     
     public MainFrame() {
         super();
@@ -80,6 +79,7 @@ public class MainFrame extends JFrame implements ComponentListener {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(startX, startY, widthX, heightOfPanel);
         scrollPane.setVisible(true);
+        scrollPane.setName("ScrollPaneForDropPanel");
         
         startY += heightOfPanel + dY;
         heightOfPanel = heightOfButtonPanels;
@@ -141,9 +141,9 @@ public class MainFrame extends JFrame implements ComponentListener {
         
     }
     
-    public FileListHandler getFileListHandler() {
-        return dropPane.getFileListHandler();
-    }
+    // public FileListHandler getFileListHandler() {
+    // return dropPane.getFileListHandler();
+    // }
     
     public void componentHidden(ComponentEvent arg0) {
     }

@@ -95,6 +95,7 @@ public class TmdbFacade implements MovieDataProvider {
      * @throws MovieDataProviderException
      *             in case something unexpected happened
      */
+    @Override
     public List<TmdbMovie> searchMovie(String title) throws MovieDataProviderException {
         String urlEncodedTitle = urlEncodeParameter(title);
         
@@ -246,7 +247,12 @@ public class TmdbFacade implements MovieDataProvider {
         
         logger.log(Level.INFO, "Received Message: " + msg);
         
-        return msg.toString();
+        String response = msg.toString();
+        logger.debug("Response is: '" + response + "'");
+        if (!response.trim().matches("\\[.*\\]")) { // test if result is json
+            throw new MovieDataProviderException("Result is not JSON as expected: " + response);
+        }
+        
+        return response;
     }
-    
 }

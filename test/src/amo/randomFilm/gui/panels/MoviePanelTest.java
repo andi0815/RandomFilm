@@ -16,7 +16,7 @@ public class MoviePanelTest extends AbstractTestBase {
     
     @Test
     public void testIt() {
-        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), getDummyMovieList(), ".mp4", 500, 60, null);
+        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), getDummyMovieList(), 500, 60, null);
         // moviePanel.setPreferredSize(new Dimension(500, 50));
         // moviePanel.invalidate();
         showComponent(moviePanel, 10000);

@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="libs/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="libs/gson-1.7.1.jar" sourcepath="libs/gson-1.7.1-sources.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.9.jar"/>
+	<classpathentry kind="lib" path="libs/uispec4j-2.4-jdk16.jar" sourcepath="libs/uispec4j-2.4-sources.jar"/>
+	<classpathentry kind="lib" path="libs/uispec4j-2.4-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

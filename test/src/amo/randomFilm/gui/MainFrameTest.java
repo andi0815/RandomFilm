@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -9,9 +9,8 @@ import java.util.List;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.gui.MainFrame;
 
-public class DropPanelTest extends AbstractTestBase {
+public class MainFrameTest extends AbstractTestBase {
     
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     
@@ -50,6 +49,7 @@ public class DropPanelTest extends AbstractTestBase {
         mainFrame.doLayout();
         mainFrame.pack();
         
+        // mainFrame.dropPane.addItems(filesList);
         Thread.sleep(60000);
         
     }

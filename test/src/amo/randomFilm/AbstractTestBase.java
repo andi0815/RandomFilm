@@ -28,6 +28,7 @@ import amo.randomFilm.datasource.tmdb.DummyMovie;
  */
 public abstract class AbstractTestBase {
     
+    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private final static DummyMovie movie1 = new DummyMovie();
     private final static DummyMovie movie2 = new DummyMovie();
     private final static DummyMovie movie3 = new DummyMovie();
