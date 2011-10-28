@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,6 +21,8 @@ import org.apache.log4j.Logger;
 import sun.awt.shell.ShellFolder;
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.MovieDataProvider;
+import amo.randomFilm.datasource.exception.MovieDataProviderException;
+import amo.randomFilm.gui.panels.SimpleMovie;
 
 /**
  * Class that contains iformation about a certain movie file. The information to display is provided
@@ -44,16 +47,21 @@ public class MoviePanel extends JPanel implements MouseListener {
     
     private boolean isSelected = false;
     
-    private final List<? extends Movie> movieAlternatives;
+    private List<? extends Movie> movieAlternatives;
+    
     private Movie selectedMovie = null;
     
-    public MoviePanel(File f, List<? extends Movie> movieAlternatives, int width, int height,
+    private MovieInfoPanel movieInfoPanel;
+    
+    private PosterPanel poster;
+    
+    public MoviePanel(File f, String title, MovieDataProvider movieDataProvider, int width, int height,
             ActionListener myActionListener) {
         super();
         
-        this.movieAlternatives = movieAlternatives;
-        this.selectedMovie = movieAlternatives != null && movieAlternatives.size() > 0 ? movieAlternatives.get(0)
-                : null;
+        this.requestMovieInfo(title, movieDataProvider);
+        this.selectedMovie = this.movieAlternatives != null && this.movieAlternatives.size() > 0 ? this.movieAlternatives
+                .get(0) : new SimpleMovie(title);
         this.file = f;
         
         this.addMouseListener(this);
@@ -66,13 +74,11 @@ public class MoviePanel extends JPanel implements MouseListener {
         // btnFilmstarts.setBounds(componentWidth - 60, ((imageHeight - 26) / 2), 26, 26);
         // add(btnFilmstarts);
         
-        // film image
-        PosterPanel poster = new PosterPanel(this.selectedMovie.getMovieImage());
-        this.add(poster, BorderLayout.LINE_START);
+        this.poster = new PosterPanel(this.selectedMovie != null ? this.selectedMovie.getMovieImage() : null);
+        this.add(this.poster, BorderLayout.LINE_START);
         
-        // film info
-        MovieInfoPanel movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file.getAbsolutePath());
-        this.add(movieInfoPanel, BorderLayout.CENTER);
+        this.movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file.getAbsolutePath());
+        this.add(this.movieInfoPanel, BorderLayout.CENTER);
         
         // delete button
         JButton btnDelete = new JButton(new ImageIcon(IMAGE_DELETE));
@@ -86,6 +92,40 @@ public class MoviePanel extends JPanel implements MouseListener {
         this.setBackground(BG_COLOR);
         this.setVisible(true);
         
+    }
+    
+    /**
+     * Starts a new Thread that requests movie information in the background.
+     * 
+     * @param title
+     *            the title to look for
+     * @param movieDataProvider
+     *            the provider implementation to use
+     */
+    private void requestMovieInfo(final String title, final MovieDataProvider movieDataProvider) {
+        Thread requestThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    MoviePanel.this.movieAlternatives = movieDataProvider.searchMovie(title);
+//                moviesFound = new ArrayList<Movie>();
+//                moviesFound.add(new SimpleMovie("TEst"));
+                    
+                } catch (MovieDataProviderException e) {
+                    logger.warn("Could not find Movie with title: " + title, e);
+                    List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
+                    movieList.add(new SimpleMovie(title));
+                    MoviePanel.this.movieAlternatives = movieList;
+                }
+                
+                MoviePanel.this.selectedMovie = MoviePanel.this.movieAlternatives != null
+                        && MoviePanel.this.movieAlternatives.size() > 0 ? MoviePanel.this.movieAlternatives.get(0)
+                        : null;
+                MoviePanel.this.movieInfoPanel.update(MoviePanel.this.selectedMovie);
+                MoviePanel.this.poster.update(MoviePanel.this.selectedMovie);
+            }
+        };
+        requestThread.start();
     }
     
     @Override

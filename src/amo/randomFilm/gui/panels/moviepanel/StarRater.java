@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -21,6 +21,8 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JPanel;
 
+import amo.randomFilm.datasource.Movie;
+
 /**
  * The star rater panel (see:
  * http://blog.noblemaster.com/2010/08/31/star-rating-panel-for-java-swing/).
@@ -28,7 +30,7 @@ import javax.swing.JPanel;
  * @author noblemaster
  * @since August 30, 2010
  */
-public class StarRater extends JPanel {
+public class StarRater extends JPanel implements Updateable {
     
     /** The listener. */
     public static interface StarListener {
@@ -105,46 +107,50 @@ public class StarRater extends JPanel {
         this.done = false;
         
         // set look
-        setOpaque(false);
-        setLayout(null);
+        this.setOpaque(false);
+        this.setLayout(null);
         
         // listen to selections
-        addMouseMotionListener(new MouseMotionAdapter() {
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
             public void mouseMoved(MouseEvent event) {
-                if (isEnabled()) {
-                    if (!done) {
-                        rollover = 1 + (event.getX() / STAR_BACKGROUND_IMAGE.getWidth(null));
-                        repaint();
+                if (StarRater.this.isEnabled()) {
+                    if (!StarRater.this.done) {
+                        StarRater.this.rollover = 1 + (event.getX() / STAR_BACKGROUND_IMAGE.getWidth(null));
+                        StarRater.this.repaint();
                     }
                 }
             }
         });
-        addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseExited(MouseEvent event) {
-                if (isEnabled()) {
-                    rollover = 0;
-                    done = false;
-                    repaint();
+                if (StarRater.this.isEnabled()) {
+                    StarRater.this.rollover = 0;
+                    StarRater.this.done = false;
+                    StarRater.this.repaint();
                 }
             }
             
+            @Override
             public void mousePressed(MouseEvent event) {
-                if (isEnabled()) {
-                    rollover = 0;
-                    done = true;
+                if (StarRater.this.isEnabled()) {
+                    StarRater.this.rollover = 0;
+                    StarRater.this.done = true;
                     StarRater.this.selection = 1 + (event.getX() / STAR_BACKGROUND_IMAGE.getWidth(null));
-                    for (int i = 0; i < listeners.size(); i++) {
-                        listeners.get(i).handleSelection(StarRater.this.selection);
+                    for (int i = 0; i < StarRater.this.listeners.size(); i++) {
+                        StarRater.this.listeners.get(i).handleSelection(StarRater.this.selection);
                     }
-                    repaint();
+                    StarRater.this.repaint();
                 }
             }
             
+            @Override
             public void mouseReleased(MouseEvent event) {
-                if (isEnabled()) {
-                    if (!done) {
-                        rollover = 1 + (event.getX() / STAR_BACKGROUND_IMAGE.getWidth(null));
-                        repaint();
+                if (StarRater.this.isEnabled()) {
+                    if (!StarRater.this.done) {
+                        StarRater.this.rollover = 1 + (event.getX() / STAR_BACKGROUND_IMAGE.getWidth(null));
+                        StarRater.this.repaint();
                     }
                 }
             }
@@ -157,13 +163,14 @@ public class StarRater extends JPanel {
      * @param enabled
      *            True for enabled.
      */
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         
         // do stuff
         if (!enabled) {
-            rollover = 0;
-            repaint();
+            this.rollover = 0;
+            this.repaint();
         }
     }
     
@@ -173,7 +180,7 @@ public class StarRater extends JPanel {
      * @return The rating [0, 1]. 0 = no rating.
      */
     public float getRating() {
-        return rating;
+        return this.rating;
     }
     
     /**
@@ -186,7 +193,7 @@ public class StarRater extends JPanel {
         if (rating > 1)
             rating = 1;
         this.rating = rating;
-        repaint();
+        this.repaint();
     }
     
     /**
@@ -195,7 +202,7 @@ public class StarRater extends JPanel {
      * @return The selection [0, n]. 0 = no selection.
      */
     public int getSelection() {
-        return selection;
+        return this.selection;
     }
     
     /**
@@ -206,7 +213,7 @@ public class StarRater extends JPanel {
      */
     public void setSelection(int selection) {
         this.selection = selection;
-        repaint();
+        this.repaint();
     }
     
     /**
@@ -216,7 +223,7 @@ public class StarRater extends JPanel {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(stars * STAR_BACKGROUND_IMAGE.getWidth(null), STAR_BACKGROUND_IMAGE.getHeight(null));
+        return new Dimension(this.stars * STAR_BACKGROUND_IMAGE.getWidth(null), STAR_BACKGROUND_IMAGE.getHeight(null));
     }
     
     /**
@@ -233,16 +240,16 @@ public class StarRater extends JPanel {
         int x = 0;
         float relativeRating = this.rating * this.stars;
         
-        for (int i = 0; i < stars; i++) {
+        for (int i = 0; i < this.stars; i++) {
             g.drawImage(STAR_BACKGROUND_IMAGE, x, 0, null);
             if (relativeRating > i) {
                 int dw = (relativeRating >= (i + 1)) ? w : Math.round((relativeRating - i) * w);
                 g.drawImage(STAR_FOREGROUND_IMAGE, x, 0, x + dw, h, 0, 0, dw, h, null);
             }
-            if (selection > i) {
+            if (this.selection > i) {
                 g.drawImage(STAR_SELECTION_IMAGE, x, 0, null);
             }
-            if (rollover > i) {
+            if (this.rollover > i) {
                 g.drawImage(STAR_ROLLOVER_IMAGE, x, 0, null);
             }
             x += w;
@@ -256,7 +263,7 @@ public class StarRater extends JPanel {
      *            The listener to add.
      */
     public void addStarListener(StarListener listener) {
-        listeners.add(listener);
+        this.listeners.add(listener);
     }
     
     /**
@@ -266,7 +273,7 @@ public class StarRater extends JPanel {
      *            The listener to add.
      */
     public void removeStarListener(StarListener listener) {
-        listeners.remove(listener);
+        this.listeners.remove(listener);
     }
     
     /**
@@ -568,4 +575,14 @@ public class StarRater extends JPanel {
             (byte) 0x0e, (byte) 0xf5, (byte) 0x1f, (byte) 0x51, (byte) 0x7f, (byte) 0x46, (byte) 0x1f, (byte) 0x39,
             (byte) 0xdb, (byte) 0x50, (byte) 0x9a, (byte) 0xea, (byte) 0xb3, (byte) 0xb3, (byte) 0xf6, (byte) 0x0b,
             (byte) 0xee, (byte) 0x36, (byte) 0x1e, (byte) 0xfc, (byte) 0x21, (byte) 0x04, (byte) 0x00, (byte) 0x00, });
+    
+    @Override
+    public void update(Movie movie) {
+        if (movie != null) {
+            this.setRating((float) movie.getMovieRating());
+        } else {
+            this.setRating(0);
+        }
+        
+    }
 }

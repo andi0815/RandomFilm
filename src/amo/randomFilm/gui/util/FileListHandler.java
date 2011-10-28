@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.gui.panels.MoviePanel;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanel;
 
 public class FileListHandler implements Comparator<MoviePanel> {
     
@@ -39,6 +39,15 @@ public class FileListHandler implements Comparator<MoviePanel> {
     
     public boolean contains(MoviePanel item) {
         return this.list.contains(item);
+    }
+    
+    public boolean contains(File file) {
+        for (MoviePanel moviePanel : this.list) {
+            if (moviePanel.getFile().equals(file)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public List<MoviePanel> getList() {

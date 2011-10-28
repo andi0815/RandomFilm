@@ -1,8 +1,9 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
+import amo.randomFilm.gui.panels.moviepanel.PathPanel;
 
 public class PathPanelTest extends AbstractTestBase {
     

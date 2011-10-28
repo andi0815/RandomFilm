@@ -39,11 +39,10 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.MovieDataProvider;
-import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 import amo.randomFilm.gui.GuiLabels;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanel;
 import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.gui.util.FileListHandler;
 import amo.randomFilm.model.FilenameFilter;
@@ -196,24 +195,15 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     void addItems(List<File> fileList) {
         List<MovieFile> movieFiles = FilenameFilter.getMovieNames(fileList);
         for (MovieFile movieFile : movieFiles) {
-            List<? extends Movie> moviesFound = null;
-            try {
-                moviesFound = this.movieDataProvider.searchMovie(movieFile.getTitle());
-//            moviesFound = new ArrayList<Movie>();
-//            moviesFound.add(new SimpleMovie("TEst"));
+            if (!this.listHandler.contains(movieFile.getFile())) {
+                MoviePanel item = new MoviePanel(movieFile.getFile(), movieFile.getTitle(), this.movieDataProvider,
+                        this.getWidth(), this.ITEM_HEIGHT, this);
+                item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4,
+                        this.ITEM_HEIGHT);
                 
-            } catch (MovieDataProviderException e) {
-                logger.warn("Could not find Movie with title: " + movieFile.getTitle(), e);
-                List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
-                movieList.add(new SimpleMovie(movieFile.getTitle()));
-                moviesFound = movieList;
+                if (this.listHandler.insertItem(item))
+                    this.add(item);
             }
-            System.out.println("======== ADDITEMS ======");
-            MoviePanel item = new MoviePanel(movieFile.getFile(), moviesFound, this.getWidth(), this.ITEM_HEIGHT, this);
-            item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4, this.ITEM_HEIGHT);
-            
-            if (this.listHandler.insertItem(item))
-                this.add(item);
         }
     }
     

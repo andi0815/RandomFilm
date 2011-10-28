@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,13 +9,15 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.datasource.Movie;
+
 /**
  * Simple Panel that draws an image as big as possible, but preserves its aspect ratio.
  * 
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 15.10.2011
  */
-public class PosterPanel extends JPanel {
+public class PosterPanel extends JPanel implements Updateable {
     
     private static final long serialVersionUID = 1L;
     
@@ -40,9 +42,9 @@ public class PosterPanel extends JPanel {
     private int imageWidth;
     
     public PosterPanel(Image image) {
-        setPreferredSize(INITIAL_SIZE);
+        this.setPreferredSize(INITIAL_SIZE);
         // setMinimumSize(new Dimension(50, 50));
-        setImage(image);
+        this.setImage(image);
     }
     
     /**
@@ -54,8 +56,8 @@ public class PosterPanel extends JPanel {
     public void setImage(Image image) {
         if (image != null) {
             this.image = image;
-            imageWidth = image.getWidth(null);
-            imageHeight = image.getHeight(null);
+            this.imageWidth = image.getWidth(null);
+            this.imageHeight = image.getHeight(null);
         } else {
             this.image = NO_IMAGE_AVAILABLE;
             System.out.println(NO_IMAGE_AVAILABLE);
@@ -68,23 +70,34 @@ public class PosterPanel extends JPanel {
         super.paint(g);
         
         // calculate current aspect ratio
-        double dx = (double) getWidth() / imageWidth;
-        double dy = (double) getHeight() / imageHeight;
+        double dx = (double) this.getWidth() / this.imageWidth;
+        double dy = (double) this.getHeight() / this.imageHeight;
         int currentWidth, currentHeight;
         
         // determine new size, but keep aspect ratio
         if (dx < dy) {
             logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by X");
-            currentWidth = getWidth();
-            currentHeight = (int) (imageHeight * dx);
+            currentWidth = this.getWidth();
+            currentHeight = (int) (this.imageHeight * dx);
         } else {
             logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
-            currentWidth = (int) (imageWidth * dy);
-            currentHeight = getHeight();
+            currentWidth = (int) (this.imageWidth * dy);
+            currentHeight = this.getHeight();
         }
         
         // draw
-        g.drawImage(image, 0, 0, currentWidth, currentHeight, 0, 0, image.getWidth(null), image.getHeight(null), null);
+        g.drawImage(this.image, 0, 0, currentWidth, currentHeight, 0, 0, this.image.getWidth(null),
+                this.image.getHeight(null), null);
         
+    }
+    
+    @Override
+    public void update(Movie movie) {
+        if (movie != null) {
+            this.setImage(movie.getMovieImage());
+        } else {
+            this.setImage(null);
+        }
+        this.repaint();
     }
 }

@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Image;
 import java.awt.image.ImageObserver;
@@ -7,6 +7,7 @@ import java.io.File;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
+import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -16,10 +17,11 @@ public class MoviePanelTest extends AbstractTestBase {
     
     @Test
     public void testIt() {
-        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), getDummyMovieList(), 500, 60, null);
+        MoviePanel moviePanel = new MoviePanel(new File("testfile.avi"), "Matrix", TmdbFacade.getInstance(), 500, 60,
+                null);
         // moviePanel.setPreferredSize(new Dimension(500, 50));
         // moviePanel.invalidate();
-        showComponent(moviePanel, 10000);
+        showComponent(moviePanel, 20000);
     }
     
     // @Test

@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Font;
 
@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 public class PathPanel extends JLabel {
     
     public PathPanel(String path) {
-        setFont(new Font("Sans-Serif", Font.ITALIC, 12));
+        this.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
         // setText("PATH: " + path);
-        setText(path);
+        this.setText(path);
     }
     
 }
