@@ -199,6 +199,8 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             List<? extends Movie> moviesFound = null;
             try {
                 moviesFound = this.movieDataProvider.searchMovie(movieFile.getTitle());
+//            moviesFound = new ArrayList<Movie>();
+//            moviesFound.add(new SimpleMovie("TEst"));
                 
             } catch (MovieDataProviderException e) {
                 logger.warn("Could not find Movie with title: " + movieFile.getTitle(), e);
@@ -206,7 +208,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
                 movieList.add(new SimpleMovie(movieFile.getTitle()));
                 moviesFound = movieList;
             }
-            
+            System.out.println("======== ADDITEMS ======");
             MoviePanel item = new MoviePanel(movieFile.getFile(), moviesFound, this.getWidth(), this.ITEM_HEIGHT, this);
             item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4, this.ITEM_HEIGHT);
             

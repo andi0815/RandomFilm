@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,8 @@ import amo.randomFilm.datasource.tmdb.DummyMovie;
 public abstract class AbstractTestBase {
     
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    public static final File MOVIE_TEST_FOLDER = new File("test" + FILE_SEPARATOR + "src" + FILE_SEPARATOR
+            + "testMovieFolder");
     private final static DummyMovie movie1 = new DummyMovie();
     private final static DummyMovie movie2 = new DummyMovie();
     private final static DummyMovie movie3 = new DummyMovie();
@@ -151,4 +154,5 @@ public abstract class AbstractTestBase {
         Image image = new ImageIcon(pathToImage, "").getImage();
         return image;
     }
+    
 }

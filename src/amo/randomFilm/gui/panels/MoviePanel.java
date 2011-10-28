@@ -169,4 +169,19 @@ public class MoviePanel extends JPanel implements MouseListener {
         this.repaint();
     }
     
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof MoviePanel) {
+            File otherFile = ((MoviePanel) other).getFile();
+            return otherFile.equals(this.file);
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.file.hashCode();
+    }
+    
 }
