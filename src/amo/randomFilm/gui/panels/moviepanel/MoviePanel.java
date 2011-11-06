@@ -74,7 +74,7 @@ public class MoviePanel extends JPanel implements MouseListener {
         // btnFilmstarts.setBounds(componentWidth - 60, ((imageHeight - 26) / 2), 26, 26);
         // add(btnFilmstarts);
         
-        this.poster = new PosterPanel(this.selectedMovie != null ? this.selectedMovie.getMovieImage() : null);
+        this.poster = new PosterPanel(null);
         this.add(this.poster, BorderLayout.LINE_START);
         
         this.movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file.getAbsolutePath());

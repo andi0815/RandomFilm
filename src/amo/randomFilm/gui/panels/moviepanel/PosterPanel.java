@@ -3,8 +3,10 @@ package amo.randomFilm.gui.panels.moviepanel;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFrame;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
@@ -19,6 +21,8 @@ import amo.randomFilm.datasource.Movie;
  */
 public class PosterPanel extends JPanel implements Updateable {
     
+    private static final String PATH_IMAGES_LOADING = "images/LOADING.jpg";
+    
     private static final long serialVersionUID = 1L;
     
     /** Logger Object for this Class */
@@ -27,12 +31,14 @@ public class PosterPanel extends JPanel implements Updateable {
     /** default initial size of this panel */
     private static final Dimension INITIAL_SIZE = new Dimension(75, 80);
     
-    // FIXME: set default image
-    private static Image NO_IMAGE_AVAILABLE = null;
+    private static Image LOADING_IMAGE = null;
     static {
-        // URL resource = PosterPanel.class.getClassLoader().getResource("images/logo.jpg");
-        // NO_IMAGE_AVAILABLE = new ImageIcon(resource, "").getImage();
-        NO_IMAGE_AVAILABLE = new JFrame().getToolkit().getImage("images/logo-big.jpg");
+        try {
+            File imagefile = new File(PATH_IMAGES_LOADING);
+            LOADING_IMAGE = ImageIO.read(imagefile);
+        } catch (IOException e) {
+            logger.warn("could not load image: " + PATH_IMAGES_LOADING);
+        }
     }
     
     private Image image;
@@ -56,13 +62,19 @@ public class PosterPanel extends JPanel implements Updateable {
     public void setImage(Image image) {
         if (image != null) {
             this.image = image;
-            this.imageWidth = image.getWidth(null);
-            this.imageHeight = image.getHeight(null);
         } else {
-            this.image = NO_IMAGE_AVAILABLE;
-            System.out.println(NO_IMAGE_AVAILABLE);
+            this.image = LOADING_IMAGE;
+            logger.debug("LOADING-IMAGE DIMENSION: " + LOADING_IMAGE.getWidth(null) + ","
+                    + LOADING_IMAGE.getHeight(null));
         }
-        
+        logger.debug("setting new image: " + this.image);
+        if (image != null) {
+            this.imageWidth = this.image.getWidth(null);
+            this.imageHeight = this.image.getHeight(null);
+        } else {
+            this.imageWidth = 1;
+            this.imageHeight = 1;
+        }
     }
     
     @Override

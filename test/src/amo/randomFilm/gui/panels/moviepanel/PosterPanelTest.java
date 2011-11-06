@@ -13,7 +13,7 @@ import amo.randomFilm.datasource.Movie;
  */
 public class PosterPanelTest extends AbstractTestBase {
     
-    @Test
+//    @Test
     public void testIt() throws Exception {
         
         List<? extends Movie> dummyMovieList = getDummyMovieList();
@@ -29,7 +29,7 @@ public class PosterPanelTest extends AbstractTestBase {
     @Test
     public void testDefault() throws Exception {
         PosterPanel posterPanel = new PosterPanel(null);
-        showComponent(posterPanel, 2000);
+        showComponent(posterPanel, 20000);
         
     }
 }

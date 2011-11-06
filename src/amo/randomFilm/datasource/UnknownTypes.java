@@ -4,6 +4,12 @@
 package amo.randomFilm.datasource;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -12,6 +18,9 @@ import java.awt.Image;
  * 
  */
 public class UnknownTypes {
+    
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(UnknownTypes.class);
     
     private UnknownTypes() {
         // hidden constructor
@@ -23,6 +32,14 @@ public class UnknownTypes {
     
     public static final String STRING = "UNKNOWN";
     
-    public static final Image IMAGE = null;
-    
+    private static final String PATH_IMAGES_NO_IMAGE_AVAIL = "images/NO_IMAGE_AVAIL.png";
+    public static Image IMAGE = null;
+    static {
+        try {
+            File imagefile = new File(PATH_IMAGES_NO_IMAGE_AVAIL);
+            IMAGE = ImageIO.read(imagefile);
+        } catch (IOException e) {
+            logger.warn("could not load image: " + PATH_IMAGES_NO_IMAGE_AVAIL);
+        }
+    }
 }
