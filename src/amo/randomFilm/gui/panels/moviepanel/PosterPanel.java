@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -24,6 +25,8 @@ public class PosterPanel extends JPanel implements Updateable {
     private static final String PATH_IMAGES_LOADING = "images/LOADING.jpg";
     
     private static final long serialVersionUID = 1L;
+    
+    private static final Color BG_COLOR = Color.WHITE;
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(PosterPanel.class);
@@ -51,6 +54,7 @@ public class PosterPanel extends JPanel implements Updateable {
         this.setPreferredSize(INITIAL_SIZE);
         // setMinimumSize(new Dimension(50, 50));
         this.setImage(image);
+        this.setBackground(BG_COLOR);
     }
     
     /**
@@ -97,8 +101,14 @@ public class PosterPanel extends JPanel implements Updateable {
             currentHeight = this.getHeight();
         }
         
+        // determine upper corner
+        int y = 0;
+        if (this.getHeight() > currentHeight) {
+            y = (this.getHeight() - currentHeight) / 2;
+        }
+        
         // draw
-        g.drawImage(this.image, 0, 0, currentWidth, currentHeight, 0, 0, this.image.getWidth(null),
+        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null),
                 this.image.getHeight(null), null);
         
     }

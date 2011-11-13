@@ -77,7 +77,7 @@ public class MoviePanel extends JPanel implements MouseListener {
         this.poster = new PosterPanel(null);
         this.add(this.poster, BorderLayout.LINE_START);
         
-        this.movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file.getAbsolutePath());
+        this.movieInfoPanel = new MovieInfoPanel(this.selectedMovie, this.file);
         this.add(this.movieInfoPanel, BorderLayout.CENTER);
         
         // delete button
@@ -92,6 +92,13 @@ public class MoviePanel extends JPanel implements MouseListener {
         this.setBackground(BG_COLOR);
         this.setVisible(true);
         
+    }
+    
+    public MoviePanel(Movie movie, int width, int height, ActionListener myActionListener) {
+        this(null, movie.getMovieTitle(), null, width, height, myActionListener);
+        this.movieInfoPanel.update(movie);
+        this.poster.update(movie);
+        this.selectedMovie = movie;
     }
     
     /**
@@ -154,6 +161,22 @@ public class MoviePanel extends JPanel implements MouseListener {
     
     public Image getIconImage() {
         return this.selectedMovie.getMovieImage();
+    }
+    
+    public List<? extends Movie> getMovieAlternatives() {
+        return this.movieAlternatives;
+    }
+    
+    public Movie getSelectedMovie() {
+        return this.selectedMovie;
+    }
+    
+    public void setSelectedMovie(Movie movie) {
+        if (this.movieAlternatives.contains(movie)) {
+            this.selectedMovie = movie;
+        } else {
+            throw new IllegalArgumentException("Movie " + movie + " does not exist as an alternative.");
+        }
     }
     
     /**

@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
+import amo.randomFilm.datasource.tmdb.TmdbFacade;
 
 public class DropPanelTest extends AbstractTestBase {
     
@@ -18,9 +19,9 @@ public class DropPanelTest extends AbstractTestBase {
         
         // do Test
         DropPanel dropPanel = new DropPanel(null);
-        dropPanel.addItems(filesList);
+        dropPanel.addMovieFiles(filesList, TmdbFacade.getInstance());
         int numMoviesFound = dropPanel.getComponentCount();
-        dropPanel.addItems(filesList);
+        dropPanel.addMovieFiles(filesList, TmdbFacade.getInstance());
         Assert.assertEquals(numMoviesFound, dropPanel.getComponentCount());
         
     }

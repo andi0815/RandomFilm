@@ -1,5 +1,7 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.io.File;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -20,9 +22,9 @@ public class MovieInfoPanel extends JPanel implements Updateable {
     private GenrePanel genrePanel;
     private TitlePanel titlePanel;
     
-    public MovieInfoPanel(Movie movie, String path) {
+    public MovieInfoPanel(Movie movie, File filePath) {
         this.movie = movie;
-        this.path = path;
+        this.path = this.path;
         
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         
@@ -47,7 +49,7 @@ public class MovieInfoPanel extends JPanel implements Updateable {
         this.add(this.genrePanel);
         
         // path
-        PathPanel pathPanel = new PathPanel(path);
+        PathPanel pathPanel = new PathPanel(filePath);
         this.add(pathPanel);
         
     }

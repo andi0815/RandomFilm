@@ -20,6 +20,7 @@ import org.junit.BeforeClass;
 
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.tmdb.DummyMovie;
+import amo.randomFilm.model.MovieFile;
 
 /**
  * Base Class for Unit Tests
@@ -32,6 +33,7 @@ public abstract class AbstractTestBase {
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final File MOVIE_TEST_FOLDER = new File("test" + FILE_SEPARATOR + "src" + FILE_SEPARATOR
             + "testMovieFolder");
+    public static final File MOVIE_TEST_FILE = new File(MOVIE_TEST_FOLDER + FILE_SEPARATOR + "Star.Wars.mpg");
     private final static DummyMovie movie1 = new DummyMovie();
     private final static DummyMovie movie2 = new DummyMovie();
     private final static DummyMovie movie3 = new DummyMovie();
@@ -131,6 +133,13 @@ public abstract class AbstractTestBase {
      */
     public static Movie getDummyMovie() {
         return movie1;
+    }
+    
+    /**
+     * @return a dummy MovieFile.
+     */
+    public static MovieFile getDummyMovieFile() {
+        return new MovieFile(MOVIE_TEST_FILE, "Star Wars");
     }
     
     /**

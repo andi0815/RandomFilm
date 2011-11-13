@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class MovieInfoPanelTest extends AbstractTestBase {
         
         List<? extends Movie> dummyMovieList = getDummyMovieList();
         
-        MovieInfoPanel movieInfoPanel = new MovieInfoPanel(dummyMovieList.get(0), "file://path/to/file.ext");
+        MovieInfoPanel movieInfoPanel = new MovieInfoPanel(dummyMovieList.get(0), new File("file://path/to/file.ext"));
         // movieInfoPanel.setPreferredSize(new Dimension(500, 90));
         showComponent(movieInfoPanel, 2000);
         

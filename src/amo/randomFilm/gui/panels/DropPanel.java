@@ -1,12 +1,8 @@
 package amo.randomFilm.gui.panels;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -23,19 +19,13 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
@@ -45,11 +35,9 @@ import amo.randomFilm.gui.GuiLabels;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanel;
 import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.gui.util.FileListHandler;
-import amo.randomFilm.model.FilenameFilter;
-import amo.randomFilm.model.MovieFile;
 
-public class DropPanel extends JPanel implements DropTargetListener, DragSourceListener, DragGestureListener,
-        ActionListener {
+public class DropPanel extends SelectableMoviePanel implements DropTargetListener, DragSourceListener,
+        DragGestureListener {
     
     /**
      * default Serial version id
@@ -59,53 +47,17 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(DropPanel.class);
     
-    /** Color of Font */
-    private static final Color DROPPER_FONT_COLOR = Color.BLACK;
-    
-    /** Label for empty drop panel */
-    private static final String TEXT_EMPTY_DROPPER = "Bewirf mich mit Dateien!";
-    
-    /** font style for empty drop panel */
-    private static final Font EMPTY_DROPPER_FONT = new Font("SansSerif", Font.BOLD, 20);
-    
-    /** Background color */
-    private static final Color BG_COLOR = Color.WHITE;
-    
-    /** height of a MoviePanel */
-    private static final int ITEM_HEIGHT = 110;
-    
-    /** Manages the list of MoviePanels */
-    private FileListHandler listHandler = new FileListHandler();
-    
-    JFrame parent = null;
+    /** the Window displaying this panel */
+    Window parent = null;
     
     // FIXME: add dynamically ...
     MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
-    public DropPanel(JFrame parent) {
+    public DropPanel(Window parent) {
         super();
-        this.setName("DropPanel");
-        this.parent = parent;
-        this.setBackground(BG_COLOR);
-        this.setLayout(null); // do it yourself layout
-        
         // create a new Drop Target and associate it with this component
         new DropTarget(this, this);
-        
-    }
-    
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        
-        if (this.listHandler.isEmpty()) {
-            // text
-            int halfWidth = (int) (this.getWidth() / 2.0);
-            int halfheight = (int) (this.getHeight() / 2.0);
-            g.setColor(DROPPER_FONT_COLOR);
-            g.setFont(EMPTY_DROPPER_FONT);
-            g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
-        }
+        this.parent = parent;
     }
     
     /**
@@ -134,7 +86,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
                 fileList = (java.util.List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
-                this.addItems(fileList);
+                this.addMovieFiles(fileList, this.movieDataProvider);
                 logger.debug("finished adding items!");
                 dropTargetDropEvent.getDropTargetContext().dropComplete(true);
                 
@@ -151,7 +103,7 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
         }
         
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        this.listHandler.sort();
+        this.resortList();
         this.resizePanel();
         this.repaint();
     }
@@ -176,39 +128,6 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     @Override
     public void dragOver(DragSourceDragEvent arg0) {
         
-    }
-    
-    /**
-     * Automatically resizes this panel according to the number of movie items
-     */
-    protected void resizePanel() {
-        this.setPreferredSize(new Dimension(this.getWidth(), (this.getComponentCount() * (this.ITEM_HEIGHT)) + 2));
-        this.revalidate();
-    }
-    
-    /**
-     * Tries to add given files to the list of movies.
-     * 
-     * @param fileList
-     *            the List of files to add
-     */
-    void addItems(List<File> fileList) {
-        List<MovieFile> movieFiles = FilenameFilter.getMovieNames(fileList);
-        for (MovieFile movieFile : movieFiles) {
-            if (!this.listHandler.contains(movieFile.getFile())) {
-                MoviePanel item = new MoviePanel(movieFile.getFile(), movieFile.getTitle(), this.movieDataProvider,
-                        this.getWidth(), this.ITEM_HEIGHT, this);
-                item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4,
-                        this.ITEM_HEIGHT);
-                
-                if (this.listHandler.insertItem(item))
-                    this.add(item);
-            }
-        }
-    }
-    
-    public FileListHandler getFileListHandler() {
-        return this.listHandler;
     }
     
     @Override
@@ -237,26 +156,20 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_DELETE)) {
-            // System.out
-            // .println(((JButton) e.getSource()).getParent().getClass());
             MoviePanel item = (MoviePanel) ((JButton) e.getSource()).getParent();
-            
-            this.remove(item);
-            this.listHandler.remove(item);
-            this.resetComponentBounds();
-            this.resizePanel();
-            this.repaint();
+            this.removeMoviePanel(item);
             
         } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_SELECT_ALL)) {
-            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
+            Iterator<MoviePanel> iter = this.getMovieIterator();
             while (iter.hasNext()) {
                 iter.next().setSelected(true);
             }
             this.repaint();
             
         } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_SELECT_NOTHING)) {
-            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
+            Iterator<MoviePanel> iter = this.getMovieIterator();
             while (iter.hasNext()) {
                 iter.next().setSelected(false);
             }
@@ -267,33 +180,29 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             
             MoviePanel item;
             FileListHandler fileListHandler = new FileListHandler();
-            Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
+            Iterator<MoviePanel> iter = this.getMovieIterator();
             
             while (iter.hasNext()) {
                 item = iter.next();
-                if (!item.isSelected()) {
-                    if (fileListHandler.insertItem(item))
-                        this.add(item);
-                }
+                if (item.isSelected())
+                    iter.remove();
+//                if (!item.isSelected()) {
+//                    if (fileListHandler.insertItem(item))
+//                        this.add(item);
+//                }
             }
             
-            this.listHandler = fileListHandler;
+//            this.listHandler = fileListHandler;
             this.resetComponentBounds();
             this.resizePanel();
             this.repaint();
             
         } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_REMOVE_ALL)) {
-            this.removeAll();
-            this.listHandler.clearList();
-            this.resizePanel();
-            this.repaint();
+            this.removeAllMovies();
             
         } else if (e.getActionCommand().equals(GuiLabels.LABEL_BTN_GO)) {
-            List<MoviePanel> listOfItems = this.listHandler.getList();
-            if (listOfItems.size() > 0) {
-                Random random = new Random(new Date().getTime());
-                
-                MoviePanel listItem = listOfItems.get(random.nextInt(listOfItems.size()));
+            MoviePanel listItem = this.getRandomMovie();
+            if (listItem != null) {
                 
                 String filmName = listItem.getFilmName();
                 String filmPath = listItem.getFile().getPath();
@@ -326,24 +235,6 @@ public class DropPanel extends JPanel implements DropTargetListener, DragSourceL
             this.parent.setAlwaysOnTop(true);
             ButtonPanelDropper.setAlwaysOnTopEnabled(true);
             
-        }
-        
-    }
-    
-    public void resetComponentBounds() {
-        int nextY = 2;
-        JComponent component;
-        Rectangle rect;
-        
-        Iterator<MoviePanel> iter = this.listHandler.getList().iterator();
-        
-        while (iter.hasNext()) {
-            component = iter.next();
-            rect = component.getBounds();
-            if (rect.getY() != nextY) {
-                component.setBounds(2, nextY, this.getWidth() - 4, this.ITEM_HEIGHT);
-            }
-            nextY += this.ITEM_HEIGHT;
         }
         
     }

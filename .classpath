@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libs/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.16.jar" sourcepath="libs/log4j-1.2.16-src.jar"/>
 	<classpathentry kind="lib" path="libs/gson-1.7.1.jar" sourcepath="libs/gson-1.7.1-sources.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.9.jar"/>
 	<classpathentry kind="lib" path="libs/uispec4j-2.4-jdk16.jar" sourcepath="libs/uispec4j-2.4-sources.jar"/>
