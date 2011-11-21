@@ -8,15 +8,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.gui.panels.moviepanel.MoviePanel;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewBasic;
 
-public class FileListHandler implements Comparator<MoviePanel> {
+public class FileListHandler implements Comparator<MoviePanelViewBasic> {
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(FileListHandler.class);
     
     /** list of movies */
-    private List<MoviePanel> list = new ArrayList<MoviePanel>();
+    private List<MoviePanelViewBasic> list = new ArrayList<MoviePanelViewBasic>();
     
     /**
      * Inserts given item in the movie list
@@ -26,23 +26,23 @@ public class FileListHandler implements Comparator<MoviePanel> {
      * @return <code>true</code>, if has been inserted, <code>false</code> if it already is in the
      *         list.
      */
-    public boolean insertItem(MoviePanel item) {
+    public boolean insertItem(MoviePanelViewBasic item) {
         if (!this.contains(item)) {
             this.list.add(item);
             return true;
         } else {
-            logger.debug("File " + item.getFile().getAbsolutePath() + " is already in list!");
+            logger.debug("File " + item.getFile() + " is already in list!");
             return false;
         }
         
     }
     
-    public boolean contains(MoviePanel item) {
+    public boolean contains(MoviePanelViewBasic item) {
         return this.list.contains(item);
     }
     
     public boolean contains(File file) {
-        for (MoviePanel moviePanel : this.list) {
+        for (MoviePanelViewBasic moviePanel : this.list) {
             if (moviePanel.getFile().equals(file)) {
                 return true;
             }
@@ -50,7 +50,7 @@ public class FileListHandler implements Comparator<MoviePanel> {
         return false;
     }
     
-    public List<MoviePanel> getList() {
+    public List<MoviePanelViewBasic> getList() {
         return this.list;
     }
     
@@ -62,7 +62,7 @@ public class FileListHandler implements Comparator<MoviePanel> {
         this.list.clear();
     }
     
-    public void remove(MoviePanel item) {
+    public void remove(MoviePanelViewBasic item) {
         this.list.remove(item);
     }
     
@@ -74,13 +74,13 @@ public class FileListHandler implements Comparator<MoviePanel> {
     }
     
     /**
-     * TODO: currently only sorts by file, implement other options
+     * TODO: currently only sorts by title, implement other options
      */
     @Override
-    public int compare(MoviePanel arg0, MoviePanel arg1) {
-        File file1 = arg0.getFile();
-        File file2 = arg1.getFile();
-        return file1.compareTo(file2);
+    public int compare(MoviePanelViewBasic arg0, MoviePanelViewBasic arg1) {
+        String title1 = arg0.getData().getMovieTitle();
+        String title2 = arg1.getData().getMovieTitle();
+        return title1.compareTo(title2);
     }
     
 }

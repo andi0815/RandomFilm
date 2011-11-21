@@ -1,6 +1,5 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -12,12 +11,13 @@ import javax.swing.JPanel;
 
 import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.gui.GuiConstants;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 11.11.2011
  */
-public class MoviePanelViewNoButtons {
+public class MoviePanelViewBasic {
     
     protected final class MPanel extends JPanel {
         @Override
@@ -39,10 +39,6 @@ public class MoviePanelViewNoButtons {
 //    private static final Logger logger = Logger.getLogger(MoviePanelViewNoButtons.class);
     
     protected static final String LABEL_DELETE = "löschen";
-    
-    protected static final Color BG_COLOR = Color.WHITE;
-    
-    protected static final Color BG_COLOR_SELECTED = new Color(200, 200, 255);
     
     protected static final String IMAGE_DELETE = "images\\Delete.png";
     
@@ -66,7 +62,7 @@ public class MoviePanelViewNoButtons {
     
     protected PathPanel pathPanel;
     
-    public MoviePanelViewNoButtons(File file) {
+    public MoviePanelViewBasic(File file) {
         super();
         
         this.layoutPanel(file);
@@ -115,7 +111,7 @@ public class MoviePanelViewNoButtons {
                                 .addComponent(this.pathPanel)));
         
         this.moviePanel.doLayout();
-        this.moviePanel.setBackground(BG_COLOR);
+        this.moviePanel.setBackground(GuiConstants.BG_COLOR);
         this.moviePanel.setVisible(true);
     }
     
@@ -138,6 +134,10 @@ public class MoviePanelViewNoButtons {
         return this.movie;
     }
     
+    public File getFile() {
+        return this.pathPanel.getFile();
+    }
+    
     public JComponent getComponent() {
         return this.moviePanel;
     }
@@ -157,15 +157,15 @@ public class MoviePanelViewNoButtons {
     void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
         if (isSelected) {
-            this.moviePanel.setBackground(BG_COLOR_SELECTED);
-            this.poster.setBackground(BG_COLOR_SELECTED);
+            this.moviePanel.setBackground(GuiConstants.BG_COLOR_SELECTED);
+            this.poster.setBackground(GuiConstants.BG_COLOR_SELECTED);
         } else {
-            this.moviePanel.setBackground(BG_COLOR);
-            this.poster.setBackground(BG_COLOR);
+            this.moviePanel.setBackground(GuiConstants.BG_COLOR);
+            this.poster.setBackground(GuiConstants.BG_COLOR);
         }
     }
     
-    boolean isSelected() {
+    public boolean isSelected() {
         return this.isSelected;
     }
     

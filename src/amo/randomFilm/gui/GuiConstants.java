@@ -1,17 +1,23 @@
 package amo.randomFilm.gui;
 
+import java.awt.Color;
+
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
  */
-public class GuiLabels {
+public class GuiConstants {
     
     /**
      * Hidden Constructor.
      */
-    private GuiLabels() {
+    private GuiConstants() {
         // unused!
     }
+    
+    public static final Color BG_COLOR = Color.WHITE;
+    
+    public static final Color BG_COLOR_SELECTED = new Color(200, 200, 255);
     
     public static final String LABEL_BTN_DELETE = "löschen";
     

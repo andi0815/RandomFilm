@@ -37,9 +37,9 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
     
     private Movie selectedMovie = null;
     
-    private MoviePanelViewNoButtons moviePanel = null;
+    private MoviePanelViewBasic moviePanel = null;
     
-    public MoviePanelPresenter(File f, String title, MoviePanelViewNoButtons moviePanel,
+    public MoviePanelPresenter(File f, String title, MoviePanelViewBasic moviePanel,
             MovieDataProvider movieDataProvider) {
         super();
         this.file = f;

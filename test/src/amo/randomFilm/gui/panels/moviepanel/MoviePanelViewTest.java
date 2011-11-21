@@ -10,7 +10,7 @@ public class MoviePanelViewTest extends AbstractTestBase {
     @Test
     public void testView() throws Exception {
         
-        MoviePanelViewNoButtons moviePanelView = new MoviePanelViewNoButtons(getDummyMovieFile().getFile());
+        MoviePanelViewBasic moviePanelView = new MoviePanelViewWithButtons(getDummyMovieFile().getFile());
         MoviePanelPresenter moviePanelPresenter = new MoviePanelPresenter(getDummyMovieFile().getFile(),
                 getDummyMovieFile().getTitle(), moviePanelView, TmdbFacade.getInstance());
         

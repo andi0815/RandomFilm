@@ -11,23 +11,31 @@ import javax.swing.JButton;
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.gui.GuiConstants;
+import amo.randomFilm.gui.panels.SimpleMovie;
+import amo.randomFilm.model.MovieFile;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 11.11.2011
  */
-public class MoviePanelView extends MoviePanelViewNoButtons {
+public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
     
     /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(MoviePanelView.class);
+    private static final Logger logger = Logger.getLogger(MoviePanelViewWithButtons.class);
     
     private JButton btnDelete;
     
-    public MoviePanelView(File file) {
+    public MoviePanelViewWithButtons(File file) {
         super(file);
         
 //        this.layoutPanel(file);
         
+    }
+    
+    public MoviePanelViewWithButtons(MovieFile movieFile) {
+        this(movieFile.getFile());
+        this.titlePanel.update(new SimpleMovie(movieFile.getTitle()));
     }
     
     @Override
@@ -50,6 +58,8 @@ public class MoviePanelView extends MoviePanelViewNoButtons {
         this.genrePanel = new GenrePanel(null);
         this.pathPanel = new PathPanel(file);
         this.btnDelete = new JButton(new ImageIcon(IMAGE_DELETE));
+        this.btnDelete.setContentAreaFilled(false);
+        this.btnDelete.setBorderPainted(false);
         this.btnDelete.setActionCommand(LABEL_DELETE);
         
 //      Then, we define the groups and add the components. We establish a root group for each dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created via createSequentialGroup and createParallelGroup methods. Components are added to groups by using the addComponent method.
@@ -74,7 +84,7 @@ public class MoviePanelView extends MoviePanelViewNoButtons {
                 .addComponent(this.btnDelete, Alignment.CENTER));
         
         this.moviePanel.doLayout();
-        this.moviePanel.setBackground(BG_COLOR);
+        this.moviePanel.setBackground(GuiConstants.BG_COLOR);
         this.moviePanel.setVisible(true);
     }
     

@@ -1,12 +1,13 @@
 package amo.randomFilm.gui.panels;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
-import amo.randomFilm.gui.GuiLabels;
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.MainFrame;
 
 public class ButtonPanelDropper extends JComponent {
@@ -34,7 +35,7 @@ public class ButtonPanelDropper extends JComponent {
         
     }
     
-    public void init(MainFrame mainFrame, DropPanel dropper, int width, int height) {
+    public void init(MainFrame mainFrame, int width, int height) {
         this.setLayout(null);
         
         int btnWidth = (int) (width * 0.45);
@@ -43,23 +44,16 @@ public class ButtonPanelDropper extends JComponent {
         int btnXRight = width - (btnWidth + 20);
         int btnY = 6;
         
-        this.btnMarkAll = new JButton(GuiLabels.LABEL_BTN_SELECT_ALL);
-        this.btnMarkNone = new JButton(GuiLabels.LABEL_BTN_SELECT_NOTHING);
-        this.btnDelete = new JButton(GuiLabels.LABEL_BTN_REMOVE_SELECTED);
-        this.btnDeleteAll = new JButton(GuiLabels.LABEL_BTN_REMOVE_ALL);
-        this.btnStart = new JButton(GuiLabels.LABEL_BTN_GO, new ImageIcon(IMAGES_NEXT));
-        btnAlwaysOnTop = new JButton(GuiLabels.LABEL_BTN_DISABLE_ALWAYS_ON_TOP);
+        this.btnMarkAll = new JButton(GuiConstants.LABEL_BTN_SELECT_ALL);
+        this.btnMarkNone = new JButton(GuiConstants.LABEL_BTN_SELECT_NOTHING);
+        this.btnDelete = new JButton(GuiConstants.LABEL_BTN_REMOVE_SELECTED);
+        this.btnDeleteAll = new JButton(GuiConstants.LABEL_BTN_REMOVE_ALL);
+        this.btnStart = new JButton(GuiConstants.LABEL_BTN_GO, new ImageIcon(IMAGES_NEXT));
+        btnAlwaysOnTop = new JButton(GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP);
         // btnStart = new PaintedButton("Los geht's !", new
         // ImageIcon(IMAGES_NEXT));
         
         this.btnStart.setHorizontalTextPosition(JButton.LEFT);
-        
-        this.btnMarkAll.addActionListener(dropper);
-        this.btnMarkNone.addActionListener(dropper);
-        this.btnDelete.addActionListener(dropper);
-        this.btnDeleteAll.addActionListener(dropper);
-        this.btnStart.addActionListener(dropper);
-        btnAlwaysOnTop.addActionListener(dropper);
         
         this.btnMarkAll.setBounds(btnXLeft, btnY, btnWidth, btnHeight);
         btnY += btnHeight + 4;
@@ -124,10 +118,29 @@ public class ButtonPanelDropper extends JComponent {
     
     public static void setAlwaysOnTopEnabled(boolean isEnabled) {
         if (isEnabled)
-            btnAlwaysOnTop.setText(GuiLabels.LABEL_BTN_DISABLE_ALWAYS_ON_TOP);
+            btnAlwaysOnTop.setText(GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP);
         else
-            btnAlwaysOnTop.setText(GuiLabels.LABEL_BTN_ENABLE_ALWAYS_ON_TOP);
+            btnAlwaysOnTop.setText(GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP);
         
+    }
+    
+    public void addActionListener(ActionListener listener) {
+        this.btnMarkAll.addActionListener(listener);
+        this.btnMarkNone.addActionListener(listener);
+        this.btnDelete.addActionListener(listener);
+        this.btnDeleteAll.addActionListener(listener);
+        this.btnStart.addActionListener(listener);
+        btnAlwaysOnTop.addActionListener(listener);
+        
+    }
+    
+    public void removeActionListener(ActionListener listener) {
+        this.btnMarkAll.removeActionListener(listener);
+        this.btnMarkNone.removeActionListener(listener);
+        this.btnDelete.removeActionListener(listener);
+        this.btnDeleteAll.removeActionListener(listener);
+        this.btnStart.removeActionListener(listener);
+        btnAlwaysOnTop.removeActionListener(listener);
     }
     
 }

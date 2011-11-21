@@ -11,10 +11,17 @@ import javax.swing.JLabel;
  */
 public class PathPanel extends JLabel {
     
+    private File filePath;
+    
     public PathPanel(File filePath) {
         this.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
         // setText("PATH: " + path);
         this.setText(filePath.getAbsolutePath());
+        this.filePath = filePath;
+    }
+    
+    public File getFile() {
+        return this.filePath;
     }
     
 //    public void update(File filePath) {
