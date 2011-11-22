@@ -1,7 +1,7 @@
 /**
  * 
  */
-package amo.randomFilm.datasource;
+package amo.randomFilm.model;
 
 import java.awt.Image;
 import java.util.List;

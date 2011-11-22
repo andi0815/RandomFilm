@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.model.Movie;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)

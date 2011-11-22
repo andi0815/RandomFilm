@@ -28,12 +28,12 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.MovieDataProvider;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelPresenter;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewWithButtons;
 import amo.randomFilm.model.FilenameFilter;
+import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.MovieFile;
 
 public class SelectableMoviePanelPresenter implements DropTargetListener, DragSourceListener, DragGestureListener {

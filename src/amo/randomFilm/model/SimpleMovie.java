@@ -1,10 +1,8 @@
-package amo.randomFilm.gui.panels;
+package amo.randomFilm.model;
 
 import java.awt.Image;
 import java.util.List;
 
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.UnknownTypes;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)

@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.model.UnknownTypes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

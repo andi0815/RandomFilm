@@ -1,6 +1,7 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Graphics;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.io.File;
 
@@ -9,9 +10,9 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.UnknownTypes;
 import amo.randomFilm.gui.GuiConstants;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -169,4 +170,15 @@ public class MoviePanelViewBasic {
         return this.isSelected;
     }
     
+    /* ========================
+     *  ACTION HANDLING: 
+     * ======================== */
+    
+    void setActionListener(ActionListener listener) {
+        // To be overloaded ...
+    }
+    
+    void removeActionListener(ActionListener listener) {
+        // To be overloaded ...
+    }
 }

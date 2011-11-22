@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.model.Movie;
 
 /**
  * Simple Panel that draws an image as big as possible, but preserves its aspect ratio.

@@ -1,6 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
-import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.model.Movie;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)

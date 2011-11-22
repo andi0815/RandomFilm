@@ -2,7 +2,6 @@ package amo.randomFilm.model;
 
 import java.io.File;
 
-import amo.randomFilm.datasource.Movie;
 
 /**
  * Class that links a Movie File with {@link Movie} data.

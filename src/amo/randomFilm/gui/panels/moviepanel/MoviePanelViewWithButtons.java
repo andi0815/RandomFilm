@@ -10,10 +10,10 @@ import javax.swing.JButton;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.UnknownTypes;
 import amo.randomFilm.gui.GuiConstants;
-import amo.randomFilm.gui.panels.SimpleMovie;
 import amo.randomFilm.model.MovieFile;
+import amo.randomFilm.model.SimpleMovie;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)

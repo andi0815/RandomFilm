@@ -1,17 +1,20 @@
 package amo.randomFilm.gui.panels;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewBasic;
-import amo.randomFilm.gui.util.FileListHandler;
+import amo.randomFilm.model.FileListHandler;
 
 public class SelectableMoviePanelView {
     
@@ -39,7 +42,7 @@ public class SelectableMoviePanelView {
     private FileListHandler listHandler = new FileListHandler();
     
     /** reference to the panel */
-    private JPanel dropperPanel;
+    private JPanel moviesPanel;
     
     /**
      * Standard Constructor.
@@ -49,7 +52,7 @@ public class SelectableMoviePanelView {
      */
     public SelectableMoviePanelView() {
         super();
-        this.dropperPanel = new JPanel() {
+        this.moviesPanel = new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
@@ -67,47 +70,10 @@ public class SelectableMoviePanelView {
                 logger.debug("My DropTarget Listener: " + this.getDropTarget());
             }
         };
-        this.dropperPanel.setName(this.dropperPanel.getClass().getSimpleName());
-        this.dropperPanel.setBackground(GuiConstants.BG_COLOR);
-//        this.dropperPanel.setLayout(null); // do it yourself layout
+        this.moviesPanel.setName(this.moviesPanel.getClass().getSimpleName());
+        this.moviesPanel.setBackground(GuiConstants.BG_COLOR);
+        this.moviesPanel.setLayout(new BoxLayout(this.moviesPanel, BoxLayout.Y_AXIS));
     }
-    
-//    /**
-//     * Tries to add given files to the list of movies.
-//     * 
-//     * @param fileList
-//     *            the List of files to add
-//     */
-//    void addMovieFiles(List<File> fileList, MovieDataProvider movieDataProvider) {
-//        List<MovieFile> movieFiles = FilenameFilter.getMovieNames(fileList);
-//        for (MovieFile movieFile : movieFiles) {
-//            if (!this.listHandler.contains(movieFile.getFile())) {
-//                MoviePanel item = new MoviePanel(movieFile.getFile(), movieFile.getTitle(), movieDataProvider,
-//                        this.getWidth(), this.ITEM_HEIGHT, this);
-//                item.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4,
-//                        this.ITEM_HEIGHT);
-//                
-//                if (this.listHandler.insertItem(item))
-//                    this.add(item);
-//            }
-//        }
-//    }
-//    
-//    /**
-//     * Adds given Movie to the list of movies. duplicates are not checked !!!!
-//     * 
-//     * @param movie
-//     *            the movie to add
-//     */
-//    void addMovie(Movie movie) {
-////        if (!this.listHandler.contains(moviePanel.getFile())) {
-//        MoviePanel moviePanel = new MoviePanel(movie, this.getWidth(), this.ITEM_HEIGHT, this);
-//        moviePanel.setBounds(2, (this.getComponentCount() * this.ITEM_HEIGHT) + 2, this.getWidth() - 4,
-//                this.ITEM_HEIGHT);
-//        if (this.listHandler.insertItem(moviePanel))
-//            this.add(moviePanel);
-////        }
-//    }
     
     protected FileListHandler getFileListHandler() {
         return this.listHandler;
@@ -117,60 +83,39 @@ public class SelectableMoviePanelView {
         this.listHandler.sort();
     }
     
-//    protected void resetComponentBounds() {
-//        int nextY = 2;
-//        MoviePanelViewNoButtons component;
-//        Rectangle rect;
-//        
-//        Iterator<MoviePanelViewNoButtons> iter = this.listHandler.getList().iterator();
-//        
-//        while (iter.hasNext()) {
-//            component = iter.next();
-//            rect = component.getBounds();
-//            if (rect.getY() != nextY) {
-//                component.setBounds(2, nextY, this.dropperPanel.getWidth() - 4, this.ITEM_HEIGHT);
-//            }
-//            nextY += this.ITEM_HEIGHT;
-//        }
-//        
-//    }
-    
     /**
      * Automatically resizes this panel according to the number of movie items
      */
     protected void resizePanel() {
-        this.dropperPanel.setPreferredSize(new Dimension(this.dropperPanel.getWidth(), (this.dropperPanel
+        this.moviesPanel.setPreferredSize(new Dimension(this.moviesPanel.getWidth(), (this.moviesPanel
                 .getComponentCount() * (this.ITEM_HEIGHT)) + 2));
-        this.dropperPanel.revalidate();
+        this.moviesPanel.revalidate();
     }
     
     public void addData(MoviePanelViewBasic movie) {
         this.listHandler.insertItem(movie);
-        this.dropperPanel.add(movie.getComponent());
+        JComponent moviePanelToAdd = movie.getComponent();
+        moviePanelToAdd.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.moviesPanel.add(moviePanelToAdd);
         
     }
     
     protected void removeData(MoviePanelViewBasic movie) {
-        this.dropperPanel.remove(movie.getComponent());
+        this.moviesPanel.remove(movie.getComponent());
         this.listHandler.remove(movie);
-//        this.resetComponentBounds();
         this.resizePanel();
-        this.dropperPanel.repaint();
+        this.moviesPanel.repaint();
     }
     
-//    protected Iterator<MoviePanelViewNoButtons> getMovieIterator() {
-//        return this.listHandler.getList().iterator();
-//    }
-    
     protected void removeAllMovies() {
-        this.dropperPanel.removeAll();
+        this.moviesPanel.removeAll();
         this.listHandler.clearList();
         this.resizePanel();
-        this.dropperPanel.repaint();
+        this.moviesPanel.repaint();
     }
     
     public JPanel getComponent() {
-        return this.dropperPanel;
+        return this.moviesPanel;
     }
     
 }

@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.UnknownTypes;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * TMDB Data Object that represents a movie.

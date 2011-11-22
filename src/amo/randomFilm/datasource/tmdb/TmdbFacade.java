@@ -18,11 +18,11 @@ import org.apache.log4j.Priority;
 
 import sun.net.www.protocol.http.HttpURLConnection;
 import amo.randomFilm.configuration.Configuration;
-import amo.randomFilm.datasource.MovieDataProvider;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
 import amo.randomFilm.datasource.tmdb.data.TmdbImage;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovie;
 import amo.randomFilm.datasource.tmdb.data.TmdbMovieExtendedInfo;
+import amo.randomFilm.model.MovieDataProvider;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

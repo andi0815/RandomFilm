@@ -4,8 +4,8 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * Simple Panel that displays a movie title.

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,7 +16,7 @@ import amo.randomFilm.gui.panels.ButtonPanelPresenter;
 import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
 import amo.randomFilm.gui.panels.SelectableMoviePanelView;
 
-public class MainFrame extends JFrame implements ComponentListener {
+public class MainFrame extends JFrame {
     
     /**
      * default Serial version id
@@ -99,70 +97,6 @@ public class MainFrame extends JFrame implements ComponentListener {
         this.getContentPane().add(this.btnPanelDropper, BorderLayout.PAGE_END);
         this.pack();
         this.repaint();
-        
-        this.addComponentListener(this);
-        
-    }
-    
-//    /**
-//     * Never Used
-//     * 
-//     * @param size
-//     */
-//    private void layoutThis(Dimension size) {
-//        
-//        this.width = size.width;
-//        this.height = size.height;
-//        
-//        int startX = 5, widthX = this.width - 15;
-//        int dY = 10;
-//        int heightOfButtonPanels = 180;
-//        int heightOfProgressLabel = 20;
-//        
-//        /**
-//         * RESIZE: Drop Panels
-//         */
-//        int startY = 5;
-//        int heightOfPanel = this.height - (heightOfButtonPanels + dY + heightOfProgressLabel + dY);
-//        
-//        this.scrollPane.setBounds(startX, startY, widthX, heightOfPanel);
-//        this.dropPane.setPreferredSize(new Dimension(widthX - 20, heightOfPanel - 5));
-//        this.dropPane.resetComponentBounds();
-//        
-//        this.dropPane.revalidate();
-//        this.dropPane.repaint();
-//        this.scrollPane.repaint();
-//        
-//        startY += heightOfPanel + dY;
-//        heightOfPanel = heightOfButtonPanels;
-//        
-//        this.btnPanelDropper.setBounds(startX, startY, widthX, heightOfPanel);
-//        this.btnPanelDropper.resizeComponent(widthX - startX, heightOfPanel - startY);
-//        this.btnPanelDropper.repaint();
-//        
-//    }
-    
-    @Override
-    public void componentHidden(ComponentEvent arg0) {
-    }
-    
-    @Override
-    public void componentMoved(ComponentEvent arg0) {
-    }
-    
-    @Override
-    public void componentShown(ComponentEvent arg0) {
-    }
-    
-    @Override
-    public void componentResized(ComponentEvent arg0) {
-        logger.debug("RESIZE: " + this.getSize().width + " " + this.getSize().height);
-        // layoutThis(size);
-        
-        // scrollPane.resizeComponent( size.width, size.height );
-        // btnPanelDropper.resizeComponent( size.width, size.height );;
-        // copyPanel.resizeComponent( size.width, size.height );
-        // btnPanelCopy.resizeComponent( size.width, size.height );
         
     }
     

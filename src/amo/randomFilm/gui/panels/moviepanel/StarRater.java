@@ -21,7 +21,7 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JPanel;
 
-import amo.randomFilm.datasource.Movie;
+import amo.randomFilm.model.Movie;
 
 /**
  * The star rater panel (see:

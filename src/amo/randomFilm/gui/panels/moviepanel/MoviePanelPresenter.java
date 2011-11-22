@@ -13,10 +13,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sun.awt.shell.ShellFolder;
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.MovieDataProvider;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
-import amo.randomFilm.gui.panels.SimpleMovie;
+import amo.randomFilm.gui.GuiConstants;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.MovieDataProvider;
+import amo.randomFilm.model.SimpleMovie;
 
 /**
  * Class that contains information about a certain movie file. The information to display is
@@ -39,13 +40,13 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
     
     private MoviePanelViewBasic moviePanel = null;
     
-    public MoviePanelPresenter(File f, String title, MoviePanelViewBasic moviePanel,
-            MovieDataProvider movieDataProvider) {
+    public MoviePanelPresenter(File f, String title, MoviePanelViewBasic moviePanel, MovieDataProvider movieDataProvider) {
         super();
         this.file = f;
         this.moviePanel = moviePanel;
         this.moviePanel.setData(new SimpleMovie(title));
         this.moviePanel.setMouseListener(this);
+        this.moviePanel.setActionListener(this);
         this.requestMovieInfo(title, movieDataProvider);
         
     }
@@ -168,7 +169,18 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        logger.warn("Caught unhandled Event: " + e);
+        
+        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_DELETE)) {
+            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_DELETE + " -> " + e + " Source: " + e.getSource());
+            
+            // MoviePanelViewNoButtons item = (MoviePanelView) ((JButton)
+            // e.getSource()).getParent();
+//          this.removeMoviePanel(item);
+            
+        } else {
+            logger.warn("Caught unhandled Event: " + e);
+            
+        }
         
     }
     

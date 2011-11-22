@@ -1,4 +1,4 @@
-package amo.randomFilm.gui.util;
+package amo.randomFilm.model;
 
 import java.io.File;
 import java.util.ArrayList;

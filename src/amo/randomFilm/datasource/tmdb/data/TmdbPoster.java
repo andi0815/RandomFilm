@@ -3,7 +3,7 @@
  */
 package amo.randomFilm.datasource.tmdb.data;
 
-import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * TMDB Data Object that represents an image & poster.

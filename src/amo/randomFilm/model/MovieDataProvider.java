@@ -1,4 +1,4 @@
-package amo.randomFilm.datasource;
+package amo.randomFilm.model;
 
 import java.util.List;
 

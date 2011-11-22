@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
-import amo.randomFilm.datasource.Movie;
-import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)

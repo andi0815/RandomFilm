@@ -3,7 +3,7 @@ package amo.randomFilm.datasource.tmdb.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import amo.randomFilm.datasource.UnknownTypes;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * Manages Extended {@link TmdbMovie} infos, such as: runtime and genres.

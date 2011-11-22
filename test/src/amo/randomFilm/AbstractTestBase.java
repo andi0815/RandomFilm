@@ -18,8 +18,8 @@ import javax.swing.JPanel;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;
 
-import amo.randomFilm.datasource.Movie;
 import amo.randomFilm.datasource.tmdb.DummyMovie;
+import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieFile;
 
 /**
