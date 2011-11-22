@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -34,6 +35,12 @@ public class MoviePanelViewBasic {
             // draw bottom border line
             g.drawLine(0, this.getHeight() - 1, this.getWidth(), this.getHeight() - 1);
         }
+        
+        @Override
+        public Dimension getMaximumSize() {
+            return new Dimension(1280, 110);
+        }
+        
     }
     
 //    /** Logger Object for this Class */

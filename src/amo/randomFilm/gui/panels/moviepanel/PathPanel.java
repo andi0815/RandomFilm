@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 
@@ -24,7 +25,13 @@ public class PathPanel extends JLabel {
         return this.filePath;
     }
     
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(0, 0);
+    }
+    
 //    public void update(File filePath) {
 //        this.setText(filePath.getAbsolutePath());
 //    }
+    
 }

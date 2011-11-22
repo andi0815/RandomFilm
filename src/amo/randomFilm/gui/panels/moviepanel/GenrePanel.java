@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
 
@@ -43,6 +44,11 @@ public class GenrePanel extends JLabel implements Updateable {
             label.append(UnknownTypes.STRING);
         }
         this.setText(label.toString());
+    }
+    
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(0, 0);
     }
     
 }

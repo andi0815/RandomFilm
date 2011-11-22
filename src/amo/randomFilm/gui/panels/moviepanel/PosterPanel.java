@@ -122,4 +122,10 @@ public class PosterPanel extends JPanel implements Updateable {
         }
         this.repaint();
     }
+    
+    @Override
+    public Dimension getMinimumSize() {
+        return INITIAL_SIZE;
+    }
+    
 }

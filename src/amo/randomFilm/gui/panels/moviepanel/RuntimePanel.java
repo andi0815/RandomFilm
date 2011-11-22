@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JLabel;
@@ -34,5 +35,10 @@ public class RuntimePanel extends JLabel implements Updateable {
         } else {
             this.setText("RUNTIME: " + UnknownTypes.STRING);
         }
+    }
+    
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(0, 0);
     }
 }
