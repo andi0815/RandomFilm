@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -13,7 +12,7 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewBasic;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 import amo.randomFilm.model.FileListHandler;
 
 public class SelectableMoviePanelView {
@@ -53,22 +52,22 @@ public class SelectableMoviePanelView {
     public SelectableMoviePanelView() {
         super();
         this.moviesPanel = new JPanel() {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                logger.debug("Paint Dropper: "
-                        + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
-                                : SelectableMoviePanelView.this.listHandler.getList().size()));
-                if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
-                    // text
-                    int halfWidth = (int) (this.getWidth() / 2.0);
-                    int halfheight = (int) (this.getHeight() / 2.0);
-                    g.setColor(DROPPER_FONT_COLOR);
-                    g.setFont(EMPTY_DROPPER_FONT);
-                    g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
-                }
-                logger.debug("My DropTarget Listener: " + this.getDropTarget());
-            }
+//            @Override
+//            public void paint(Graphics g) {
+//                super.paint(g);
+//                logger.debug("Paint Dropper: "
+//                        + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
+//                                : SelectableMoviePanelView.this.listHandler.getList().size()));
+//                if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
+//                    // text
+//                    int halfWidth = (int) (this.getWidth() / 2.0);
+//                    int halfheight = (int) (this.getHeight() / 2.0);
+//                    g.setColor(DROPPER_FONT_COLOR);
+//                    g.setFont(EMPTY_DROPPER_FONT);
+//                    g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
+//                }
+//                logger.debug("My DropTarget Listener: " + this.getDropTarget());
+//            }
         };
         this.moviesPanel.setName(this.moviesPanel.getClass().getSimpleName());
         this.moviesPanel.setBackground(GuiConstants.BG_COLOR);
@@ -92,7 +91,7 @@ public class SelectableMoviePanelView {
         this.moviesPanel.revalidate();
     }
     
-    public void addData(MoviePanelViewBasic movie) {
+    public void addData(MoviePanelBasicView movie) {
         this.listHandler.insertItem(movie);
         JComponent moviePanelToAdd = movie.getComponent();
         moviePanelToAdd.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -100,7 +99,7 @@ public class SelectableMoviePanelView {
         
     }
     
-    protected void removeData(MoviePanelViewBasic movie) {
+    protected void removeData(MoviePanelBasicView movie) {
         this.moviesPanel.remove(movie.getComponent());
         this.listHandler.remove(movie);
         this.resizePanel();

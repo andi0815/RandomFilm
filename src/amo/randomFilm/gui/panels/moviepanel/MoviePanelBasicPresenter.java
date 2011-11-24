@@ -1,8 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -14,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import sun.awt.shell.ShellFolder;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
-import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.SimpleMovie;
@@ -27,10 +24,38 @@ import amo.randomFilm.model.SimpleMovie;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
  */
-public class MoviePanelPresenter implements MouseListener, ActionListener {
+public class MoviePanelBasicPresenter implements MouseListener {
+    
+    private final class RequestThread extends Thread {
+        private final MovieDataProvider movieDataProvider;
+        private final String title;
+        private MoviePanelBasicPresenter parent;
+        
+        private RequestThread(MovieDataProvider movieDataProvider, String title) {
+            this.movieDataProvider = movieDataProvider;
+            this.title = title;
+        }
+        
+        public void setParent(MoviePanelBasicPresenter parent) {
+            this.parent = parent;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                this.parent.setMovieAlternatives(this.movieDataProvider.searchMovie(this.title));
+                
+            } catch (MovieDataProviderException e) {
+                logger.warn("Could not find Movie with title: " + this.title, e);
+                List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
+                movieList.add(new SimpleMovie(this.title));
+                this.parent.setMovieAlternatives(movieList);
+            }
+        }
+    }
     
     /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(MoviePanelPresenter.class);
+    private static final Logger logger = Logger.getLogger(MoviePanelBasicPresenter.class);
     
     private final File file;
     
@@ -38,23 +63,27 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
     
     private Movie selectedMovie = null;
     
-    private MoviePanelViewBasic moviePanel = null;
+    protected MoviePanelBasicView moviePanel = null;
     
-    public MoviePanelPresenter(File f, String title, MoviePanelViewBasic moviePanel, MovieDataProvider movieDataProvider) {
+    public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel,
+            MovieDataProvider movieDataProvider) {
         super();
         this.file = f;
         this.moviePanel = moviePanel;
         this.moviePanel.setData(new SimpleMovie(title));
         this.moviePanel.setMouseListener(this);
-        this.moviePanel.setActionListener(this);
         this.requestMovieInfo(title, movieDataProvider);
         
     }
     
-//    public MoviePanelPresenter(Movie movie) {
-//        this(null, movie.getMovieTitle(), null);
-//        this.selectedMovie = movie;
-//    }
+    protected void setMovieAlternatives(List<? extends Movie> alternatives) {
+        this.movieAlternatives = alternatives;
+        // set first movie the selected one, if any available
+        this.selectedMovie = MoviePanelBasicPresenter.this.movieAlternatives != null
+                && MoviePanelBasicPresenter.this.movieAlternatives.size() > 0 ? MoviePanelBasicPresenter.this.movieAlternatives
+                .get(0) : null;
+        this.moviePanel.setData(MoviePanelBasicPresenter.this.selectedMovie);
+    }
     
     /**
      * Starts a new Thread that requests movie information in the background.
@@ -65,27 +94,8 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
      *            the provider implementation to use
      */
     private void requestMovieInfo(final String title, final MovieDataProvider movieDataProvider) {
-        Thread requestThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    MoviePanelPresenter.this.movieAlternatives = movieDataProvider.searchMovie(title);
-//                moviesFound = new ArrayList<Movie>();
-//                moviesFound.add(new SimpleMovie("TEst"));
-                    
-                } catch (MovieDataProviderException e) {
-                    logger.warn("Could not find Movie with title: " + title, e);
-                    List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
-                    movieList.add(new SimpleMovie(title));
-                    MoviePanelPresenter.this.movieAlternatives = movieList;
-                }
-                
-                MoviePanelPresenter.this.selectedMovie = MoviePanelPresenter.this.movieAlternatives != null
-                        && MoviePanelPresenter.this.movieAlternatives.size() > 0 ? MoviePanelPresenter.this.movieAlternatives
-                        .get(0) : null;
-                MoviePanelPresenter.this.moviePanel.setData(MoviePanelPresenter.this.selectedMovie);
-            }
-        };
+        RequestThread requestThread = new RequestThread(movieDataProvider, title);
+        requestThread.setParent(this);
         requestThread.start();
     }
     
@@ -150,38 +160,11 @@ public class MoviePanelPresenter implements MouseListener, ActionListener {
     @Override
     public void mousePressed(MouseEvent arg0) {
         this.moviePanel.setSelected(!this.moviePanel.isSelected());
+        logger.error("!!!!!!!!!!!!!!!!!!!!!Clicked!!!");
     }
     
-//    @Override
-//    public boolean equals(Object other) {
-//        if (other instanceof MoviePanelPresenter) {
-//            File otherFile = ((MoviePanelPresenter) other).getFile();
-//            return otherFile.equals(this.file);
-//        } else {
-//            return false;
-//        }
-//    }
-//    
-//    @Override
-//    public int hashCode() {
-//        return this.file.hashCode();
-//    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        
-        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_DELETE)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_DELETE + " -> " + e + " Source: " + e.getSource());
-            
-            // MoviePanelViewNoButtons item = (MoviePanelView) ((JButton)
-            // e.getSource()).getParent();
-//          this.removeMoviePanel(item);
-            
-        } else {
-            logger.warn("Caught unhandled Event: " + e);
-            
-        }
-        
+    public MoviePanelBasicView getView() {
+        return this.moviePanel;
     }
     
 }

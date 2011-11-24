@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.io.File;
 
@@ -19,21 +20,20 @@ import amo.randomFilm.model.UnknownTypes;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 11.11.2011
  */
-public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
+public class MoviePanelWithButtonsView extends MoviePanelBasicView {
     
     /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(MoviePanelViewWithButtons.class);
+    private static final Logger logger = Logger.getLogger(MoviePanelWithButtonsView.class);
     
     private JButton btnDelete;
     
-    public MoviePanelViewWithButtons(File file) {
+    private JButton btnAlternatives;
+    
+    public MoviePanelWithButtonsView(File file) {
         super(file);
-        
-//        this.layoutPanel(file);
-        
     }
     
-    public MoviePanelViewWithButtons(MovieFile movieFile) {
+    public MoviePanelWithButtonsView(MovieFile movieFile) {
         this(movieFile.getFile());
         this.titlePanel.update(new SimpleMovie(movieFile.getTitle()));
     }
@@ -57,10 +57,17 @@ public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
         this.yearPanel = new YearPanel(UnknownTypes.STRING);
         this.genrePanel = new GenrePanel(null);
         this.pathPanel = new PathPanel(file);
-        this.btnDelete = new JButton(new ImageIcon(IMAGE_DELETE));
+        this.btnDelete = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_DELETE));
         this.btnDelete.setContentAreaFilled(false);
         this.btnDelete.setBorderPainted(false);
-        this.btnDelete.setActionCommand(LABEL_DELETE);
+        this.btnDelete.setActionCommand(GuiConstants.LABEL_BTN_DELETE);
+        this.btnDelete.setMinimumSize(new Dimension(32, 32));
+        this.btnAlternatives = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_ALTERNATIVES));
+        this.btnAlternatives.setContentAreaFilled(false);
+        this.btnAlternatives.setBorderPainted(false);
+        this.btnAlternatives.setActionCommand(GuiConstants.LABEL_BTN_ALTERNATIVES);
+        this.btnAlternatives.setMinimumSize(new Dimension(32, 32));
+        this.btnAlternatives.setVisible(false);
         
 //      Then, we define the groups and add the components. We establish a root group for each dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created via createSequentialGroup and createParallelGroup methods. Components are added to groups by using the addComponent method.
         layout.setHorizontalGroup(layout
@@ -71,6 +78,7 @@ public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
                                 .addComponent(this.starRater).addComponent(this.runtimePanel)
                                 .addComponent(this.yearPanel).addComponent(this.genrePanel)
                                 .addComponent(this.pathPanel)) //
+                .addComponent(this.btnAlternatives) //
                 .addComponent(this.btnDelete));
         layout.setVerticalGroup(layout.createParallelGroup() //
                 .addComponent(this.poster, Alignment.CENTER) //
@@ -81,6 +89,7 @@ public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
                                 .addComponent(this.yearPanel) //
                                 .addComponent(this.genrePanel) //
                                 .addComponent(this.pathPanel)) //
+                .addComponent(this.btnAlternatives, Alignment.CENTER) //
                 .addComponent(this.btnDelete, Alignment.CENTER));
         
         this.moviePanel.doLayout();
@@ -88,10 +97,20 @@ public class MoviePanelViewWithButtons extends MoviePanelViewBasic {
         this.moviePanel.setVisible(true);
     }
     
-    public void setActionListener(ActionListener listener) {
-        this.btnDelete.addActionListener(listener);
+    public void hasAlternatives(boolean hasAlternatives) {
+        this.btnAlternatives.setVisible(hasAlternatives);
+        this.moviePanel.doLayout();
+        this.moviePanel.repaint();
+        logger.debug("IN: hasAlternatives -  " + hasAlternatives);
     }
     
+    @Override
+    public void setActionListener(ActionListener listener) {
+        this.btnDelete.addActionListener(listener);
+        this.btnAlternatives.addActionListener(listener);
+    }
+    
+    @Override
     public void removeActionListener(ActionListener listener) {
         this.btnDelete.removeActionListener(listener);
     }

@@ -30,8 +30,9 @@ import org.apache.log4j.Logger;
 
 import amo.randomFilm.datasource.tmdb.TmdbFacade;
 import amo.randomFilm.gui.GuiConstants;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelPresenter;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewWithButtons;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicPresenter;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsPresenter;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsView;
 import amo.randomFilm.model.FilenameFilter;
 import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.MovieFile;
@@ -51,7 +52,7 @@ public class SelectableMoviePanelPresenter implements DropTargetListener, DragSo
     
     private SelectableMoviePanelView view;
     
-    List<MoviePanelPresenter> moviePresenters = new ArrayList<MoviePanelPresenter>();
+    List<MoviePanelBasicPresenter> moviePresenters = new ArrayList<MoviePanelBasicPresenter>();
     // FIXME: inject ...
     private MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
@@ -59,12 +60,6 @@ public class SelectableMoviePanelPresenter implements DropTargetListener, DragSo
         super();
         // create a new Drop Target and associate it with the view and this component
         DropTarget dropTarget = new DropTarget(view.getComponent(), this);
-        logger.info("------------- DropTarget: " + dropTarget);
-//        try {
-//            dropTarget.addDropTargetListener(this);
-//        } catch (TooManyListenersException e) {
-//            e.printStackTrace();
-//        }
         this.view = view;
     }
     
@@ -79,6 +74,11 @@ public class SelectableMoviePanelPresenter implements DropTargetListener, DragSo
         else
             dropTargetDragEvent.rejectDrag();
         
+    }
+    
+    public void removeMovie(MoviePanelBasicPresenter presenter) {
+        this.moviePresenters.remove(presenter);
+        this.view.removeData(presenter.getView());
     }
     
     /**
@@ -100,10 +100,10 @@ public class SelectableMoviePanelPresenter implements DropTargetListener, DragSo
                 Iterator<MovieFile> iterator = movieNames.iterator();
                 while (iterator.hasNext()) {
                     MovieFile next = iterator.next();
-                    MoviePanelViewWithButtons movieView = new MoviePanelViewWithButtons(next);
+                    MoviePanelWithButtonsView movieView = new MoviePanelWithButtonsView(next);
                     this.view.addData(movieView);
-                    MoviePanelPresenter moviePanelPresenter = new MoviePanelPresenter(next.getFile(), next.getTitle(),
-                            movieView, this.movieDataProvider);
+                    MoviePanelBasicPresenter moviePanelPresenter = new MoviePanelWithButtonsPresenter(next.getFile(),
+                            next.getTitle(), movieView, this, this.movieDataProvider);
                     this.moviePresenters.add(moviePanelPresenter);
                 }
                 logger.debug("finished adding items!");

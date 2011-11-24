@@ -11,7 +11,6 @@ import org.apache.log4j.BasicConfigurator;
 
 import amo.randomFilm.configuration.Configuration;
 import amo.randomFilm.gui.MainFrame;
-import amo.randomFilm.gui.SplashScreen;
 
 public class RandomFilm {
     
@@ -25,7 +24,7 @@ public class RandomFilm {
         // Set up a simple configuration that logs on the console.
         BasicConfigurator.configure();
         
-        SplashScreen splash = new SplashScreen();
+//        SplashScreen splash = new SplashScreen();
         // splash.run();
         
         // initialize Configuration

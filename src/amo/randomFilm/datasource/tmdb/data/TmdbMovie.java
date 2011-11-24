@@ -66,164 +66,168 @@ public class TmdbMovie extends GsonObject implements Movie {
     private Image image = null;
     
     public double getScore() {
-        return score;
+        return this.score;
     }
     
     public double getPopularity() {
-        return popularity;
+        return this.popularity;
     }
     
     public boolean isTranslated() {
-        return translated;
+        return this.translated;
     }
     
     public boolean isAdult() {
-        return adult;
+        return this.adult;
     }
     
     public String getLanguage() {
-        return language;
+        return this.language;
     }
     
     public String getOriginal_name() {
-        return original_name;
+        return this.original_name;
     }
     
     public String getName() {
-        return name;
+        return this.name;
     }
     
     public String getAlternative_name() {
-        return alternative_name;
+        return this.alternative_name;
     }
     
     public String getType() {
-        return movie_type;
+        return this.movie_type;
     }
     
     public String getId() {
-        return id;
+        return this.id;
     }
     
     public String getImdb_id() {
-        return imdb_id;
+        return this.imdb_id;
     }
     
     public String getUrl() {
-        return url;
+        return this.url;
     }
     
     public int getVotes() {
-        return votes;
+        return this.votes;
     }
     
     public double getRating() {
-        return rating;
+        return this.rating;
     }
     
     public String getCertification() {
-        return certification;
+        return this.certification;
     }
     
     public String getOverview() {
-        return overview;
+        return this.overview;
     }
     
     public String getReleased() {
-        return released;
+        return this.released;
     }
     
     public String getLast_modified_at() {
-        return last_modified_at;
+        return this.last_modified_at;
     }
     
     public List<TmdbPoster> getPosters() {
-        return posters;
+        return this.posters;
     }
     
     @Override
     public String toString() {
         StringBuilder representation = new StringBuilder();
         representation.append("[").append(this.getClass().getSimpleName()).append(": ");
-        addIfNotEmpty(representation, "name", name);
-        addIfNotEmpty(representation, "released", released);
-        addIfNotEmpty(representation, "score", score);
-        addIfNotEmpty(representation, "language", language);
-        addIfNotEmpty(representation, "original_name", original_name);
-        addIfNotEmpty(representation, "alternative_name", alternative_name);
-        addIfNotEmpty(representation, "popularity", popularity);
-        addIfNotEmpty(representation, "translated", translated);
-        addIfNotEmpty(representation, "adult", adult);
-        addIfNotEmpty(representation, "type", movie_type);
-        addIfNotEmpty(representation, "id", id);
-        addIfNotEmpty(representation, "url", url);
-        addIfNotEmpty(representation, "imdb_id", imdb_id);
-        addIfNotEmpty(representation, "votes", votes);
-        addIfNotEmpty(representation, "imdb_id", imdb_id);
-        addIfNotEmpty(representation, "rating", rating);
-        addIfNotEmpty(representation, "certification", certification);
-        addIfNotEmpty(representation, "overview", overview);
-        addIfNotEmpty(representation, "posters", (posters != null ? posters.toString() : "NONE"));
+        this.addIfNotEmpty(representation, "name", this.name);
+        this.addIfNotEmpty(representation, "released", this.released);
+        this.addIfNotEmpty(representation, "score", this.score);
+        this.addIfNotEmpty(representation, "language", this.language);
+        this.addIfNotEmpty(representation, "original_name", this.original_name);
+        this.addIfNotEmpty(representation, "alternative_name", this.alternative_name);
+        this.addIfNotEmpty(representation, "popularity", this.popularity);
+        this.addIfNotEmpty(representation, "translated", this.translated);
+        this.addIfNotEmpty(representation, "adult", this.adult);
+        this.addIfNotEmpty(representation, "type", this.movie_type);
+        this.addIfNotEmpty(representation, "id", this.id);
+        this.addIfNotEmpty(representation, "url", this.url);
+        this.addIfNotEmpty(representation, "imdb_id", this.imdb_id);
+        this.addIfNotEmpty(representation, "votes", this.votes);
+        this.addIfNotEmpty(representation, "imdb_id", this.imdb_id);
+        this.addIfNotEmpty(representation, "rating", this.rating);
+        this.addIfNotEmpty(representation, "certification", this.certification);
+        this.addIfNotEmpty(representation, "overview", this.overview);
+        this.addIfNotEmpty(representation, "posters", (this.posters != null ? this.posters.toString() : "NONE"));
         return representation.append("]").toString();
     }
     
     @Override
     public Image getMovieImage() {
-        if (image == null) {
+        if (this.image == null) {
             try {
                 TmdbImage tmdbImage = TmdbFacade.getImage(this.id);
-                image = tmdbImage.getImage();
+                this.image = tmdbImage.getImage();
                 
             } catch (MovieDataProviderException e) {
-                logger.error("Could not fetch image for movie " + name, e);
+                logger.error("Could not fetch image for movie " + this.name, e);
             }
         }
-        return image;
+        return this.image;
     }
     
     @Override
     public int getMovieRuntime() {
-        if (extInfo == null) {
+        if (this.extInfo == null) {
             try {
-                extInfo = TmdbFacade.getInfo(id);
+                this.extInfo = TmdbFacade.getInfo(this.id);
             } catch (MovieDataProviderException e) {
                 logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
                 return UnknownTypes.INT;
             }
         }
-        return extInfo.getRuntime();
+        return this.extInfo.getRuntime();
     }
     
     @Override
     public double getMovieRating() {
-        return rating / 10;
+        return this.rating / 10;
     }
     
     @Override
     public String getMovieShortDescription() {
-        return overview;
+        return this.overview;
     }
     
     @Override
     public String getMovieTitle() {
-        return name;
+        return this.name;
     }
     
     @Override
     public String getMovieYear() {
-        return released.substring(0, 4);
+        if (this.released != null) {
+            return this.released.substring(0, 4);
+        } else {
+            return UnknownTypes.STRING;
+        }
     }
     
     @Override
     public List<String> getMovieGenres() {
-        if (extInfo == null) {
+        if (this.extInfo == null) {
             try {
-                extInfo = TmdbFacade.getInfo(id);
+                this.extInfo = TmdbFacade.getInfo(this.id);
             } catch (MovieDataProviderException e) {
                 logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
             }
         }
-        return extInfo.getGenres();
+        return this.extInfo.getGenres();
     }
     
 }

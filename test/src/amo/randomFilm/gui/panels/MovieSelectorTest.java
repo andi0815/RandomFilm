@@ -8,8 +8,8 @@ import javax.swing.JFrame;
 import org.apache.log4j.BasicConfigurator;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewWithButtons;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewBasic;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsView;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -23,10 +23,10 @@ public class MovieSelectorTest extends AbstractTestBase {
         
         BasicConfigurator.configure();
         
-        MoviePanelViewBasic mpv1 = new MoviePanelViewWithButtons(new File("file://test.it"));
-        MoviePanelViewBasic mpv2 = new MoviePanelViewWithButtons(new File("file://test.it_2"));
-        MoviePanelViewBasic mpv3 = new MoviePanelViewWithButtons(new File("file://test.it_3"));
-        MoviePanelViewBasic mpv3_nochmal = new MoviePanelViewWithButtons(new File("file://test.it_3"));
+        MoviePanelBasicView mpv1 = new MoviePanelWithButtonsView(new File("file://test.it"));
+        MoviePanelBasicView mpv2 = new MoviePanelWithButtonsView(new File("file://test.it_2"));
+        MoviePanelBasicView mpv3 = new MoviePanelWithButtonsView(new File("file://test.it_3"));
+        MoviePanelBasicView mpv3_nochmal = new MoviePanelWithButtonsView(new File("file://test.it_3"));
 //        showComponent(mpv1.getComponent(), 1000);
         
         SelectableMoviePanelView movieSelector = new SelectableMoviePanelView();

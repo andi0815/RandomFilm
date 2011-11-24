@@ -19,7 +19,7 @@ import amo.randomFilm.model.UnknownTypes;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 11.11.2011
  */
-public class MoviePanelViewBasic {
+public class MoviePanelBasicView {
     
     protected final class MPanel extends JPanel {
         @Override
@@ -43,13 +43,6 @@ public class MoviePanelViewBasic {
         
     }
     
-//    /** Logger Object for this Class */
-//    private static final Logger logger = Logger.getLogger(MoviePanelViewNoButtons.class);
-    
-    protected static final String LABEL_DELETE = "löschen";
-    
-    protected static final String IMAGE_DELETE = "images\\Delete.png";
-    
     protected JPanel moviePanel;
     
     protected boolean isSelected = false;
@@ -70,7 +63,7 @@ public class MoviePanelViewBasic {
     
     protected PathPanel pathPanel;
     
-    public MoviePanelViewBasic(File file) {
+    public MoviePanelBasicView(File file) {
         super();
         
         this.layoutPanel(file);

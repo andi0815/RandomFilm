@@ -8,15 +8,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelViewBasic;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 
-public class FileListHandler implements Comparator<MoviePanelViewBasic> {
+public class FileListHandler implements Comparator<MoviePanelBasicView> {
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(FileListHandler.class);
     
     /** list of movies */
-    private List<MoviePanelViewBasic> list = new ArrayList<MoviePanelViewBasic>();
+    private List<MoviePanelBasicView> list = new ArrayList<MoviePanelBasicView>();
     
     /**
      * Inserts given item in the movie list
@@ -26,7 +26,7 @@ public class FileListHandler implements Comparator<MoviePanelViewBasic> {
      * @return <code>true</code>, if has been inserted, <code>false</code> if it already is in the
      *         list.
      */
-    public boolean insertItem(MoviePanelViewBasic item) {
+    public boolean insertItem(MoviePanelBasicView item) {
         if (!this.contains(item)) {
             this.list.add(item);
             return true;
@@ -37,12 +37,12 @@ public class FileListHandler implements Comparator<MoviePanelViewBasic> {
         
     }
     
-    public boolean contains(MoviePanelViewBasic item) {
+    public boolean contains(MoviePanelBasicView item) {
         return this.list.contains(item);
     }
     
     public boolean contains(File file) {
-        for (MoviePanelViewBasic moviePanel : this.list) {
+        for (MoviePanelBasicView moviePanel : this.list) {
             if (moviePanel.getFile().equals(file)) {
                 return true;
             }
@@ -50,7 +50,7 @@ public class FileListHandler implements Comparator<MoviePanelViewBasic> {
         return false;
     }
     
-    public List<MoviePanelViewBasic> getList() {
+    public List<MoviePanelBasicView> getList() {
         return this.list;
     }
     
@@ -62,7 +62,7 @@ public class FileListHandler implements Comparator<MoviePanelViewBasic> {
         this.list.clear();
     }
     
-    public void remove(MoviePanelViewBasic item) {
+    public void remove(MoviePanelBasicView item) {
         this.list.remove(item);
     }
     
@@ -77,7 +77,7 @@ public class FileListHandler implements Comparator<MoviePanelViewBasic> {
      * TODO: currently only sorts by title, implement other options
      */
     @Override
-    public int compare(MoviePanelViewBasic arg0, MoviePanelViewBasic arg1) {
+    public int compare(MoviePanelBasicView arg0, MoviePanelBasicView arg1) {
         String title1 = arg0.getData().getMovieTitle();
         String title2 = arg1.getData().getMovieTitle();
         return title1.compareTo(title2);
