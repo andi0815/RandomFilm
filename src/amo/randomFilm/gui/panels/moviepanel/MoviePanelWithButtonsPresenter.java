@@ -5,12 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JDialog;
-
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
+import amo.randomFilm.gui.panels.SelectionDialogPanelPresenter;
 import amo.randomFilm.gui.panels.SelectionDialogPanelView;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
@@ -67,13 +66,8 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
             SelectionDialogPanelView selectionDialogPanelView = new SelectionDialogPanelView();
             selectionDialogPanelView.setData(this.getMovieAlternatives());
             
-            JDialog jDialog = new JDialog();
-            jDialog.getContentPane().add(selectionDialogPanelView.getComponent());
-            jDialog.setEnabled(true);
-            jDialog.setModal(true);
-            jDialog.setTitle(GuiConstants.TITLE_CHOOSE_ALTERNATIVE);
-            jDialog.pack();
-            jDialog.setVisible(true);
+            SelectionDialogPanelPresenter selectionPresenter = new SelectionDialogPanelPresenter(
+                    selectionDialogPanelView, this);
             
         } else {
             logger.warn("Caught unhandled Event: " + e.getActionCommand());

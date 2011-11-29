@@ -1,6 +1,5 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -12,6 +11,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 
 /**
@@ -22,11 +22,7 @@ import amo.randomFilm.model.Movie;
  */
 public class PosterPanel extends JPanel implements Updateable {
     
-    private static final String PATH_IMAGES_LOADING = "images/LOADING.jpg";
-    
     private static final long serialVersionUID = 1L;
-    
-    private static final Color BG_COLOR = Color.WHITE;
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(PosterPanel.class);
@@ -37,10 +33,10 @@ public class PosterPanel extends JPanel implements Updateable {
     private static Image LOADING_IMAGE = null;
     static {
         try {
-            File imagefile = new File(PATH_IMAGES_LOADING);
+            File imagefile = new File(GuiConstants.IMAGE_POSTER_LOADING);
             LOADING_IMAGE = ImageIO.read(imagefile);
         } catch (IOException e) {
-            logger.warn("could not load image: " + PATH_IMAGES_LOADING);
+            logger.warn("could not load image: " + GuiConstants.IMAGE_POSTER_LOADING);
         }
     }
     
@@ -54,7 +50,7 @@ public class PosterPanel extends JPanel implements Updateable {
         this.setPreferredSize(INITIAL_SIZE);
         // setMinimumSize(new Dimension(50, 50));
         this.setImage(image);
-        this.setBackground(BG_COLOR);
+        this.setBackground(GuiConstants.BG_COLOR);
     }
     
     /**

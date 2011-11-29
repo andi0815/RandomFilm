@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
@@ -19,35 +20,34 @@ import amo.randomFilm.model.Movie;
 public class SelectionDialogPanelView {
     
     private SelectableMoviePanelView selectionView;
-    private SelectableMoviePanelPresenter selectionPresenter;
     private JPanel view;
     private JButton btnOK;
     private JButton btnCancel;
+    private SelectionHandler selectionHandler = new SelectionHandler();
     
     public SelectionDialogPanelView() {
         this.selectionView = new SelectableMoviePanelView();
-        this.selectionPresenter = new SelectableMoviePanelPresenter(this.selectionView);
         this.btnOK = new JButton(GuiConstants.LABEL_BTN_SELECT);
         this.btnCancel = new JButton(GuiConstants.LABEL_BTN_CANCEL);
-        
-        // TODO: add Scrollbar !!!
         
         this.view = new JPanel();
         GroupLayout layout = new GroupLayout(this.view);
         this.view.setLayout(layout);
         
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                .addComponent(this.selectionView.getComponent())
+        JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(moviepanel)
                 .addGroup(layout.createSequentialGroup().addComponent(this.btnCancel).addComponent(this.btnOK)));
         
         layout.setVerticalGroup(layout.createSequentialGroup() //
-                .addComponent(this.selectionView.getComponent()) //
+                .addComponent(moviepanel) //
                 .addGroup( //
                         layout.createParallelGroup()//
                                 .addComponent(this.btnCancel) //
                                 .addComponent(this.btnOK)));
         
-        this.view.add(this.selectionView.getComponent());
+        this.view.add(moviepanel);
         this.view.add(this.btnCancel);
         this.view.add(this.btnOK);
     }
@@ -56,7 +56,10 @@ public class SelectionDialogPanelView {
         for (Movie movie : movies) {
             MoviePanelBasicView movieView = new MoviePanelBasicView(null);
             movieView.setData(movie);
+//            MoviePanelBasicPresenter moviePanelBasicPresenter = new MoviePanelBasicPresenter(movie, movieView);
             this.selectionView.addData(movieView);
+            this.selectionHandler.addMovie(movieView);
+//            movieView.getComponent().addMouseListener(this.selectionHandler);
         }
     }
     
@@ -67,6 +70,10 @@ public class SelectionDialogPanelView {
     public void addActionListener(ActionListener listener) {
         this.btnCancel.addActionListener(listener);
         this.btnOK.addActionListener(listener);
+    }
+    
+    public MoviePanelBasicView getSelectedMovie() {
+        return this.selectionHandler.getSelectedMovie();
     }
     
 }

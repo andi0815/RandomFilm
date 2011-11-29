@@ -52,7 +52,7 @@ public abstract class AbstractTestBase {
         movie3.setRating(0.4);
         movie3.setRuntime(68);
         movie3.setShortDesc("short desc");
-        movie3.setTitle("The second Dumy Movie");
+        movie3.setTitle("The third Dumy Movie");
         movie3.setYear("1977");
         
     }

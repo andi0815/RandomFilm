@@ -45,7 +45,11 @@ public class GuiConstants {
     
     public static final String LABEL_BTN_ENABLE_ALWAYS_ON_TOP = "Always On Top einschalten";
     
-    public static final String TITLE_CHOOSE_ALTERNATIVE = "Choose Alternative";
+    public static final String LABEL_CHOOSE_ALTERNATIVE = "Choose Alternative";
+    
+    public static final String LABEL_BTN_SELECT = "Select";
+    
+    public static final String LABEL_BTN_CANCEL = "Cancel";
     
     /* =====================
      *  IMAGES
@@ -63,8 +67,6 @@ public class GuiConstants {
     
     public static final String IMAGE_BTN_PREV = "images\\BTN_PREV.png";
     
-    public static final String LABEL_BTN_SELECT = "Select";
-    
-    public static final String LABEL_BTN_CANCEL = "Cancel";
+    public static final String IMAGE_POSTER_LOADING = "images/LOADING.jpg";
     
 }
