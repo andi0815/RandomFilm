@@ -27,19 +27,18 @@ public class SelectionDialogPanelView {
     
     public SelectionDialogPanelView() {
         this.selectionView = new SelectableMoviePanelView();
+        JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.btnOK = new JButton(GuiConstants.LABEL_BTN_SELECT);
         this.btnCancel = new JButton(GuiConstants.LABEL_BTN_CANCEL);
         
         this.view = new JPanel();
         GroupLayout layout = new GroupLayout(this.view);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
         this.view.setLayout(layout);
-        
-        JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(moviepanel)
                 .addGroup(layout.createSequentialGroup().addComponent(this.btnCancel).addComponent(this.btnOK)));
-        
         layout.setVerticalGroup(layout.createSequentialGroup() //
                 .addComponent(moviepanel) //
                 .addGroup( //
@@ -50,6 +49,7 @@ public class SelectionDialogPanelView {
         this.view.add(moviepanel);
         this.view.add(this.btnCancel);
         this.view.add(this.btnOK);
+        this.view.setBackground(GuiConstants.BG_COLOR);
     }
     
     public void setData(List<? extends Movie> movies) {
