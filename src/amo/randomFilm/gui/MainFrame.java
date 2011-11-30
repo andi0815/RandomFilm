@@ -6,8 +6,11 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
@@ -61,13 +64,23 @@ public class MainFrame extends JFrame {
         
         // setze Fenstereigenschaften
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
-//        this.setLayout(null);
+        this.setLayout(new BorderLayout(5, 5));
         this.setTitle(title);
         this.setAlwaysOnTop(true);
         setDefaultLookAndFeelDecorated(true);
         this.setIconImage((new ImageIcon(iconPath)).getImage());
         this.setResizable(false);
+        this.getContentPane().setBackground(GuiConstants.BG_COLOR);
+        
+        /**
+         * INIT: Input field
+         */
+        JTextField titleTextField = new JTextField();
+        JButton btnAddMovieTitle = new JButton(GuiConstants.LABEL_BTN_ADD_TITLE);
+        JPanel jPanel = new JPanel(new BorderLayout(5, 5));
+        jPanel.add(titleTextField, BorderLayout.CENTER);
+        jPanel.add(btnAddMovieTitle, BorderLayout.LINE_END);
+        jPanel.setBackground(GuiConstants.BG_COLOR);
         
         /**
          * INIT: Buttons
@@ -87,10 +100,13 @@ public class MainFrame extends JFrame {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.scrollPane.setVisible(true);
         this.scrollPane.setName("ScrollPaneForDropPanel");
+        this.listOfMoviesPresenter.addTitleField(titleTextField);
+        btnAddMovieTitle.addActionListener(this.listOfMoviesPresenter);
         
         /**
          * START
          */
+        this.getContentPane().add(jPanel, BorderLayout.PAGE_START);
         this.getContentPane().add(this.scrollPane, BorderLayout.CENTER);
         this.getContentPane().add(this.btnPanel, BorderLayout.PAGE_END);
         this.pack();

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
@@ -39,6 +40,7 @@ import amo.randomFilm.gui.util.Dialogs;
 import amo.randomFilm.model.FilenameFilter;
 import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.MovieFile;
+import amo.randomFilm.model.UnknownTypes;
 
 public class ListOfMoviesPresenter implements DropTargetListener, DragSourceListener, DragGestureListener,
         ActionListener {
@@ -61,6 +63,8 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     private MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
     private ButtonPanelView buttonPanel;
+    
+    private JTextField titleTextField;
     
     public ListOfMoviesPresenter(ListOfMoviesView view, ButtonPanelView buttonPanel, Window parentFrame) {
         super();
@@ -109,11 +113,7 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
                 Iterator<MovieFile> iterator = movieNames.iterator();
                 while (iterator.hasNext()) {
                     MovieFile next = iterator.next();
-                    MoviePanelWithButtonsView movieView = new MoviePanelWithButtonsView(next);
-                    this.view.addData(movieView);
-                    MoviePanelBasicPresenter moviePanelPresenter = new MoviePanelWithButtonsPresenter(next.getFile(),
-                            next.getTitle(), movieView, this, this.movieDataProvider);
-                    this.moviePresenters.add(moviePanelPresenter);
+                    this.addMovie(next);
                 }
                 logger.debug("finished adding items!");
                 dropTargetDropEvent.getDropTargetContext().dropComplete(true);
@@ -135,6 +135,14 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
 //        this.view.resortList();
         this.view.resizePanel();
 //        this.view.getComponent().repaint();
+    }
+    
+    private void addMovie(MovieFile movieFile) {
+        MoviePanelWithButtonsView movieView = new MoviePanelWithButtonsView(movieFile);
+        this.view.addData(movieView);
+        MoviePanelBasicPresenter moviePanelPresenter = new MoviePanelWithButtonsPresenter(movieFile.getFile(),
+                movieFile.getTitle(), movieView, this, this.movieDataProvider);
+        this.moviePresenters.add(moviePanelPresenter);
     }
     
     private List<MovieFile> removeDuplicateMovies(List<MovieFile> movieNames) {
@@ -250,6 +258,19 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
                     + e.getSource());
             this.setAlwaysOnTop(true);
             
+        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ADD_TITLE)) {
+            logger.debug("Got Action Event: " + GuiConstants.LABEL_BTN_ADD_TITLE + " -> " + e + " Source: "
+                    + e.getSource());
+            if (this.titleTextField != null) {
+                this.addMovie(new MovieFile(UnknownTypes.getUnknownFile(), this.titleTextField.getText()));
+                this.titleTextField.setText("");
+            } else {
+                logger.error("titleTextField has not been set, cannot get text from input field!");
+            }
+            
+        } else {
+            logger.warn("Got Unknown Event: " + e + " Source: " + e.getSource());
+            
         }
         
     }
@@ -291,6 +312,10 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
         } else {
             logger.debug("Doch nicht ...");
         }
+    }
+    
+    public void addTitleField(JTextField titleTextField) {
+        this.titleTextField = titleTextField;
     }
     
 }

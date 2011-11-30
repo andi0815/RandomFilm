@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.gui.GuiConstants;
+
 /**
  * 
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -33,6 +35,13 @@ public class UnknownTypes {
     public static final String STRING = "UNKNOWN";
     
     private static final String PATH_IMAGES_NO_IMAGE_AVAIL = "images/NO_IMAGE_AVAIL.png";
+    
+    private static int filecounter = 0;
+    
+    public static File getUnknownFile() {
+        return new File(GuiConstants.UNKNOWN_FILE_PREFIX + filecounter++);
+    }
+    
     public static Image IMAGE = null;
     static {
         try {
