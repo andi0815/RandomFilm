@@ -64,12 +64,10 @@ public class SelectionHandler implements MouseListener {
     
     @Override
     public void mousePressed(MouseEvent e) {
-        logger.error("============ MousePressed On: " + e.getComponent());
         Iterator<MoviePanelBasicView> iterator = this.movieAlternatives.iterator();
         while (iterator.hasNext()) {
             MoviePanelBasicView next = iterator.next();
             if (next.getComponent().equals(e.getComponent())) {
-                logger.warn("--------- SELCTED: " + next.getData().getMovieTitle());
                 if (next.isSelected()) {
                     next.setSelected(false);
                     this.selectedMovie = null;
@@ -79,7 +77,6 @@ public class SelectionHandler implements MouseListener {
                 }
             } else {
                 next.setSelected(false);
-                logger.warn("---------NOT SELCTED: " + next.getData().getMovieTitle());
             }
         }
     }

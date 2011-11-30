@@ -2,6 +2,8 @@ package amo.randomFilm.gui.panels;
 
 import java.io.File;
 
+import javax.swing.JFrame;
+
 import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
@@ -17,16 +19,20 @@ public class SelectionDialogTest extends AbstractTestBase {
     
     @Test
     public void testIt() throws Exception {
-        SelectableMoviePanelView view = new SelectableMoviePanelView();
-        SelectableMoviePanelPresenter parentPanel = new SelectableMoviePanelPresenter(view);
+        ButtonPanelView buttonPanel = new ButtonPanelView();
+        JFrame parentFrame = new JFrame();
+        buttonPanel.init(parentFrame, 100, 100);
+        
+        ListOfMoviesView view = new ListOfMoviesView();
+        ListOfMoviesPresenter parentPanel = new ListOfMoviesPresenter(view, buttonPanel, parentFrame);
         MoviePanelWithButtonsView movieView = new MoviePanelWithButtonsView(new File(""));
         MoviePanelWithButtonsPresenter moviePresenter = new MoviePanelWithButtonsPresenter(null, "dummy title",
                 movieView, parentPanel, TmdbFacade.getInstance());
         
-        SelectionDialogPanelView selectionDialogPanelView = new SelectionDialogPanelView();
+        SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
         selectionDialogPanelView.setData(this.getDummyMovieList());
         
-        SelectionDialogPanelPresenter presenter = new SelectionDialogPanelPresenter(selectionDialogPanelView,
+        SelectAlternativeDialogPresenter presenter = new SelectAlternativeDialogPresenter(selectionDialogPanelView,
                 moviePresenter);
     }
 }

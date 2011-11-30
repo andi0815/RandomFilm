@@ -15,18 +15,18 @@ import amo.randomFilm.gui.util.Dialogs;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 28.11.2011
  */
-public class SelectionDialogPanelPresenter implements ActionListener {
+public class SelectAlternativeDialogPresenter implements ActionListener {
     
     /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(SelectionDialogPanelPresenter.class);
+    private static final Logger logger = Logger.getLogger(SelectAlternativeDialogPresenter.class);
     
     private JDialog jDialog;
     
-    private SelectionDialogPanelView selectionDialogPanelView;
+    private SelectAlternativeDialogView selectionDialogPanelView;
     
     private MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter;
     
-    public SelectionDialogPanelPresenter(SelectionDialogPanelView selectionDialogPanelView,
+    public SelectAlternativeDialogPresenter(SelectAlternativeDialogView selectionDialogPanelView,
             MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter) {
         this.jDialog = new JDialog();
         this.moviePanelWithButtonsPresenter = moviePanelWithButtonsPresenter;

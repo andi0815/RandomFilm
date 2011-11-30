@@ -11,10 +11,9 @@ import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.gui.panels.ButtonPanelDropper;
-import amo.randomFilm.gui.panels.ButtonPanelPresenter;
-import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
-import amo.randomFilm.gui.panels.SelectableMoviePanelView;
+import amo.randomFilm.gui.panels.ButtonPanelView;
+import amo.randomFilm.gui.panels.ListOfMoviesPresenter;
+import amo.randomFilm.gui.panels.ListOfMoviesView;
 
 public class MainFrame extends JFrame {
     
@@ -30,12 +29,12 @@ public class MainFrame extends JFrame {
     
     public static final String iconPath = "images/logo.jpg";
     
-    private ButtonPanelDropper btnPanelDropper;
+    private ButtonPanelView btnPanel;
     private JScrollPane scrollPane;
     
     private int width, height;
     
-    private SelectableMoviePanelPresenter selectableMoviePanelPresenter;
+    private ListOfMoviesPresenter listOfMoviesPresenter;
     
     public MainFrame() {
         super();
@@ -71,30 +70,29 @@ public class MainFrame extends JFrame {
         this.setResizable(false);
         
         /**
-         * INIT: Drop Panel
-         */
-        SelectableMoviePanelView selectableMoviePanelView = new SelectableMoviePanelView();
-        this.selectableMoviePanelPresenter = new SelectableMoviePanelPresenter(selectableMoviePanelView);
-        this.scrollPane = new JScrollPane(selectableMoviePanelView.getComponent(),
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        this.scrollPane.setVisible(true);
-        this.scrollPane.setName("ScrollPaneForDropPanel");
-        
-        /**
          * INIT: Buttons
          */
         int heightOfButtonPanels = 150;
-        this.btnPanelDropper = new ButtonPanelDropper();
-        this.btnPanelDropper.setPreferredSize(new Dimension(width, heightOfButtonPanels));
-        this.btnPanelDropper.init(this, width, heightOfButtonPanels);
-        ButtonPanelPresenter buttonPanelPresenter = new ButtonPanelPresenter();
-        this.btnPanelDropper.addActionListener(buttonPanelPresenter);
+        this.btnPanel = new ButtonPanelView();
+        this.btnPanel.setPreferredSize(new Dimension(width, heightOfButtonPanels));
+        this.btnPanel.init(this, width, heightOfButtonPanels);
+//        this.btnPanel.addActionListener(this.listOfMoviesPresenter);
+        
+        /**
+         * INIT: Drop Panel
+         */
+        ListOfMoviesView listOfMoviesView = new ListOfMoviesView();
+        this.listOfMoviesPresenter = new ListOfMoviesPresenter(listOfMoviesView, this.btnPanel, this);
+        this.scrollPane = new JScrollPane(listOfMoviesView.getComponent(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollPane.setVisible(true);
+        this.scrollPane.setName("ScrollPaneForDropPanel");
         
         /**
          * START
          */
         this.getContentPane().add(this.scrollPane, BorderLayout.CENTER);
-        this.getContentPane().add(this.btnPanelDropper, BorderLayout.PAGE_END);
+        this.getContentPane().add(this.btnPanel, BorderLayout.PAGE_END);
         this.pack();
         this.repaint();
         

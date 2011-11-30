@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
-import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
-import amo.randomFilm.gui.panels.SelectionDialogPanelPresenter;
-import amo.randomFilm.gui.panels.SelectionDialogPanelView;
+import amo.randomFilm.gui.panels.ListOfMoviesPresenter;
+import amo.randomFilm.gui.panels.SelectAlternativeDialogPresenter;
+import amo.randomFilm.gui.panels.SelectAlternativeDialogView;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
 
@@ -23,10 +23,10 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(MoviePanelWithButtonsPresenter.class);
     
-    private SelectableMoviePanelPresenter parentPresenter;
+    private ListOfMoviesPresenter parentPresenter;
     
     public MoviePanelWithButtonsPresenter(File f, String title, MoviePanelWithButtonsView moviePanel,
-            SelectableMoviePanelPresenter parentPresenter, MovieDataProvider movieDataProvider) {
+            ListOfMoviesPresenter parentPresenter, MovieDataProvider movieDataProvider) {
         super(f, title, moviePanel, movieDataProvider);
         this.parentPresenter = parentPresenter;
         this.moviePanel.setActionListener(this);
@@ -63,10 +63,10 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
             // Scrollpane
             // return selection
             
-            SelectionDialogPanelView selectionDialogPanelView = new SelectionDialogPanelView();
+            SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
             selectionDialogPanelView.setData(this.getMovieAlternatives());
             
-            SelectionDialogPanelPresenter selectionPresenter = new SelectionDialogPanelPresenter(
+            SelectAlternativeDialogPresenter selectionPresenter = new SelectAlternativeDialogPresenter(
                     selectionDialogPanelView, this);
             
         } else {

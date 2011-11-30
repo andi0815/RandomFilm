@@ -51,6 +51,14 @@ public class GuiConstants {
     
     public static final String LABEL_BTN_CANCEL = "Cancel";
     
+    public static final String LABEL_START_RANDOM = "Ja";
+    
+    public static final String LABEL_CANCEL_RANDOM = "Nein";
+    
+    public static final String LABEL_TITLE_START_RANDOM = "Start Movie?";
+    
+    public static final String LABEL_START_THIS_MOVIE = "Start Movie: %s ?" + "\n(Filename: %s)";
+    
     /* =====================
      *  IMAGES
      =======================*/

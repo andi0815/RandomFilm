@@ -2,15 +2,19 @@ package amo.randomFilm.gui.util;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
+
+import amo.randomFilm.gui.GuiConstants;
 
 public class Dialogs {
     
@@ -91,18 +95,31 @@ public class Dialogs {
      *            - String to display
      * @return yes = 0; no = 1
      */
-    public static boolean showStartFilmDialog(String filmName, String filmPath, Image filmIcon, Component comp) {
-        Object[] options = { "Ja", "Nein" };
+    public static boolean showStartFilmDialog(String filmName, String filmPath, Image filmIcon, Component parent) {
+        Object[] options = { GuiConstants.LABEL_START_RANDOM, GuiConstants.LABEL_CANCEL_RANDOM };
+        int MAX_SIZE = 200;
+        float scaleFactor = filmIcon.getWidth(null) / (float) filmIcon.getHeight(null);
+        int newWidth, newHeight;
+        if (filmIcon.getWidth(null) > filmIcon.getHeight(null)) {
+            newWidth = MAX_SIZE;
+            newHeight = (int) (MAX_SIZE / scaleFactor);
+        } else {
+            newWidth = (int) (MAX_SIZE * scaleFactor);
+            newHeight = MAX_SIZE;
+        }
+        logger.debug("Scaling from: " + filmIcon.getWidth(null) + "," + filmIcon.getHeight(null) + " TO (SF="
+                + scaleFactor + "): " + newWidth + "," + newHeight);
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(filmIcon, 0, 0, newWidth, newHeight, null);
+        g.dispose();
         
-        int i = JOptionPane.showOptionDialog(comp, // Component parentComponent,
-                "Film: " + filmName + " starten?" + "\n(" + filmPath + ")", // Object
-                // message,
-                "", // String title,
+        int i = JOptionPane.showOptionDialog(parent, // Component parentComponent,
+                String.format(GuiConstants.LABEL_START_THIS_MOVIE, filmName, filmPath), // message,
+                GuiConstants.LABEL_TITLE_START_RANDOM, // String title,
                 JOptionPane.YES_NO_OPTION, // int optionType,
                 JOptionPane.QUESTION_MESSAGE, // int messageType,
-                new ImageIcon(filmIcon), // new
-                // ImageIcon("./images/question.png"),
-                // //Icon icon,
+                new ImageIcon(resizedImage), // new
                 options, // Object[] options,
                 options[1] // Object initialValue
                 );
@@ -131,4 +148,5 @@ public class Dialogs {
         logger.error("Window-Loc Y: " + (screenInsets.top + ((screenHeight - window.getHeight()) / 2)));
         
     }
+    
 }

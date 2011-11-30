@@ -17,16 +17,16 @@ import amo.randomFilm.model.Movie;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 24.11.2011
  */
-public class SelectionDialogPanelView {
+public class SelectAlternativeDialogView {
     
-    private SelectableMoviePanelView selectionView;
+    private ListOfMoviesView selectionView;
     private JPanel view;
     private JButton btnOK;
     private JButton btnCancel;
     private SelectionHandler selectionHandler = new SelectionHandler();
     
-    public SelectionDialogPanelView() {
-        this.selectionView = new SelectableMoviePanelView();
+    public SelectAlternativeDialogView() {
+        this.selectionView = new ListOfMoviesView();
         JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.btnOK = new JButton(GuiConstants.LABEL_BTN_SELECT);
