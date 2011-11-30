@@ -56,13 +56,6 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
         if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ALTERNATIVES)) {
             logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_ALTERNATIVES + " -> Source: " + e.getSource());
             
-            // TODO:
-            // selection listener
-            // OK, CANCEL Buttons
-            // Min / Max Size
-            // Scrollpane
-            // return selection
-            
             SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
             selectionDialogPanelView.setData(this.getMovieAlternatives());
             
