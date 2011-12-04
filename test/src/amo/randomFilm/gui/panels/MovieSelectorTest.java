@@ -8,8 +8,8 @@ import javax.swing.JFrame;
 import org.apache.log4j.BasicConfigurator;
 
 import amo.randomFilm.AbstractTestBase;
-import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsView;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsView;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -29,13 +29,17 @@ public class MovieSelectorTest extends AbstractTestBase {
         MoviePanelBasicView mpv3_nochmal = new MoviePanelWithButtonsView(new File("file://test.it_3"));
 //        showComponent(mpv1.getComponent(), 1000);
         
-        SelectableMoviePanelView movieSelector = new SelectableMoviePanelView();
+        ListOfMoviesView movieSelector = new ListOfMoviesView();
 //        movieSelector.addData(mpv1);
 //        movieSelector.addData(mpv2);
 //        movieSelector.addData(mpv3);
 //        movieSelector.addData(mpv3_nochmal);
         
-        SelectableMoviePanelPresenter selectableMoviePanelPresenter = new SelectableMoviePanelPresenter(movieSelector);
+        ButtonPanelView buttonPanel = new ButtonPanelView();
+        JFrame parentFrame = new JFrame();
+        buttonPanel.init(parentFrame, 100, 100);
+        ListOfMoviesPresenter selectableMoviePanelPresenter = new ListOfMoviesPresenter(movieSelector, buttonPanel,
+                parentFrame);
         
 //        JPanel movieSelector = new JPanel();
 //        movieSelector.add(mpv1.getComponent());

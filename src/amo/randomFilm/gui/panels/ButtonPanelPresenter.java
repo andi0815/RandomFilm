@@ -16,17 +16,13 @@ public class ButtonPanelPresenter implements ActionListener {
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(ButtonPanelPresenter.class);
     
+    public ButtonPanelPresenter() {
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_DELETE)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_DELETE + " -> " + e + " Source: " + e.getSource());
-            
-            // MoviePanelViewNoButtons item = (MoviePanelView) ((JButton)
-            // e.getSource()).getParent();
-//          this.removeMoviePanel(item);
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT_ALL)) {
+        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT_ALL)) {
             logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_SELECT_ALL + " -> " + e + " Source: "
                     + e.getSource());
             

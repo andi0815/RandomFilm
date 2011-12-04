@@ -6,6 +6,8 @@ import java.io.File;
 
 import javax.swing.JLabel;
 
+import amo.randomFilm.gui.GuiConstants;
+
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 16.10.2011
@@ -17,7 +19,11 @@ public class PathPanel extends JLabel {
     public PathPanel(File filePath) {
         this.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
         if (filePath != null) {
-            this.setText(filePath.getAbsolutePath());
+            if (!filePath.getName().startsWith(GuiConstants.UNKNOWN_FILE_PREFIX)) {
+                this.setText(filePath.getAbsolutePath());
+            } else {
+                this.setText(GuiConstants.LABEL_NO_FILE_GIVEN);
+            }
         }
         this.filePath = filePath;
     }

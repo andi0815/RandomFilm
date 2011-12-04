@@ -1,8 +1,6 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Image;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import sun.awt.shell.ShellFolder;
 import amo.randomFilm.datasource.exception.MovieDataProviderException;
+import amo.randomFilm.gui.panels.SelectionHandler;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.SimpleMovie;
@@ -24,7 +23,7 @@ import amo.randomFilm.model.SimpleMovie;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
  */
-public class MoviePanelBasicPresenter implements MouseListener {
+public class MoviePanelBasicPresenter {
     
     private final class RequestThread extends Thread {
         private final MovieDataProvider movieDataProvider;
@@ -57,7 +56,7 @@ public class MoviePanelBasicPresenter implements MouseListener {
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(MoviePanelBasicPresenter.class);
     
-    private final File file;
+    private File file = null;
     
     private List<? extends Movie> movieAlternatives;
     
@@ -65,15 +64,22 @@ public class MoviePanelBasicPresenter implements MouseListener {
     
     protected MoviePanelBasicView moviePanel = null;
     
+    private SelectionHandler selectionHandler;
+    
     public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel,
             MovieDataProvider movieDataProvider) {
-        super();
+        this(new SimpleMovie(title), moviePanel);
         this.file = f;
-        this.moviePanel = moviePanel;
-        this.moviePanel.setData(new SimpleMovie(title));
-        this.moviePanel.setMouseListener(this);
         this.requestMovieInfo(title, movieDataProvider);
         
+    }
+    
+    public MoviePanelBasicPresenter(Movie movie, MoviePanelBasicView moviePanel) {
+        super();
+        this.moviePanel = moviePanel;
+        this.moviePanel.setData(movie);
+        this.selectionHandler = new SelectionHandler();
+        this.selectionHandler.addMovie(moviePanel);
     }
     
     protected void setMovieAlternatives(List<? extends Movie> alternatives) {
@@ -122,6 +128,7 @@ public class MoviePanelBasicPresenter implements MouseListener {
     public void setSelectedMovie(Movie movie) {
         if (this.movieAlternatives.contains(movie)) {
             this.selectedMovie = movie;
+            this.moviePanel.setData(this.selectedMovie);
         } else {
             throw new IllegalArgumentException("Movie " + movie + " does not exist as an alternative.");
         }
@@ -139,28 +146,6 @@ public class MoviePanelBasicPresenter implements MouseListener {
             logger.error("Could not find file: " + this.file);
         }
         return execType;
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent arg0) {
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent arg0) {
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent arg0) {
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent arg0) {
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent arg0) {
-        this.moviePanel.setSelected(!this.moviePanel.isSelected());
-        logger.error("!!!!!!!!!!!!!!!!!!!!!Clicked!!!");
     }
     
     public MoviePanelBasicView getView() {

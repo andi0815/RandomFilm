@@ -15,7 +15,7 @@ import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 import amo.randomFilm.model.FileListHandler;
 
-public class SelectableMoviePanelView {
+public class ListOfMoviesView {
     
     /**
      * default Serial version id
@@ -23,7 +23,7 @@ public class SelectableMoviePanelView {
     private static final long serialVersionUID = 1L;
     
     /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(SelectableMoviePanelView.class);
+    private static final Logger logger = Logger.getLogger(ListOfMoviesView.class);
     
     /** Color of Font */
     private static final Color DROPPER_FONT_COLOR = Color.BLACK;
@@ -49,7 +49,7 @@ public class SelectableMoviePanelView {
      * @param parent
      *            the Window that is displaying this Panel
      */
-    public SelectableMoviePanelView() {
+    public ListOfMoviesView() {
         super();
         this.moviesPanel = new JPanel() {
 //            @Override

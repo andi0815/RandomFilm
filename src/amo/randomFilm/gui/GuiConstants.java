@@ -45,7 +45,23 @@ public class GuiConstants {
     
     public static final String LABEL_BTN_ENABLE_ALWAYS_ON_TOP = "Always On Top einschalten";
     
-    public static final String TITLE_CHOOSE_ALTERNATIVE = "Choose Alternative";
+    public static final String LABEL_CHOOSE_ALTERNATIVE = "Choose Alternative";
+    
+    public static final String LABEL_BTN_SELECT = "Select";
+    
+    public static final String LABEL_BTN_CANCEL = "Cancel";
+    
+    public static final String LABEL_START_RANDOM = "Ja";
+    
+    public static final String LABEL_CANCEL_RANDOM = "Nein";
+    
+    public static final String LABEL_TITLE_START_RANDOM = "Start Movie?";
+    
+    public static final String LABEL_START_THIS_MOVIE = "Start Movie: %s ?" + "\n(Filename: %s)";
+    
+    public static final String LABEL_BTN_ADD_TITLE = "Hinzufügen";
+    
+    public static final String LABEL_NO_FILE_GIVEN = "Keine Datei ...";
     
     /* =====================
      *  IMAGES
@@ -63,8 +79,12 @@ public class GuiConstants {
     
     public static final String IMAGE_BTN_PREV = "images\\BTN_PREV.png";
     
-    public static final String LABEL_BTN_SELECT = "Select";
+    public static final String IMAGE_POSTER_LOADING = "images/LOADING.jpg";
     
-    public static final String LABEL_BTN_CANCEL = "Cancel";
+    /* =====================
+     *  IDENTIFIERS
+     =======================*/
+    
+    public static final String UNKNOWN_FILE_PREFIX = "UNKNOWN_TITLE_OF_MOVIE.598765tzibjzb_";
     
 }

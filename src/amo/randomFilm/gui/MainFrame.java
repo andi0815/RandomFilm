@@ -6,15 +6,17 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
-import amo.randomFilm.gui.panels.ButtonPanelDropper;
-import amo.randomFilm.gui.panels.ButtonPanelPresenter;
-import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
-import amo.randomFilm.gui.panels.SelectableMoviePanelView;
+import amo.randomFilm.gui.panels.ButtonPanelView;
+import amo.randomFilm.gui.panels.ListOfMoviesPresenter;
+import amo.randomFilm.gui.panels.ListOfMoviesView;
 
 public class MainFrame extends JFrame {
     
@@ -30,12 +32,12 @@ public class MainFrame extends JFrame {
     
     public static final String iconPath = "images/logo.jpg";
     
-    private ButtonPanelDropper btnPanelDropper;
+    private ButtonPanelView btnPanel;
     private JScrollPane scrollPane;
     
     private int width, height;
     
-    private SelectableMoviePanelPresenter selectableMoviePanelPresenter;
+    private ListOfMoviesPresenter listOfMoviesPresenter;
     
     public MainFrame() {
         super();
@@ -62,39 +64,51 @@ public class MainFrame extends JFrame {
         
         // setze Fenstereigenschaften
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
-//        this.setLayout(null);
+        this.setLayout(new BorderLayout(5, 5));
         this.setTitle(title);
         this.setAlwaysOnTop(true);
         setDefaultLookAndFeelDecorated(true);
         this.setIconImage((new ImageIcon(iconPath)).getImage());
         this.setResizable(false);
+        this.getContentPane().setBackground(GuiConstants.BG_COLOR);
         
         /**
-         * INIT: Drop Panel
+         * INIT: Input field
          */
-        SelectableMoviePanelView selectableMoviePanelView = new SelectableMoviePanelView();
-        this.selectableMoviePanelPresenter = new SelectableMoviePanelPresenter(selectableMoviePanelView);
-        this.scrollPane = new JScrollPane(selectableMoviePanelView.getComponent(),
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        this.scrollPane.setVisible(true);
-        this.scrollPane.setName("ScrollPaneForDropPanel");
+        JTextField titleTextField = new JTextField();
+        JButton btnAddMovieTitle = new JButton(GuiConstants.LABEL_BTN_ADD_TITLE);
+        JPanel jPanel = new JPanel(new BorderLayout(5, 5));
+        jPanel.add(titleTextField, BorderLayout.CENTER);
+        jPanel.add(btnAddMovieTitle, BorderLayout.LINE_END);
+        jPanel.setBackground(GuiConstants.BG_COLOR);
         
         /**
          * INIT: Buttons
          */
         int heightOfButtonPanels = 150;
-        this.btnPanelDropper = new ButtonPanelDropper();
-        this.btnPanelDropper.setPreferredSize(new Dimension(width, heightOfButtonPanels));
-        this.btnPanelDropper.init(this, width, heightOfButtonPanels);
-        ButtonPanelPresenter buttonPanelPresenter = new ButtonPanelPresenter();
-        this.btnPanelDropper.addActionListener(buttonPanelPresenter);
+        this.btnPanel = new ButtonPanelView();
+        this.btnPanel.setPreferredSize(new Dimension(width, heightOfButtonPanels));
+        this.btnPanel.init(this, width, heightOfButtonPanels);
+//        this.btnPanel.addActionListener(this.listOfMoviesPresenter);
+        
+        /**
+         * INIT: Drop Panel
+         */
+        ListOfMoviesView listOfMoviesView = new ListOfMoviesView();
+        this.listOfMoviesPresenter = new ListOfMoviesPresenter(listOfMoviesView, this.btnPanel, this);
+        this.scrollPane = new JScrollPane(listOfMoviesView.getComponent(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollPane.setVisible(true);
+        this.scrollPane.setName("ScrollPaneForDropPanel");
+        this.listOfMoviesPresenter.addTitleField(titleTextField);
+        btnAddMovieTitle.addActionListener(this.listOfMoviesPresenter);
         
         /**
          * START
          */
+        this.getContentPane().add(jPanel, BorderLayout.PAGE_START);
         this.getContentPane().add(this.scrollPane, BorderLayout.CENTER);
-        this.getContentPane().add(this.btnPanelDropper, BorderLayout.PAGE_END);
+        this.getContentPane().add(this.btnPanel, BorderLayout.PAGE_END);
         this.pack();
         this.repaint();
         

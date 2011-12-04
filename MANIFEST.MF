@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
 Main-Class: amo.randomFilm.RandomFilm
+Class-Path: libs/log4j-1.2.16.jar libs/gson-1.7.1.jar

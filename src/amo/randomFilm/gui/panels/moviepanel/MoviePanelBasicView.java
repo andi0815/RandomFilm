@@ -155,7 +155,7 @@ public class MoviePanelBasicView {
         this.moviePanel.removeMouseListener(listener);
     }
     
-    void setSelected(boolean isSelected) {
+    public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
         if (isSelected) {
             this.moviePanel.setBackground(GuiConstants.BG_COLOR_SELECTED);
@@ -164,6 +164,7 @@ public class MoviePanelBasicView {
             this.moviePanel.setBackground(GuiConstants.BG_COLOR);
             this.poster.setBackground(GuiConstants.BG_COLOR);
         }
+        this.getComponent().repaint();
     }
     
     public boolean isSelected() {

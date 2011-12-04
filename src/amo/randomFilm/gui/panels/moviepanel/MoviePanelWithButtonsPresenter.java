@@ -5,13 +5,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JDialog;
-
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
-import amo.randomFilm.gui.panels.SelectableMoviePanelPresenter;
-import amo.randomFilm.gui.panels.SelectionDialogPanelView;
+import amo.randomFilm.gui.panels.ListOfMoviesPresenter;
+import amo.randomFilm.gui.panels.SelectAlternativeDialogPresenter;
+import amo.randomFilm.gui.panels.SelectAlternativeDialogView;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
 
@@ -24,10 +23,10 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(MoviePanelWithButtonsPresenter.class);
     
-    private SelectableMoviePanelPresenter parentPresenter;
+    private ListOfMoviesPresenter parentPresenter;
     
     public MoviePanelWithButtonsPresenter(File f, String title, MoviePanelWithButtonsView moviePanel,
-            SelectableMoviePanelPresenter parentPresenter, MovieDataProvider movieDataProvider) {
+            ListOfMoviesPresenter parentPresenter, MovieDataProvider movieDataProvider) {
         super(f, title, moviePanel, movieDataProvider);
         this.parentPresenter = parentPresenter;
         this.moviePanel.setActionListener(this);
@@ -57,23 +56,11 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
         if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ALTERNATIVES)) {
             logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_ALTERNATIVES + " -> Source: " + e.getSource());
             
-            // TODO:
-            // selection listener
-            // OK, CANCEL Buttons
-            // Min / Max Size
-            // Scrollpane
-            // return selection
-            
-            SelectionDialogPanelView selectionDialogPanelView = new SelectionDialogPanelView();
+            SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
             selectionDialogPanelView.setData(this.getMovieAlternatives());
             
-            JDialog jDialog = new JDialog();
-            jDialog.getContentPane().add(selectionDialogPanelView.getComponent());
-            jDialog.setEnabled(true);
-            jDialog.setModal(true);
-            jDialog.setTitle(GuiConstants.TITLE_CHOOSE_ALTERNATIVE);
-            jDialog.pack();
-            jDialog.setVisible(true);
+            SelectAlternativeDialogPresenter selectionPresenter = new SelectAlternativeDialogPresenter(
+                    selectionDialogPanelView, this);
             
         } else {
             logger.warn("Caught unhandled Event: " + e.getActionCommand());
