@@ -2,7 +2,6 @@ package amo.randomFilm.gui.panels;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -11,7 +10,6 @@ import javax.swing.JScrollPane;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
-import amo.randomFilm.model.Movie;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -52,15 +50,21 @@ public class SelectAlternativeDialogView {
         this.view.setBackground(GuiConstants.BG_COLOR);
     }
     
-    public void setData(List<? extends Movie> movies) {
-        for (Movie movie : movies) {
-            MoviePanelBasicView movieView = new MoviePanelBasicView(null);
-            movieView.setData(movie);
-//            MoviePanelBasicPresenter moviePanelBasicPresenter = new MoviePanelBasicPresenter(movie, movieView);
-            this.selectionView.addData(movieView);
-            this.selectionHandler.addMovie(movieView);
-//            movieView.getComponent().addMouseListener(this.selectionHandler);
-        }
+    // public void setData(List<? extends Movie> movies) {
+    // for (Movie movie : movies) {
+    // MoviePanelBasicView movieView = new MoviePanelBasicView(null);
+    // movieView.setData(movie);
+    // // MoviePanelBasicPresenter moviePanelBasicPresenter = new MoviePanelBasicPresenter(movie,
+    // movieView);
+    // this.selectionView.addData(movieView);
+    // this.selectionHandler.addMovie(movieView);
+    // // movieView.getComponent().addMouseListener(this.selectionHandler);
+    // }
+    // }
+    
+    public void addMovieView(MoviePanelBasicView movieView) {
+        this.selectionView.addData(movieView);
+        this.selectionHandler.addMovie(movieView);
     }
     
     public Component getComponent() {

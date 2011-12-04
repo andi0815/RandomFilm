@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.GroupLayout.Alignment;
 
 import org.apache.log4j.Logger;
 
@@ -44,9 +44,9 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         final GroupLayout layout = new GroupLayout(this.moviePanel);
         this.moviePanel.setLayout(layout);
         
-////       We specify automatic gap insertion:
-//        layout.setAutoCreateGaps(true);
-//        layout.setAutoCreateContainerGaps(true);
+        // // We specify automatic gap insertion:
+        // layout.setAutoCreateGaps(true);
+        // layout.setAutoCreateContainerGaps(true);
         
         // initialize Components
         this.poster = new PosterPanel(null);
@@ -69,15 +69,14 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         this.btnAlternatives.setMinimumSize(new Dimension(32, 32));
         this.btnAlternatives.setVisible(false);
         
-//      Then, we define the groups and add the components. We establish a root group for each dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created via createSequentialGroup and createParallelGroup methods. Components are added to groups by using the addComponent method.
-        layout.setHorizontalGroup(layout
-                .createSequentialGroup()
-                .addComponent(this.poster)
-                .addGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel)
-                                .addComponent(this.starRater).addComponent(this.runtimePanel)
-                                .addComponent(this.yearPanel).addComponent(this.genrePanel)
-                                .addComponent(this.pathPanel)) //
+        // Then, we define the groups and add the components. We establish a root group for each
+        // dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created
+        // via createSequentialGroup and createParallelGroup methods. Components are added to groups
+        // by using the addComponent method.
+        layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.poster).addGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(
+                        this.starRater).addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(
+                        this.genrePanel).addComponent(this.pathPanel)) //
                 .addComponent(this.btnAlternatives) //
                 .addComponent(this.btnDelete));
         layout.setVerticalGroup(layout.createParallelGroup() //
@@ -101,7 +100,6 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         this.btnAlternatives.setVisible(hasAlternatives);
         this.moviePanel.doLayout();
         this.moviePanel.repaint();
-        logger.debug("IN: hasAlternatives -  " + hasAlternatives);
     }
     
     @Override

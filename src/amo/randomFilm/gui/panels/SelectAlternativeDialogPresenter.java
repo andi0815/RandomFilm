@@ -2,14 +2,19 @@ package amo.randomFilm.gui.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JDialog;
 
 import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
+import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsPresenter;
+import amo.randomFilm.gui.util.BackgroundMovieDataLoader;
 import amo.randomFilm.gui.util.Dialogs;
+import amo.randomFilm.model.Movie;
+import amo.randomFilm.model.SimpleMovie;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -27,11 +32,22 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
     private MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter;
     
     public SelectAlternativeDialogPresenter(SelectAlternativeDialogView selectionDialogPanelView,
-            MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter) {
+            List<? extends Movie> listOfAlternatives, MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter) {
+        // init View
+        this.selectionDialogPanelView = selectionDialogPanelView;
+        this.selectionDialogPanelView.addActionListener(this);
+        
+        for (Movie movie : listOfAlternatives) {
+            MoviePanelBasicView movieView = new MoviePanelBasicView(moviePanelWithButtonsPresenter.getFile());
+            movieView.setData(new SimpleMovie(movie.getMovieTitle()));
+            selectionDialogPanelView.addMovieView(movieView);
+            BackgroundMovieDataLoader bgLoader = new BackgroundMovieDataLoader(movie, movieView);
+            bgLoader.start();
+        }
+        
+        // init Dialog
         this.jDialog = new JDialog();
         this.moviePanelWithButtonsPresenter = moviePanelWithButtonsPresenter;
-        this.selectionDialogPanelView = selectionDialogPanelView;
-        selectionDialogPanelView.addActionListener(this);
         this.jDialog.getContentPane().add(selectionDialogPanelView.getComponent());
         this.jDialog.setEnabled(true);
         this.jDialog.setModal(true);

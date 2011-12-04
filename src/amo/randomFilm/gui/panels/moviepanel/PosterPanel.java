@@ -88,11 +88,11 @@ public class PosterPanel extends JPanel implements Updateable {
         
         // determine new size, but keep aspect ratio
         if (dx < dy) {
-            logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by X");
+            // logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by X");
             currentWidth = this.getWidth();
             currentHeight = (int) (this.imageHeight * dx);
         } else {
-            logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
+            // logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
             currentWidth = (int) (this.imageWidth * dy);
             currentHeight = this.getHeight();
         }
@@ -104,8 +104,8 @@ public class PosterPanel extends JPanel implements Updateable {
         }
         
         // draw
-        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null),
-                this.image.getHeight(null), null);
+        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null), this.image
+                .getHeight(null), null);
         
     }
     

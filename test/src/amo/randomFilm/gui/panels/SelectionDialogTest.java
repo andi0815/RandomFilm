@@ -30,9 +30,8 @@ public class SelectionDialogTest extends AbstractTestBase {
                 movieView, parentPanel, TmdbFacade.getInstance());
         
         SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
-        selectionDialogPanelView.setData(this.getDummyMovieList());
         
         SelectAlternativeDialogPresenter presenter = new SelectAlternativeDialogPresenter(selectionDialogPanelView,
-                moviePresenter);
+                this.getDummyMovieList(), moviePresenter);
     }
 }

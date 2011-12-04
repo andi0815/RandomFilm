@@ -17,8 +17,7 @@ import amo.randomFilm.model.SimpleMovie;
 
 /**
  * Class that contains information about a certain movie file. The information to display is
- * provided
- * by a {@link MovieDataProvider} within a {@link Movie} object.
+ * provided by a {@link MovieDataProvider} within a {@link Movie} object.
  * 
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
@@ -87,7 +86,8 @@ public class MoviePanelBasicPresenter {
         // set first movie the selected one, if any available
         this.selectedMovie = MoviePanelBasicPresenter.this.movieAlternatives != null
                 && MoviePanelBasicPresenter.this.movieAlternatives.size() > 0 ? MoviePanelBasicPresenter.this.movieAlternatives
-                .get(0) : null;
+                .get(0)
+                : null;
         this.moviePanel.setData(MoviePanelBasicPresenter.this.selectedMovie);
     }
     

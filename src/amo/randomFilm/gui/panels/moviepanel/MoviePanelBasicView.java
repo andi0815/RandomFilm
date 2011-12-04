@@ -7,11 +7,12 @@ import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.GroupLayout.Alignment;
 
 import amo.randomFilm.gui.GuiConstants;
+import amo.randomFilm.gui.util.UpdatableView;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.UnknownTypes;
 
@@ -19,7 +20,7 @@ import amo.randomFilm.model.UnknownTypes;
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 11.11.2011
  */
-public class MoviePanelBasicView {
+public class MoviePanelBasicView implements UpdatableView {
     
     protected final class MPanel extends JPanel {
         @Override
@@ -75,9 +76,9 @@ public class MoviePanelBasicView {
         this.moviePanel = new MPanel();
         GroupLayout layout = new GroupLayout(this.moviePanel);
         this.moviePanel.setLayout(layout);
-////       We specify automatic gap insertion:
-//        layout.setAutoCreateGaps(true);
-//        layout.setAutoCreateContainerGaps(true);
+        // // We specify automatic gap insertion:
+        // layout.setAutoCreateGaps(true);
+        // layout.setAutoCreateContainerGaps(true);
         
         // initialize Components
         this.poster = new PosterPanel(null);
@@ -93,14 +94,10 @@ public class MoviePanelBasicView {
         // dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created
         // via createSequentialGroup and createParallelGroup methods. Components are added to groups
         // by using the addComponent method.
-        layout.setHorizontalGroup(layout
-                .createSequentialGroup()
-                .addComponent(this.poster)
-                .addGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel)
-                                .addComponent(this.starRater).addComponent(this.runtimePanel)
-                                .addComponent(this.yearPanel).addComponent(this.genrePanel)
-                                .addComponent(this.pathPanel)));
+        layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.poster).addGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(
+                        this.starRater).addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(
+                        this.genrePanel).addComponent(this.pathPanel)));
         layout.setVerticalGroup(layout.createParallelGroup() //
                 .addComponent(this.poster, Alignment.CENTER) //
                 .addGroup( //
@@ -116,10 +113,10 @@ public class MoviePanelBasicView {
         this.moviePanel.setVisible(true);
     }
     
-    /* ========================
-     *  PUBLIC Interface: 
-     * ======================== */
-    
+    /*
+     * ======================== PUBLIC Interface: ========================
+     */
+
     public void setData(Movie movie) {
         this.movie = movie;
         this.poster.update(movie);
@@ -128,11 +125,16 @@ public class MoviePanelBasicView {
         this.runtimePanel.update(movie);
         this.yearPanel.update(movie);
         this.genrePanel.update(movie);
-//        this.pathPanel.update(movie);
+        // this.pathPanel.update(movie);
     }
     
     public Movie getData() {
         return this.movie;
+    }
+    
+    @Override
+    public void updateData(Movie movie) {
+        setData(movie);
     }
     
     public File getFile() {
@@ -143,10 +145,10 @@ public class MoviePanelBasicView {
         return this.moviePanel;
     }
     
-    /* ========================
-     *  SELECTION HANDLING: 
-     * ======================== */
-    
+    /*
+     * ======================== SELECTION HANDLING: ========================
+     */
+
     void setMouseListener(MouseListener listener) {
         this.moviePanel.addMouseListener(listener);
     }
@@ -171,10 +173,10 @@ public class MoviePanelBasicView {
         return this.isSelected;
     }
     
-    /* ========================
-     *  ACTION HANDLING: 
-     * ======================== */
-    
+    /*
+     * ======================== ACTION HANDLING: ========================
+     */
+
     void setActionListener(ActionListener listener) {
         // To be overloaded ...
     }

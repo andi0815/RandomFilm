@@ -57,10 +57,8 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
             logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_ALTERNATIVES + " -> Source: " + e.getSource());
             
             SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
-            selectionDialogPanelView.setData(this.getMovieAlternatives());
-            
             SelectAlternativeDialogPresenter selectionPresenter = new SelectAlternativeDialogPresenter(
-                    selectionDialogPanelView, this);
+                    selectionDialogPanelView, this.getMovieAlternatives(), this);
             
         } else {
             logger.warn("Caught unhandled Event: " + e.getActionCommand());
