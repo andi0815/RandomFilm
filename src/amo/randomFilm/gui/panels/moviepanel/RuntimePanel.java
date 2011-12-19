@@ -1,10 +1,10 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.UnknownTypes;
 
@@ -15,7 +15,7 @@ import amo.randomFilm.model.UnknownTypes;
 public class RuntimePanel extends JLabel implements Updateable {
     
     public RuntimePanel(int runtimeLength) {
-        this.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+        this.setFont(GuiConstants.FONT_NORMAL);
         this.doUpdate(runtimeLength);
     }
     

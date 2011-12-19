@@ -1,10 +1,10 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.UnknownTypes;
 
@@ -16,7 +16,7 @@ public class YearPanel extends JLabel implements Updateable {
     
     public YearPanel(String year) {
         this.doUpdate(year);
-        this.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+        this.setFont(GuiConstants.FONT_NORMAL);
     }
     
     private void doUpdate(String year) {

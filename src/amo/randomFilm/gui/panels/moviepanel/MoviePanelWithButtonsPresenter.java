@@ -9,10 +9,12 @@ import org.apache.log4j.Logger;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.ListOfMoviesPresenter;
+import amo.randomFilm.gui.panels.MovieDetailsView;
 import amo.randomFilm.gui.panels.SelectAlternativeDialogPresenter;
 import amo.randomFilm.gui.panels.SelectAlternativeDialogView;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.MovieDataProvider;
+import amo.randomFilm.model.UnknownTypes;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -38,11 +40,14 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
     @Override
     protected void setMovieAlternatives(List<? extends Movie> alternatives) {
         super.setMovieAlternatives(alternatives);
-        if (alternatives != null && alternatives.size() > 1) {
-            ((MoviePanelWithButtonsView) this.moviePanel).hasAlternatives(true);
-        } else {
-            ((MoviePanelWithButtonsView) this.moviePanel).hasAlternatives(false);
-        }
+        
+        boolean hasAlternatives = alternatives != null && alternatives.size() > 1;
+        ((MoviePanelWithButtonsView) this.moviePanel).hasAlternatives(hasAlternatives);
+        
+        boolean hasDetails = this.getSelectedMovie().getMovieShortDescription() != null
+                && this.getSelectedMovie().getMovieShortDescription() != UnknownTypes.STRING;
+        ((MoviePanelWithButtonsView) this.moviePanel).hasDetails(hasDetails);
+        
     }
     
     @Override
@@ -59,6 +64,12 @@ public class MoviePanelWithButtonsPresenter extends MoviePanelBasicPresenter imp
             SelectAlternativeDialogView selectionDialogPanelView = new SelectAlternativeDialogView();
             SelectAlternativeDialogPresenter selectionPresenter = new SelectAlternativeDialogPresenter(
                     selectionDialogPanelView, this.getMovieAlternatives(), this);
+            
+        }
+        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_INFO)) {
+            logger.debug("Got Action Event: " + GuiConstants.LABEL_BTN_INFO + " -> Source: " + e.getSource());
+            MovieDetailsView movieDetailsView = new MovieDetailsView(this.getSelectedMovie());
+            movieDetailsView.setVisible(true);
             
         } else {
             logger.warn("Caught unhandled Event: " + e.getActionCommand());

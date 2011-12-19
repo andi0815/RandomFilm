@@ -226,6 +226,11 @@ public class StarRater extends JPanel implements Updateable {
         return new Dimension(this.stars * STAR_BACKGROUND_IMAGE.getWidth(null), STAR_BACKGROUND_IMAGE.getHeight(null));
     }
     
+    @Override
+    public Dimension getMaximumSize() {
+        return this.getPreferredSize();
+    }
+    
     /**
      * Paints this component.
      * 
