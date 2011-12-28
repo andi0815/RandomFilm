@@ -49,9 +49,7 @@ public class PosterPanel extends JPanel implements Updateable {
     private boolean centerVertically = true;
     
     public PosterPanel(Image image) {
-//        this.setPreferredSize(INITIAL_SIZE);
         this.setMinimumSize(INITIAL_SIZE);
-        // setMinimumSize(new Dimension(50, 50));
         this.setImage(image);
         this.setBackground(GuiConstants.BG_COLOR);
     }
@@ -109,8 +107,8 @@ public class PosterPanel extends JPanel implements Updateable {
         }
         
         // draw
-        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null),
-                this.image.getHeight(null), null);
+        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null), this.image
+                .getHeight(null), null);
         
     }
     
@@ -126,6 +124,18 @@ public class PosterPanel extends JPanel implements Updateable {
     
     public void setCenterVertically(boolean centerVertically) {
         this.centerVertically = centerVertically;
+    }
+    
+    @Override
+    public Dimension getPreferredSize() {
+        // calculate current aspect ratio
+        double dy = (double) this.getHeight() / this.imageHeight;
+        int currentWidth, currentHeight;
+        // logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
+        currentWidth = (int) (this.imageWidth * dy);
+        currentHeight = this.getHeight();
+        
+        return new Dimension(currentWidth, currentHeight);
     }
     
 }

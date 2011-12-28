@@ -1,15 +1,15 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.io.File;
 
-import javax.swing.GroupLayout;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.GroupLayout.Alignment;
 
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.util.UpdatableView;
@@ -74,7 +74,8 @@ public class MoviePanelBasicView implements UpdatableView {
     protected void layoutPanel(File file) {
         
         this.moviePanel = new MPanel();
-        GroupLayout layout = new GroupLayout(this.moviePanel);
+        // GroupLayout layout = new GroupLayout(this.moviePanel);
+        BorderLayout layout = new BorderLayout();
         this.moviePanel.setLayout(layout);
         // // We specify automatic gap insertion:
         // layout.setAutoCreateGaps(true);
@@ -90,23 +91,37 @@ public class MoviePanelBasicView implements UpdatableView {
         this.genrePanel = new GenrePanel(null);
         this.pathPanel = new PathPanel(file);
         
-        // Then, we define the groups and add the components. We establish a root group for each
-        // dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created
-        // via createSequentialGroup and createParallelGroup methods. Components are added to groups
-        // by using the addComponent method.
-        layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.poster).addGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(
-                        this.starRater).addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(
-                        this.genrePanel).addComponent(this.pathPanel)));
-        layout.setVerticalGroup(layout.createParallelGroup() //
-                .addComponent(this.poster, Alignment.CENTER) //
-                .addGroup( //
-                        layout.createSequentialGroup()//
-                                .addComponent(this.titlePanel) //
-                                .addComponent(this.starRater).addComponent(this.runtimePanel) //
-                                .addComponent(this.yearPanel) //
-                                .addComponent(this.genrePanel) //
-                                .addComponent(this.pathPanel)));
+        // // Then, we define the groups and add the components. We establish a root group for each
+        // // dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are
+        // created
+        // // via createSequentialGroup and createParallelGroup methods. Components are added to
+        // groups
+        // // by using the addComponent method.
+        // layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.poster).addGroup(
+        // layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(
+        // this.starRater).addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(
+        // this.genrePanel).addComponent(this.pathPanel)));
+        // layout.setVerticalGroup(layout.createParallelGroup() //
+        // .addComponent(this.poster, Alignment.CENTER) //
+        // .addGroup( //
+        // layout.createSequentialGroup()//
+        // .addComponent(this.titlePanel) //
+        // .addComponent(this.starRater).addComponent(this.runtimePanel) //
+        // .addComponent(this.yearPanel) //
+        // .addComponent(this.genrePanel) //
+        // .addComponent(this.pathPanel)));
+        
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.add(titlePanel);
+        textPanel.add(starRater);
+        textPanel.add(runtimePanel);
+        textPanel.add(yearPanel);
+        textPanel.add(genrePanel);
+        textPanel.add(pathPanel);
+        
+        this.moviePanel.add(poster, BorderLayout.LINE_START);
+        this.moviePanel.add(textPanel, BorderLayout.CENTER);
         
         this.moviePanel.doLayout();
         this.moviePanel.setBackground(GuiConstants.BG_COLOR);

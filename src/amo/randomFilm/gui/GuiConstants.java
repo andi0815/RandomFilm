@@ -94,12 +94,14 @@ public class GuiConstants {
     
     public static final String IMAGE_BTN_PREV = "images\\BTN_PREV.png";
     
-    public static final String IMAGE_POSTER_LOADING = "images/LOADING.jpg";
+    public static final String IMAGE_POSTER_LOADING = "images/LOADING.png";
+    
+    public static final String IMAGE_POSTER_NO_AVAIL = "images/NO_IMAGE_AVAIL.png";
     
     /* =====================
      *  FONTS
      =======================*/
-    
+
     public static final Font FONT_NORMAL = new Font("Sans-Serif", Font.PLAIN, 12);
     
     public static final Font FONT_BIG_BOLD = new Font("Sans-Serif", Font.BOLD, 18);
