@@ -132,9 +132,9 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
         
         viewComponent.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         // FIXME:
-//        this.view.resortList();
+        // this.view.resortList();
         this.view.resizePanel();
-//        this.view.getComponent().repaint();
+        // this.view.getComponent().repaint();
     }
     
     private void addMovie(MovieFile movieFile) {
@@ -258,10 +258,15 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
                     + e.getSource());
             this.setAlwaysOnTop(true);
             
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ADD_TITLE)) {
+        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ADD_TITLE)
+        // also catch enter in textField :
+                || (e.getSource() instanceof JTextField && ((JTextField) e.getSource()).getName().equals(
+                        GuiConstants.LABEL_BTN_ADD_TITLE))) {
+            
             logger.debug("Got Action Event: " + GuiConstants.LABEL_BTN_ADD_TITLE + " -> " + e + " Source: "
                     + e.getSource());
             if (this.titleTextField != null) {
+                
                 this.addMovie(new MovieFile(UnknownTypes.getUnknownFile(), this.titleTextField.getText()));
                 this.titleTextField.setText("");
             } else {

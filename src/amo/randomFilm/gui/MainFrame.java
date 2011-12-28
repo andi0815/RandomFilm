@@ -76,6 +76,7 @@ public class MainFrame extends JFrame {
          * INIT: Input field
          */
         JTextField titleTextField = new JTextField();
+        titleTextField.setName(GuiConstants.LABEL_BTN_ADD_TITLE);
         JButton btnAddMovieTitle = new JButton(GuiConstants.LABEL_BTN_ADD_TITLE);
         JPanel jPanel = new JPanel(new BorderLayout(5, 5));
         jPanel.add(titleTextField, BorderLayout.CENTER);
@@ -89,7 +90,7 @@ public class MainFrame extends JFrame {
         this.btnPanel = new ButtonPanelView();
         this.btnPanel.setPreferredSize(new Dimension(width, heightOfButtonPanels));
         this.btnPanel.init(this, width, heightOfButtonPanels);
-//        this.btnPanel.addActionListener(this.listOfMoviesPresenter);
+        // this.btnPanel.addActionListener(this.listOfMoviesPresenter);
         
         /**
          * INIT: Drop Panel
@@ -102,6 +103,7 @@ public class MainFrame extends JFrame {
         this.scrollPane.setName("ScrollPaneForDropPanel");
         this.listOfMoviesPresenter.addTitleField(titleTextField);
         btnAddMovieTitle.addActionListener(this.listOfMoviesPresenter);
+        titleTextField.addActionListener(this.listOfMoviesPresenter);
         
         /**
          * START
