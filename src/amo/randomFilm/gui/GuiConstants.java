@@ -1,6 +1,7 @@
 package amo.randomFilm.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -41,6 +42,8 @@ public class GuiConstants {
     
     public static final String LABEL_BTN_ALTERNATIVES = "Show Alternatives";
     
+    public static final String LABEL_BTN_INFO = "Show detailed Info";
+    
     public static final String LABEL_BTN_SELECT_ALL = "Alles markieren";
     
     public static final String LABEL_BTN_SELECT_NOTHING = "Nichts markieren";
@@ -60,6 +63,8 @@ public class GuiConstants {
     public static final String LABEL_BTN_SELECT = "Select";
     
     public static final String LABEL_BTN_CANCEL = "Cancel";
+    
+    public static final String LABEL_BTN_CLOSE = "Close";
     
     public static final String LABEL_START_RANDOM = "Ja";
     
@@ -90,6 +95,14 @@ public class GuiConstants {
     public static final String IMAGE_BTN_PREV = "images\\BTN_PREV.png";
     
     public static final String IMAGE_POSTER_LOADING = "images/LOADING.jpg";
+    
+    /* =====================
+     *  FONTS
+     =======================*/
+    
+    public static final Font FONT_NORMAL = new Font("Sans-Serif", Font.PLAIN, 12);
+    
+    public static final Font FONT_BIG_BOLD = new Font("Sans-Serif", Font.BOLD, 18);
     
     /* =====================
      *  IDENTIFIERS

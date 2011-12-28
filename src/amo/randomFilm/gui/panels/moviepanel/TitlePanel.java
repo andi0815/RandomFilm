@@ -1,10 +1,10 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.UnknownTypes;
 
@@ -18,7 +18,7 @@ public class TitlePanel extends JLabel implements Updateable {
     
     public TitlePanel(String title) {
         this.setText(title);
-        this.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+        this.setFont(GuiConstants.FONT_BIG_BOLD);
     }
     
     @Override

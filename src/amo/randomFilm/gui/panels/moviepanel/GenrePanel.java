@@ -1,11 +1,11 @@
 package amo.randomFilm.gui.panels.moviepanel;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.List;
 
 import javax.swing.JLabel;
 
+import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.Movie;
 import amo.randomFilm.model.UnknownTypes;
 
@@ -16,7 +16,7 @@ import amo.randomFilm.model.UnknownTypes;
 public class GenrePanel extends JLabel implements Updateable {
     
     public GenrePanel(List<String> genres) {
-        this.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+        this.setFont(GuiConstants.FONT_NORMAL);
         this.updateLabel(genres);
     }
     

@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.GroupLayout.Alignment;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +28,8 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
     private JButton btnDelete;
     
     private JButton btnAlternatives;
+    
+    private JButton btnInfo;
     
     public MoviePanelWithButtonsView(File file) {
         super(file);
@@ -68,15 +70,26 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         this.btnAlternatives.setActionCommand(GuiConstants.LABEL_BTN_ALTERNATIVES);
         this.btnAlternatives.setMinimumSize(new Dimension(32, 32));
         this.btnAlternatives.setVisible(false);
+        this.btnInfo = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_INFO));
+        this.btnInfo.setContentAreaFilled(false);
+        this.btnInfo.setBorderPainted(false);
+        this.btnInfo.setActionCommand(GuiConstants.LABEL_BTN_INFO);
+        this.btnInfo.setMinimumSize(new Dimension(32, 32));
+        this.btnInfo.setVisible(false);
         
         // Then, we define the groups and add the components. We establish a root group for each
         // dimension using the setHorizontalGroup and setVerticalGroup methods. Groups are created
         // via createSequentialGroup and createParallelGroup methods. Components are added to groups
         // by using the addComponent method.
-        layout.setHorizontalGroup(layout.createSequentialGroup().addComponent(this.poster).addGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(
-                        this.starRater).addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(
-                        this.genrePanel).addComponent(this.pathPanel)) //
+        layout.setHorizontalGroup(layout
+                .createSequentialGroup()
+                .addComponent(this.poster)
+                .addGroup(
+                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel)
+                                .addComponent(this.starRater).addComponent(this.runtimePanel)
+                                .addComponent(this.yearPanel).addComponent(this.genrePanel)
+                                .addComponent(this.pathPanel)) //
+                .addComponent(this.btnInfo) //
                 .addComponent(this.btnAlternatives) //
                 .addComponent(this.btnDelete));
         layout.setVerticalGroup(layout.createParallelGroup() //
@@ -88,6 +101,7 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
                                 .addComponent(this.yearPanel) //
                                 .addComponent(this.genrePanel) //
                                 .addComponent(this.pathPanel)) //
+                .addComponent(this.btnInfo, Alignment.CENTER) //
                 .addComponent(this.btnAlternatives, Alignment.CENTER) //
                 .addComponent(this.btnDelete, Alignment.CENTER));
         
@@ -102,10 +116,17 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         this.moviePanel.repaint();
     }
     
+    public void hasDetails(boolean hasDetails) {
+        this.btnInfo.setVisible(hasDetails);
+        this.moviePanel.doLayout();
+        this.moviePanel.repaint();
+    }
+    
     @Override
     public void setActionListener(ActionListener listener) {
         this.btnDelete.addActionListener(listener);
         this.btnAlternatives.addActionListener(listener);
+        this.btnInfo.addActionListener(listener);
     }
     
     @Override

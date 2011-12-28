@@ -228,7 +228,7 @@ public class StarRater extends JPanel implements Updateable {
     
     @Override
     public Dimension getMaximumSize() {
-        return getPreferredSize();
+        return this.getPreferredSize();
     }
     
     /**
@@ -510,7 +510,7 @@ public class StarRater extends JPanel implements Updateable {
             (byte) 0x64, (byte) 0xcf, (byte) 0x53, (byte) 0x21, (byte) 0x04, (byte) 0x00, (byte) 0x00, });
     /** The image. */
     private static final Image STAR_SELECTION_IMAGE = compressedByteArrayToImage(new byte[] {
-
+    
     (byte) 0x1f, (byte) 0x8b, (byte) 0x08, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x00, (byte) 0x00, (byte) 0x9d, (byte) 0x93, (byte) 0xdb, (byte) 0x6b, (byte) 0x13, (byte) 0x41,
             (byte) 0x14, (byte) 0xc6, (byte) 0x27, (byte) 0x9b, (byte) 0x39, (byte) 0xb3, (byte) 0xb3, (byte) 0xbb,

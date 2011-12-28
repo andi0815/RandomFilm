@@ -3,14 +3,16 @@
  */
 package amo.randomFilm.gui.panels;
 
-import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTextArea;
+
+import org.junit.Test;
 
 import amo.randomFilm.AbstractTestBase;
 import amo.randomFilm.gui.GuiConstants;
@@ -30,6 +32,16 @@ import amo.randomFilm.model.Movie;
  */
 public class MovieDetailsTest extends AbstractTestBase {
     
+    @Test
+    public void testDialog() {
+        JFrame parentFrame = new JFrame();
+        parentFrame.pack();
+        parentFrame.setVisible(true);
+        
+        MovieDetailsView movieDetailsView = new MovieDetailsView(getDummyMovie());
+        movieDetailsView.setVisible(true);
+    }
+    
     public static void main(String[] args) {
         
         JFrame parentFrame = new JFrame();
@@ -44,16 +56,21 @@ public class MovieDetailsTest extends AbstractTestBase {
         RuntimePanel runtimePanel = new RuntimePanel(movie.getMovieRuntime());
         YearPanel yearPanel = new YearPanel(movie.getMovieYear());
         GenrePanel genrePanel = new GenrePanel(movie.getMovieGenres());
-        JLabel shortDescrLabel = new JLabel(movie.getMovieShortDescription());
+        JTextArea shortDescrLabel = new JTextArea("SHORT DESCRIPTION: " + movie.getMovieShortDescription());
+        shortDescrLabel.setLineWrap(true);
         PosterPanel posterPanel = new PosterPanel(movie.getMovieImage());
+        posterPanel.setCenterVertically(false);
+        posterPanel.setMinimumSize(new Dimension(250, 0));
         
         // init dialog
         JDialog detailsDialog = new JDialog(parentFrame, "Movie Info: " + movie.getMovieTitle());
+        detailsDialog.setMinimumSize(new Dimension(700, 400));
         detailsDialog.setModal(true);
         detailsDialog.getContentPane().setBackground(GuiConstants.BG_COLOR);
         
         // do layout
         GroupLayout groupLayout = new GroupLayout(detailsDialog.getContentPane());
+        groupLayout.setAutoCreateGaps(true);
         detailsDialog.setLayout(groupLayout);
         groupLayout.setHorizontalGroup( //
                 groupLayout.createParallelGroup() // START: (Poster & Stuff) & Shortdesc
@@ -65,24 +82,26 @@ public class MovieDetailsTest extends AbstractTestBase {
                                                 .addComponent(starRater) //
                                                 .addComponent(runtimePanel) //
                                                 .addComponent(yearPanel) //
-                                                .addComponent(genrePanel)) //
+                                                .addComponent(genrePanel) //
+                                                .addComponent(shortDescrLabel)) //
                         )// END: (Poster & Stuff)
-                        .addComponent(shortDescrLabel));
+                );
         
         groupLayout.setVerticalGroup( //
                 groupLayout.createSequentialGroup() // START: (Poster & Stuff) & Shortdesc
                         .addGroup( // START: (Poster & Stuff)
-                                groupLayout.createParallelGroup() // 
-                                        .addComponent(posterPanel, 500, 500, 1000) //
+                                groupLayout.createParallelGroup() //
+                                        .addComponent(posterPanel) //
                                         .addGroup( // START: Stuff
                                                 groupLayout.createSequentialGroup()//
                                                         .addComponent(titlePanel)//
                                                         .addComponent(starRater) //
                                                         .addComponent(runtimePanel) //
                                                         .addComponent(yearPanel) //
-                                                        .addComponent(genrePanel))//
+                                                        .addComponent(genrePanel) //
+                                                        .addComponent(shortDescrLabel))//
                         )// END: (Poster & Stuff)
-                        .addComponent(shortDescrLabel));
+                );
         
         Container contentPane = detailsDialog.getContentPane();
         contentPane.add(posterPanel);
@@ -91,8 +110,6 @@ public class MovieDetailsTest extends AbstractTestBase {
         contentPane.add(yearPanel);
         contentPane.add(genrePanel);
         contentPane.add(shortDescrLabel);
-        
-        posterPanel.setBackground(Color.blue);
         
         detailsDialog.doLayout();
         detailsDialog.pack();
