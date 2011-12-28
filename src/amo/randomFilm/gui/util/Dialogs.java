@@ -137,9 +137,13 @@ public class Dialogs {
         Dimension screenDimension = tk.getScreenSize();
         logger.debug("Screen Insets: " + screenInsets);
         logger.debug("Screen Dimension: " + screenDimension);
-        window.pack();
+        
         int screenHeight = screenDimension.height - (screenInsets.bottom + screenInsets.top);
         int screenWidth = screenDimension.width - (screenInsets.left + screenInsets.right);
+        
+        window.setMaximumSize(new Dimension(screenWidth, screenHeight));
+        window.pack();
+        
         window.setLocation( //
                 screenInsets.left + ((screenWidth - window.getWidth()) / 2), //
                 screenInsets.top + ((screenHeight - window.getHeight()) / 2) //

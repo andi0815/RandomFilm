@@ -17,8 +17,8 @@ import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsView;
  */
 public class MovieSelectorTest extends AbstractTestBase {
     
-//    @Test
-//    public void testSelectorDialog() throws Exception {
+    // @Test
+    // public void testSelectorDialog() throws Exception {
     public static void main(String[] args) {
         
         BasicConfigurator.configure();
@@ -27,13 +27,13 @@ public class MovieSelectorTest extends AbstractTestBase {
         MoviePanelBasicView mpv2 = new MoviePanelWithButtonsView(new File("file://test.it_2"));
         MoviePanelBasicView mpv3 = new MoviePanelWithButtonsView(new File("file://test.it_3"));
         MoviePanelBasicView mpv3_nochmal = new MoviePanelWithButtonsView(new File("file://test.it_3"));
-//        showComponent(mpv1.getComponent(), 1000);
+        // showComponent(mpv1.getComponent(), 1000);
         
         ListOfMoviesView movieSelector = new ListOfMoviesView();
-//        movieSelector.addData(mpv1);
-//        movieSelector.addData(mpv2);
-//        movieSelector.addData(mpv3);
-//        movieSelector.addData(mpv3_nochmal);
+        movieSelector.addData(mpv1);
+        movieSelector.addData(mpv2);
+        movieSelector.addData(mpv3);
+        movieSelector.addData(mpv3_nochmal);
         
         ButtonPanelView buttonPanel = new ButtonPanelView();
         JFrame parentFrame = new JFrame();
@@ -41,39 +41,39 @@ public class MovieSelectorTest extends AbstractTestBase {
         ListOfMoviesPresenter selectableMoviePanelPresenter = new ListOfMoviesPresenter(movieSelector, buttonPanel,
                 parentFrame);
         
-//        JPanel movieSelector = new JPanel();
-//        movieSelector.add(mpv1.getComponent());
-//        movieSelector.add(mpv2.getComponent());
-//        movieSelector.add(mpv3.getComponent());
-//        movieSelector.add(mpv3_nochmal.getComponent());
+        // JPanel movieSelector = new JPanel();
+        // movieSelector.add(mpv1.getComponent());
+        // movieSelector.add(mpv2.getComponent());
+        // movieSelector.add(mpv3.getComponent());
+        // movieSelector.add(mpv3_nochmal.getComponent());
         
         movieSelector.getComponent().setPreferredSize(new Dimension(500, 500));
-//        movieSelector.resizePanel();
+        // movieSelector.resizePanel();
         
         JFrame jFrame = new JFrame();
-//        jFrame.setPreferredSize(new Dimension(800, 800));
+        // jFrame.setPreferredSize(new Dimension(800, 800));
         jFrame.getContentPane().add(movieSelector.getComponent());
-//        jFrame.getContentPane().add(movieSelector);
+        // jFrame.getContentPane().add(movieSelector);
         jFrame.pack();
         jFrame.setVisible(true);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-//        JDialog selectionDialog = new JDialog();
-//        selectionDialog.setModalityType(ModalityType.APPLICATION_MODAL);
-//        SelectableMoviePanel selectableMoviePanel = new SelectableMoviePanel();
-//        selectionDialog.getContentPane().add(selectableMoviePanel);
-//        
-//        MoviePanel moviePanel = this.getMovieFile(selectableMoviePanel, getDummyMovieFile());
-//        List<? extends Movie> movieAlternatives = moviePanel.getMovieAlternatives();
-//        System.out.println(movieAlternatives);
-//        selectableMoviePanel.addMovie(movieAlternatives.get(0));
-//        selectableMoviePanel.addMovie(movieAlternatives.get(1));
-//        
-//        selectionDialog.setVisible(true);
-//        Thread.sleep(10000);
+        // JDialog selectionDialog = new JDialog();
+        // selectionDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+        // SelectableMoviePanel selectableMoviePanel = new SelectableMoviePanel();
+        // selectionDialog.getContentPane().add(selectableMoviePanel);
+        //        
+        // MoviePanel moviePanel = this.getMovieFile(selectableMoviePanel, getDummyMovieFile());
+        // List<? extends Movie> movieAlternatives = moviePanel.getMovieAlternatives();
+        // System.out.println(movieAlternatives);
+        // selectableMoviePanel.addMovie(movieAlternatives.get(0));
+        // selectableMoviePanel.addMovie(movieAlternatives.get(1));
+        //        
+        // selectionDialog.setVisible(true);
+        // Thread.sleep(10000);
     }
-//    private MoviePanel getMovieFile(SelectableMoviePanel selectableMoviePanel, MovieFile mFile) {
-//        return new MoviePanel(mFile.getFile(), mFile.getTitle(), TmdbFacade.getInstance(), 500, 110,
-//                selectableMoviePanel);
-//    }
+    // private MoviePanel getMovieFile(SelectableMoviePanel selectableMoviePanel, MovieFile mFile) {
+    // return new MoviePanel(mFile.getFile(), mFile.getTitle(), TmdbFacade.getInstance(), 500, 110,
+    // selectableMoviePanel);
+    // }
 }

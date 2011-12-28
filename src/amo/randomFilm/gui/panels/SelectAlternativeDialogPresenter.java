@@ -1,5 +1,6 @@
 package amo.randomFilm.gui.panels;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -37,13 +38,6 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
         this.selectionDialogPanelView = selectionDialogPanelView;
         this.selectionDialogPanelView.addActionListener(this);
         
-        for (Movie movie : listOfAlternatives) {
-            MoviePanelBasicView movieView = new MoviePanelBasicView(moviePanelWithButtonsPresenter.getFile());
-            movieView.setData(new SimpleMovie(movie.getMovieTitle()));
-            selectionDialogPanelView.addMovieView(movieView);
-            BackgroundMovieDataLoader.getInstance().loadAndUpdateMovie(movie, movieView);
-        }
-        
         // init Dialog
         this.jDialog = new JDialog();
         this.moviePanelWithButtonsPresenter = moviePanelWithButtonsPresenter;
@@ -51,8 +45,19 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
         this.jDialog.setEnabled(true);
         this.jDialog.setModal(true);
         this.jDialog.setTitle(GuiConstants.LABEL_CHOOSE_ALTERNATIVE);
+        this.jDialog.setMinimumSize(new Dimension(GuiConstants.WIDTH_MIN_OF_FRAME, GuiConstants.HEIGHT_MIN_OF_FRAME));
+        // jDialog.doLayout();
         this.jDialog.pack();
+        
         Dialogs.centerWindow(this.jDialog);
+        
+        for (Movie movie : listOfAlternatives) {
+            MoviePanelBasicView movieView = new MoviePanelBasicView(moviePanelWithButtonsPresenter.getFile());
+            movieView.setData(new SimpleMovie(movie.getMovieTitle()));
+            selectionDialogPanelView.addMovieView(movieView);
+            BackgroundMovieDataLoader.getInstance().loadAndUpdateMovie(movie, movieView);
+        }
+        
         this.jDialog.setVisible(true);
         
     }

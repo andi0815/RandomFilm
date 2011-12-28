@@ -27,6 +27,9 @@ public class SelectAlternativeDialogView {
         this.selectionView = new ListOfMoviesView();
         JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        // at least three items should be visible
+        // moviepanel.setMinimumSize(new Dimension(0, GuiConstants.HEIGHT_MOVIE_PANEL * 3));
+        
         this.btnOK = new JButton(GuiConstants.LABEL_BTN_SELECT);
         this.btnCancel = new JButton(GuiConstants.LABEL_BTN_CANCEL);
         
@@ -34,9 +37,12 @@ public class SelectAlternativeDialogView {
         GroupLayout layout = new GroupLayout(this.view);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        this.view.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(moviepanel)
-                .addGroup(layout.createSequentialGroup().addComponent(this.btnCancel).addComponent(this.btnOK)));
+        layout.setHorizontalGroup(//
+                layout.createParallelGroup(//
+                        GroupLayout.Alignment.TRAILING).addComponent(moviepanel)//
+                        .addGroup(layout.createSequentialGroup() //
+                                .addComponent(this.btnCancel)//
+                                .addComponent(this.btnOK)));
         layout.setVerticalGroup(layout.createSequentialGroup() //
                 .addComponent(moviepanel) //
                 .addGroup( //
@@ -44,10 +50,16 @@ public class SelectAlternativeDialogView {
                                 .addComponent(this.btnCancel) //
                                 .addComponent(this.btnOK)));
         
+        this.view.setLayout(layout);
+        
         this.view.add(moviepanel);
         this.view.add(this.btnCancel);
         this.view.add(this.btnOK);
         this.view.setBackground(GuiConstants.BG_COLOR);
+        
+        this.view.doLayout();
+        System.out.println(" ============== SIZE : " + view.getPreferredSize().getWidth() + " / "
+                + view.getPreferredSize().getHeight());
     }
     
     // public void setData(List<? extends Movie> movies) {

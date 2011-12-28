@@ -18,15 +18,25 @@ public class GuiConstants {
     /* =====================
      *  STYLE
      =======================*/
-    
+
     public static final Color BG_COLOR = Color.WHITE;
     
     public static final Color BG_COLOR_SELECTED = new Color(200, 200, 255);
     
+    /** height of a MoviePanel */
+    public static final int HEIGHT_MOVIE_PANEL = 110;
+    
+    /** Width of Whole Gui-Frame */
+    public static final int WIDTH_OF_FRAME = 500;
+    
+    public static final int WIDTH_MIN_OF_FRAME = 400;
+    
+    public static final int HEIGHT_MIN_OF_FRAME = 500;
+    
     /* =====================
      *  LABELS
      =======================*/
-    
+
     public static final String LABEL_BTN_DELETE = "löschen";
     
     public static final String LABEL_BTN_ALTERNATIVES = "Show Alternatives";
@@ -66,7 +76,7 @@ public class GuiConstants {
     /* =====================
      *  IMAGES
      =======================*/
-    
+
     public static final String IMAGE_BTN_DELETE = "images\\BTN_DELETE.png";
     
     public static final String IMAGE_BTN_ALTERNATIVES = "images\\BTN_ALTERNATIVES.png";
@@ -84,7 +94,7 @@ public class GuiConstants {
     /* =====================
      *  IDENTIFIERS
      =======================*/
-    
+
     public static final String UNKNOWN_FILE_PREFIX = "UNKNOWN_TITLE_OF_MOVIE.598765tzibjzb_";
     
 }

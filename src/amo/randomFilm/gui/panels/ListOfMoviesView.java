@@ -1,9 +1,7 @@
 package amo.randomFilm.gui.panels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -25,18 +23,6 @@ public class ListOfMoviesView {
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(ListOfMoviesView.class);
     
-    /** Color of Font */
-    private static final Color DROPPER_FONT_COLOR = Color.BLACK;
-    
-    /** Label for empty drop panel */
-    private static final String TEXT_EMPTY_DROPPER = "Feed Me!!!";
-    
-    /** font style for empty drop panel */
-    private static final Font EMPTY_DROPPER_FONT = new Font("SansSerif", Font.BOLD, 20);
-    
-    /** height of a MoviePanel */
-    private static final int ITEM_HEIGHT = 110;
-    
     /** Manages the list of MoviePanels */
     private FileListHandler listHandler = new FileListHandler();
     
@@ -52,22 +38,22 @@ public class ListOfMoviesView {
     public ListOfMoviesView() {
         super();
         this.moviesPanel = new JPanel() {
-//            @Override
-//            public void paint(Graphics g) {
-//                super.paint(g);
-//                logger.debug("Paint Dropper: "
-//                        + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
-//                                : SelectableMoviePanelView.this.listHandler.getList().size()));
-//                if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
-//                    // text
-//                    int halfWidth = (int) (this.getWidth() / 2.0);
-//                    int halfheight = (int) (this.getHeight() / 2.0);
-//                    g.setColor(DROPPER_FONT_COLOR);
-//                    g.setFont(EMPTY_DROPPER_FONT);
-//                    g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
-//                }
-//                logger.debug("My DropTarget Listener: " + this.getDropTarget());
-//            }
+            // @Override
+            // public void paint(Graphics g) {
+            // super.paint(g);
+            // logger.debug("Paint Dropper: "
+            // + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
+            // : SelectableMoviePanelView.this.listHandler.getList().size()));
+            // if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
+            // // text
+            // int halfWidth = (int) (this.getWidth() / 2.0);
+            // int halfheight = (int) (this.getHeight() / 2.0);
+            // g.setColor(DROPPER_FONT_COLOR);
+            // g.setFont(EMPTY_DROPPER_FONT);
+            // g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
+            // }
+            // logger.debug("My DropTarget Listener: " + this.getDropTarget());
+            // }
         };
         this.moviesPanel.setName(this.moviesPanel.getClass().getSimpleName());
         this.moviesPanel.setBackground(GuiConstants.BG_COLOR);
@@ -87,7 +73,7 @@ public class ListOfMoviesView {
      */
     protected void resizePanel() {
         this.moviesPanel.setPreferredSize(new Dimension(this.moviesPanel.getWidth(), (this.moviesPanel
-                .getComponentCount() * (this.ITEM_HEIGHT)) + 2));
+                .getComponentCount() * (GuiConstants.HEIGHT_MOVIE_PANEL)) + 2));
         this.moviesPanel.revalidate();
     }
     
