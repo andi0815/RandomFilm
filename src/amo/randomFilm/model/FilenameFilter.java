@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.configuration.Configuration;
+
 /**
  * This class provides functions to filter movie files and trying to guess the correctly formatted
  * movie title.
@@ -17,8 +19,8 @@ import org.apache.log4j.Logger;
  */
 public class FilenameFilter {
     
-    // TODO: Extract to config file ?!
-    private static final Pattern KNWON_EXTENSIONS = Pattern.compile("avi|mpg|mpeg|mov|flv|divx|xvid|ifo|vob|wmv");
+    private static final Pattern KNWON_EXTENSIONS = Pattern.compile(Configuration.getInstance().getProperty(
+            "knownExtensions"));
     
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     

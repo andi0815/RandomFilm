@@ -1,16 +1,5 @@
-################ Configure File-Extensions: ###############
-#
-#extension.avi=
-#extension.mpg=
-#extension.mpeg=
-#extension.mov=
-#extension.flv=
-#extension.divx=
-#extension.xvid=
-#extension.ifo=
-#extension.vob=
-# DVD-Folder
-#extension.dvd=
+# Configure known File-Extensions
+knownExtensions=avi|mpg|mpeg|mov|flv|divx|xvid|ifo|vob|wmv|mkv
 
 # Height of Window = ScreenHeight - GUI.frameHeghtDelta
 #GUI.frameHeightDelta=50
