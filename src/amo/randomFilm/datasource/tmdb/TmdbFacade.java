@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -233,7 +234,17 @@ public class TmdbFacade implements MovieDataProvider {
             throw new MovieDataProviderException("Could not read from URL for Method: " + method, e);
         }
         
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        // check for character set ...
+        System.out.println("=============contentType:" + conn.getContentType());
+        Charset charset = getCharset(conn.getContentType());
+        
+        InputStreamReader inStreamReader = null;
+        if (charset != null) {
+            inStreamReader = new InputStreamReader(inputStream, charset);
+        } else {
+            inStreamReader = new InputStreamReader(inputStream);
+        }
+        BufferedReader reader = new BufferedReader(inStreamReader);
         
         StringBuilder msg = new StringBuilder();
         String line = null;
@@ -254,5 +265,22 @@ public class TmdbFacade implements MovieDataProvider {
         }
         
         return response;
+    }
+    
+    private static Charset getCharset(String contentType) {
+        String[] values = contentType.split(";"); // The values.length must be equal to 2...
+        for (String value : values) {
+            value = value.trim();
+            if (value.toLowerCase().startsWith("charset=")) {
+                String charsetStr = value.substring("charset=".length());
+                if (Charset.isSupported(charsetStr)) {
+                    return Charset.forName(charsetStr);
+                } else {
+                    return null;
+                }
+            }
+        }
+        
+        return null;
     }
 }
