@@ -53,7 +53,7 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
         
         for (Movie movie : listOfAlternatives) {
             MoviePanelBasicView movieView = new MoviePanelBasicView(moviePanelWithButtonsPresenter.getFile());
-            movieView.setData(new SimpleMovie(movie.getMovieTitle()));
+            movieView.setData(new SimpleMovie(movie.getMovieTitle(), true));
             selectionDialogPanelView.addMovieView(movieView);
             BackgroundMovieDataLoader.getInstance().loadAndUpdateMovie(movie, movieView);
         }

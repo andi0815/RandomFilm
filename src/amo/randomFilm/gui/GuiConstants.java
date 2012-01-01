@@ -2,12 +2,22 @@ package amo.randomFilm.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
  */
 public class GuiConstants {
+    
+    /** Logger Object for this Class */
+    private static final Logger logger = Logger.getLogger(GuiConstants.class);
     
     /**
      * Hidden Constructor.
@@ -19,7 +29,7 @@ public class GuiConstants {
     /* =====================
      *  STYLE
      =======================*/
-
+    
     public static final Color BG_COLOR = Color.WHITE;
     
     public static final Color BG_COLOR_SELECTED = new Color(200, 200, 255);
@@ -37,7 +47,7 @@ public class GuiConstants {
     /* =====================
      *  LABELS
      =======================*/
-
+    
     public static final String LABEL_BTN_DELETE = "löschen";
     
     public static final String LABEL_BTN_ALTERNATIVES = "Show Alternatives";
@@ -81,27 +91,43 @@ public class GuiConstants {
     /* =====================
      *  IMAGES
      =======================*/
-
-    public static final String IMAGE_BTN_DELETE = "images\\BTN_DELETE.png";
     
-    public static final String IMAGE_BTN_ALTERNATIVES = "images\\BTN_ALTERNATIVES.png";
+    public static final String IMAGEPATH_BTN_DELETE = "images\\BTN_DELETE.png";
     
-    public static final String IMAGE_BTN_PLAY = "images\\BTN_PLAY.png";
+    public static final String IMAGEPATH_BTN_ALTERNATIVES = "images\\BTN_ALTERNATIVES.png";
     
-    public static final String IMAGE_BTN_STARTRANDOM = "images\\BTN_STARTRANDOM.png";
+    public static final String IMAGEPATH_BTN_PLAY = "images\\BTN_PLAY.png";
     
-    public static final String IMAGE_BTN_INFO = "images\\BTN_INFO.png";
+    public static final String IMAGEPATH_BTN_STARTRANDOM = "images\\BTN_STARTRANDOM.png";
     
-    public static final String IMAGE_BTN_PREV = "images\\BTN_PREV.png";
+    public static final String IMAGEPATH_BTN_INFO = "images\\BTN_INFO.png";
     
-    public static final String IMAGE_POSTER_LOADING = "images/LOADING.png";
+    public static final String IMAGEPATH_BTN_PREV = "images\\BTN_PREV.png";
     
-    public static final String IMAGE_POSTER_NO_AVAIL = "images/NO_IMAGE_AVAIL.png";
+    public static final String IMAGEPATH_POSTER_LOADING = "images/LOADING.png";
+    
+    public static final Image IMAGE_POSTER_LOADING = loadImage(IMAGEPATH_POSTER_LOADING);
+    
+    public static final String IMAGEPATH_POSTER_NO_AVAIL = "images/NO_IMAGE_AVAIL.png";
+    
+    public static final Image IMAGE_POSTER_NO_AVAIL = loadImage(IMAGEPATH_POSTER_NO_AVAIL);
+    
+    /* Convenience Function */
+    
+    private static Image loadImage(String imagePath) {
+        try {
+            File imagefile = new File(imagePath);
+            return ImageIO.read(imagefile);
+        } catch (IOException e) {
+            logger.warn("could not load image: " + imagePath);
+        }
+        return null;
+    }
     
     /* =====================
      *  FONTS
      =======================*/
-
+    
     public static final Font FONT_NORMAL = new Font("Sans-Serif", Font.PLAIN, 12);
     
     public static final Font FONT_BIG_BOLD = new Font("Sans-Serif", Font.BOLD, 18);
@@ -109,7 +135,7 @@ public class GuiConstants {
     /* =====================
      *  IDENTIFIERS
      =======================*/
-
+    
     public static final String UNKNOWN_FILE_PREFIX = "UNKNOWN_TITLE_OF_MOVIE.598765tzibjzb_";
     
 }

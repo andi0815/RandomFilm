@@ -3,6 +3,7 @@ package amo.randomFilm.model;
 import java.awt.Image;
 import java.util.List;
 
+import amo.randomFilm.gui.GuiConstants;
 
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
@@ -12,8 +13,19 @@ public class SimpleMovie implements Movie {
     
     private String title;
     
-    public SimpleMovie(String title) {
+    private Image image;
+    
+    public SimpleMovie(String title, boolean isImageAvailable) {
         this.title = title;
+        this.setImageAvailable(isImageAvailable);
+    }
+    
+    public void setImageAvailable(boolean isAvailable) {
+        if (isAvailable) {
+            this.image = GuiConstants.IMAGE_POSTER_LOADING;
+        } else {
+            this.image = GuiConstants.IMAGE_POSTER_NO_AVAIL;
+        }
     }
     
     public void setTitle(String title) {
@@ -49,7 +61,7 @@ public class SimpleMovie implements Movie {
      */
     @Override
     public Image getMovieImage() {
-        return UnknownTypes.IMAGE;
+        return this.image;
     }
     
     /**

@@ -46,7 +46,7 @@ public class MoviePanelBasicPresenter {
             } catch (MovieDataProviderException e) {
                 logger.warn("Could not find Movie with title: " + this.title, e);
                 List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
-                movieList.add(new SimpleMovie(this.title));
+                movieList.add(new SimpleMovie(this.title, false));
                 this.parent.setMovieAlternatives(movieList);
             }
         }
@@ -67,7 +67,7 @@ public class MoviePanelBasicPresenter {
     
     public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel,
             MovieDataProvider movieDataProvider) {
-        this(new SimpleMovie(title), moviePanel);
+        this(new SimpleMovie(title, true), moviePanel);
         this.file = f;
         this.requestMovieInfo(title, movieDataProvider);
         
@@ -86,8 +86,7 @@ public class MoviePanelBasicPresenter {
         // set first movie the selected one, if any available
         this.selectedMovie = MoviePanelBasicPresenter.this.movieAlternatives != null
                 && MoviePanelBasicPresenter.this.movieAlternatives.size() > 0 ? MoviePanelBasicPresenter.this.movieAlternatives
-                .get(0)
-                : null;
+                .get(0) : null;
         this.moviePanel.setData(MoviePanelBasicPresenter.this.selectedMovie);
     }
     

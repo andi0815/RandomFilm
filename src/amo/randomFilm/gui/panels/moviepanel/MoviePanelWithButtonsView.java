@@ -37,7 +37,7 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
     
     public MoviePanelWithButtonsView(MovieFile movieFile) {
         this(movieFile.getFile());
-        this.titlePanel.update(new SimpleMovie(movieFile.getTitle()));
+        this.titlePanel.update(new SimpleMovie(movieFile.getTitle(), true));
     }
     
     @Override
@@ -59,18 +59,18 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
         this.yearPanel = new YearPanel(UnknownTypes.STRING);
         this.genrePanel = new GenrePanel(null);
         this.pathPanel = new PathPanel(file);
-        this.btnDelete = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_DELETE));
+        this.btnDelete = new JButton(new ImageIcon(GuiConstants.IMAGEPATH_BTN_DELETE));
         this.btnDelete.setContentAreaFilled(false);
         this.btnDelete.setBorderPainted(false);
         this.btnDelete.setActionCommand(GuiConstants.LABEL_BTN_DELETE);
         this.btnDelete.setMinimumSize(new Dimension(32, 32));
-        this.btnAlternatives = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_ALTERNATIVES));
+        this.btnAlternatives = new JButton(new ImageIcon(GuiConstants.IMAGEPATH_BTN_ALTERNATIVES));
         this.btnAlternatives.setContentAreaFilled(false);
         this.btnAlternatives.setBorderPainted(false);
         this.btnAlternatives.setActionCommand(GuiConstants.LABEL_BTN_ALTERNATIVES);
         this.btnAlternatives.setMinimumSize(new Dimension(32, 32));
         this.btnAlternatives.setVisible(false);
-        this.btnInfo = new JButton(new ImageIcon(GuiConstants.IMAGE_BTN_INFO));
+        this.btnInfo = new JButton(new ImageIcon(GuiConstants.IMAGEPATH_BTN_INFO));
         this.btnInfo.setContentAreaFilled(false);
         this.btnInfo.setBorderPainted(false);
         this.btnInfo.setActionCommand(GuiConstants.LABEL_BTN_INFO);

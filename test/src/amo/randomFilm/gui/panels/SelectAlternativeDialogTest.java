@@ -34,7 +34,7 @@ public class SelectAlternativeDialogTest {
         
         List<Movie> listOfAlternatives = new ArrayList<Movie>();
         for (int i = 0; i < 11; i++) {
-            listOfAlternatives.add(new SimpleMovie("" + i));
+            listOfAlternatives.add(new SimpleMovie("" + i, true));
         }
         SelectAlternativeDialogView selectAlternativeDialogView = new SelectAlternativeDialogView();
         SelectAlternativeDialogPresenter selectAlternativeDialogPresenter = new SelectAlternativeDialogPresenter(

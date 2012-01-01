@@ -33,10 +33,10 @@ public class PosterPanel extends JPanel implements Updateable {
     private static Image LOADING_IMAGE = null;
     static {
         try {
-            File imagefile = new File(GuiConstants.IMAGE_POSTER_LOADING);
+            File imagefile = new File(GuiConstants.IMAGEPATH_POSTER_LOADING);
             LOADING_IMAGE = ImageIO.read(imagefile);
         } catch (IOException e) {
-            logger.warn("could not load image: " + GuiConstants.IMAGE_POSTER_LOADING);
+            logger.warn("could not load image: " + GuiConstants.IMAGEPATH_POSTER_LOADING);
         }
     }
     
