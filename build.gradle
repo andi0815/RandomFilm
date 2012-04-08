@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+// Standard Java Project Config
+sourceCompatibility = 1.6
+version = '1.0'
+
+
+// JAR Export Config
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Random Film (SWING)', 'Implementation-Version': version
+    }
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'jarOut'
+       }
+    }
+}
+
+// Dependencies
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.code.gson', name: 'gson', version: '1.7.1'
+    testCompile group: 'log4j', name: 'log4j', version: '1.2.+'
+ 	//testCompile 'junit:junit:4.8.2'
+}
+
+// Override Folder Settings
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src/amo/randomFilm'
+        }
+    }
+}
