@@ -25,6 +25,9 @@ import amo.randomFilm.model.SimpleMovie;
 public class MoviePanelBasicPresenter {
     
     private final class RequestThread extends Thread {
+        
+        /** Logger Object for this Class */
+        private final Logger logger = Logger.getLogger(MoviePanelBasicPresenter.RequestThread.class);
         private final MovieDataProvider movieDataProvider;
         private final String title;
         private MoviePanelBasicPresenter parent;
@@ -41,7 +44,25 @@ public class MoviePanelBasicPresenter {
         @Override
         public void run() {
             try {
-                this.parent.setMovieAlternatives(this.movieDataProvider.searchMovie(this.title));
+                List<? extends Movie> moviesFound = this.movieDataProvider.searchMovie(this.title);
+                System.out.println("##################### FOUND: ");
+                boolean initialTitleChanged = true; // add initial title to alternatives, if it
+                                                    // cannot be found anymore
+                for (Movie current : moviesFound) {
+                    System.out.println("##################### " + current);
+                    if (current.getMovieTitle().trim().toLowerCase().equals((this.title.toLowerCase()))) {
+                        initialTitleChanged = false;
+                        break; // stop searching
+                    }
+                }
+                if (initialTitleChanged) {
+                    // initial title differs from found ones, it must be added to alternatives
+                    ArrayList<Movie> newList = new ArrayList<Movie>();
+                    newList.addAll(moviesFound);
+                    newList.add(new SimpleMovie(this.title, false));
+                    moviesFound = newList;
+                }
+                this.parent.setMovieAlternatives(moviesFound);
                 
             } catch (MovieDataProviderException e) {
                 logger.warn("Could not find Movie with title: " + this.title, e);
@@ -65,10 +86,14 @@ public class MoviePanelBasicPresenter {
     
     private SelectionHandler selectionHandler;
     
+    // /** Title of the Movie initially found */
+    // private String initialTitle;
+    
     public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel,
             MovieDataProvider movieDataProvider) {
         this(new SimpleMovie(title, true), moviePanel);
         this.file = f;
+        // this.initialTitle = title;
         this.requestMovieInfo(title, movieDataProvider);
         
     }

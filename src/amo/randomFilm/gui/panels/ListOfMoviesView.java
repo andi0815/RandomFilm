@@ -7,21 +7,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
-
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 import amo.randomFilm.model.FileListHandler;
 
 public class ListOfMoviesView {
-    
-    /**
-     * default Serial version id
-     */
-    private static final long serialVersionUID = 1L;
-    
-    /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(ListOfMoviesView.class);
     
     /** Manages the list of MoviePanels */
     private FileListHandler listHandler = new FileListHandler();
@@ -37,24 +27,28 @@ public class ListOfMoviesView {
      */
     public ListOfMoviesView() {
         super();
-        this.moviesPanel = new JPanel() {
-            // @Override
-            // public void paint(Graphics g) {
-            // super.paint(g);
-            // logger.debug("Paint Dropper: "
-            // + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
-            // : SelectableMoviePanelView.this.listHandler.getList().size()));
-            // if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
-            // // text
-            // int halfWidth = (int) (this.getWidth() / 2.0);
-            // int halfheight = (int) (this.getHeight() / 2.0);
-            // g.setColor(DROPPER_FONT_COLOR);
-            // g.setFont(EMPTY_DROPPER_FONT);
-            // g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
-            // }
-            // logger.debug("My DropTarget Listener: " + this.getDropTarget());
-            // }
-        };
+        this.moviesPanel = new JPanel()
+        // {
+        //
+        // private static final long serialVersionUID = 1L;
+        // // @Override
+        // // public void paint(Graphics g) {
+        // // super.paint(g);
+        // // logger.debug("Paint Dropper: "
+        // // + (SelectableMoviePanelView.this.listHandler.isEmpty() ? "empty List"
+        // // : SelectableMoviePanelView.this.listHandler.getList().size()));
+        // // if (SelectableMoviePanelView.this.listHandler.isEmpty()) {
+        // // // text
+        // // int halfWidth = (int) (this.getWidth() / 2.0);
+        // // int halfheight = (int) (this.getHeight() / 2.0);
+        // // g.setColor(DROPPER_FONT_COLOR);
+        // // g.setFont(EMPTY_DROPPER_FONT);
+        // // g.drawString(TEXT_EMPTY_DROPPER, halfWidth - 120, halfheight + 5);
+        // // }
+        // // logger.debug("My DropTarget Listener: " + this.getDropTarget());
+        // // }
+        // }
+        ;
         this.moviesPanel.setName(this.moviesPanel.getClass().getSimpleName());
         this.moviesPanel.setBackground(GuiConstants.BG_COLOR);
         this.moviesPanel.setLayout(new BoxLayout(this.moviesPanel, BoxLayout.Y_AXIS));

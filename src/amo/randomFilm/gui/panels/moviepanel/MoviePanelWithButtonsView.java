@@ -9,8 +9,6 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import org.apache.log4j.Logger;
-
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.model.MovieFile;
 import amo.randomFilm.model.SimpleMovie;
@@ -21,9 +19,6 @@ import amo.randomFilm.model.UnknownTypes;
  * @date 11.11.2011
  */
 public class MoviePanelWithButtonsView extends MoviePanelBasicView {
-    
-    /** Logger Object for this Class */
-    private static final Logger logger = Logger.getLogger(MoviePanelWithButtonsView.class);
     
     private JButton btnDelete;
     

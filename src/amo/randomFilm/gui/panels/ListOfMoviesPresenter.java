@@ -45,11 +45,6 @@ import amo.randomFilm.model.UnknownTypes;
 public class ListOfMoviesPresenter implements DropTargetListener, DragSourceListener, DragGestureListener,
         ActionListener {
     
-    /**
-     * default Serial version id
-     */
-    private static final long serialVersionUID = 1L;
-    
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(ListOfMoviesPresenter.class);
     
@@ -77,7 +72,7 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     }
     
     /**
-     * Teste, ob Dateien gedroppt werden dürfen (nur Dateien dürfen!)
+     * Teste, ob Dateien gedroppt werden duerfen (nur Dateien duerfen!)
      */
     @Override
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
