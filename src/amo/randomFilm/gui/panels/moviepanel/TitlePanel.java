@@ -16,6 +16,8 @@ import amo.randomFilm.model.UnknownTypes;
  */
 public class TitlePanel extends JLabel implements Updateable {
     
+    private static final long serialVersionUID = 1L;
+    
     public TitlePanel(String title) {
         this.setText(title);
         this.setFont(GuiConstants.FONT_BIG_BOLD);

@@ -24,7 +24,7 @@ public class UnknownTypes {
     
     public static final int INT = -1;
     
-    public static final String STRING = "UNKNOWN";
+    public static final String STRING = "n.V.";
     
     private static int filecounter = 0;
     

@@ -28,13 +28,21 @@ import amo.randomFilm.model.UnknownTypes;
 public class MovieDetailsView {
     
     private JDialog detailsDialog = new JDialog();
+    
     private TitlePanel titlePanel = new TitlePanel(UnknownTypes.STRING);
+    
     private StarRater starRater = new StarRater();
+    
     private RuntimePanel runtimePanel = new RuntimePanel(UnknownTypes.INT);
+    
     private YearPanel yearPanel = new YearPanel(UnknownTypes.STRING);
+    
     private GenrePanel genrePanel = new GenrePanel(null);
+    
     private JTextArea shortDescrLabel = new JTextArea();
+    
     private PosterPanel posterPanel = new PosterPanel(null);
+    
     // FIXME: insert close button
     private JButton btnClose = new JButton();
     
@@ -48,16 +56,21 @@ public class MovieDetailsView {
         this.detailsDialog.setTitle("Movie Info: " + movie.getMovieTitle());
         
         this.titlePanel = new TitlePanel(movie.getMovieTitle());
+        this.titlePanel.setFont(GuiConstants.FONT_INFOSCREEN_BIG);
         this.starRater = new StarRater(10);
         this.starRater.setRating((float) movie.getMovieRating());
         this.runtimePanel = new RuntimePanel(movie.getMovieRuntime());
+        this.runtimePanel.setFont(GuiConstants.FONT_INFOSCREEN_NORMAL);
         this.yearPanel = new YearPanel(movie.getMovieYear());
+        this.yearPanel.setFont(GuiConstants.FONT_INFOSCREEN_NORMAL);
         this.genrePanel = new GenrePanel(movie.getMovieGenres());
+        this.genrePanel.setFont(GuiConstants.FONT_INFOSCREEN_NORMAL);
         this.shortDescrLabel = new JTextArea("SHORT DESCRIPTION: " + movie.getMovieShortDescription());
         this.shortDescrLabel.setLineWrap(true);
+        this.shortDescrLabel.setWrapStyleWord(true);
         this.shortDescrLabel.setAutoscrolls(true);
         this.shortDescrLabel.setEditable(false);
-        this.shortDescrLabel.setFont(GuiConstants.FONT_NORMAL);
+        this.shortDescrLabel.setFont(GuiConstants.FONT_INFOSCREEN_NORMAL);
         this.posterPanel = new PosterPanel(movie.getMovieImage());
         this.posterPanel.setCenterVertically(false);
         this.posterPanel.setMinimumSize(new Dimension(250, 0));

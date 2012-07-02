@@ -36,8 +36,7 @@ public class Configuration {
             Dialogs.showWarning("Could not find Properties file: " + filePath, null);
             System.exit(1);
         } catch (IOException e) {
-            Dialogs.showWarning("Could not read properly from Properties file: " + filePath + ". \nCause:\n"
-                    + e.getMessage(), null);
+            Dialogs.showWarning("Could not read properly from Properties file: " + filePath + ". \nCause:\n" + e.getMessage(), null);
             System.exit(1);
         }
     }
@@ -62,6 +61,24 @@ public class Configuration {
      */
     public String getProperty(String key) {
         return properties.getProperty(key);
+    }
+    
+    /**
+     * Returns an Integer-representation of given configuration parameter.
+     * 
+     * @param key
+     *            name of configuration parameter
+     * @return the Integer representation of the parameter or <code>null</code> in case it could not
+     *         be found
+     * @throws NumberFormatException
+     *             in case the configuration parameter could not be parsed successfully
+     */
+    public Integer getIntProperty(String key) throws NumberFormatException {
+        String property = this.getProperty(key);
+        if (property != null) {
+            return Integer.valueOf(property);
+        }
+        return null;
     }
     
 }

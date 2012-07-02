@@ -28,8 +28,11 @@ public class MoviePanelBasicPresenter {
         
         /** Logger Object for this Class */
         private final Logger logger = Logger.getLogger(MoviePanelBasicPresenter.RequestThread.class);
+        
         private final MovieDataProvider movieDataProvider;
+        
         private final String title;
+        
         private MoviePanelBasicPresenter parent;
         
         private RequestThread(MovieDataProvider movieDataProvider, String title) {
@@ -45,11 +48,9 @@ public class MoviePanelBasicPresenter {
         public void run() {
             try {
                 List<? extends Movie> moviesFound = this.movieDataProvider.searchMovie(this.title);
-                System.out.println("##################### FOUND: ");
                 boolean initialTitleChanged = true; // add initial title to alternatives, if it
                                                     // cannot be found anymore
                 for (Movie current : moviesFound) {
-                    System.out.println("##################### " + current);
                     if (current.getMovieTitle().trim().toLowerCase().equals((this.title.toLowerCase()))) {
                         initialTitleChanged = false;
                         break; // stop searching
@@ -65,7 +66,7 @@ public class MoviePanelBasicPresenter {
                 this.parent.setMovieAlternatives(moviesFound);
                 
             } catch (MovieDataProviderException e) {
-                logger.warn("Could not find Movie with title: " + this.title, e);
+                this.logger.warn("Could not find Movie with title: " + this.title, e);
                 List<SimpleMovie> movieList = new ArrayList<SimpleMovie>();
                 movieList.add(new SimpleMovie(this.title, false));
                 this.parent.setMovieAlternatives(movieList);
@@ -86,16 +87,10 @@ public class MoviePanelBasicPresenter {
     
     private SelectionHandler selectionHandler;
     
-    // /** Title of the Movie initially found */
-    // private String initialTitle;
-    
-    public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel,
-            MovieDataProvider movieDataProvider) {
+    public MoviePanelBasicPresenter(File f, String title, MoviePanelBasicView moviePanel, MovieDataProvider movieDataProvider) {
         this(new SimpleMovie(title, true), moviePanel);
         this.file = f;
-        // this.initialTitle = title;
         this.requestMovieInfo(title, movieDataProvider);
-        
     }
     
     public MoviePanelBasicPresenter(Movie movie, MoviePanelBasicView moviePanel) {
@@ -109,8 +104,7 @@ public class MoviePanelBasicPresenter {
     protected void setMovieAlternatives(List<? extends Movie> alternatives) {
         this.movieAlternatives = alternatives;
         // set first movie the selected one, if any available
-        this.selectedMovie = MoviePanelBasicPresenter.this.movieAlternatives != null
-                && MoviePanelBasicPresenter.this.movieAlternatives.size() > 0 ? MoviePanelBasicPresenter.this.movieAlternatives
+        this.selectedMovie = MoviePanelBasicPresenter.this.movieAlternatives != null && MoviePanelBasicPresenter.this.movieAlternatives.size() > 0 ? MoviePanelBasicPresenter.this.movieAlternatives
                 .get(0) : null;
         this.moviePanel.setData(MoviePanelBasicPresenter.this.selectedMovie);
     }
@@ -134,7 +128,17 @@ public class MoviePanelBasicPresenter {
     }
     
     public String getFilmName() {
-        return this.selectedMovie.getMovieTitle();
+        if (this.selectedMovie != null) {
+            return this.selectedMovie.getMovieTitle();
+        } else {
+            if (this.moviePanel != null) {
+                Movie movie = this.moviePanel.getData();
+                if (movie != null) {
+                    return movie.getMovieTitle();
+                }
+            }
+        }
+        return null;
     }
     
     public Image getIconImage() {
@@ -147,6 +151,7 @@ public class MoviePanelBasicPresenter {
     
     public Movie getSelectedMovie() {
         return this.selectedMovie;
+        
     }
     
     public void setSelectedMovie(Movie movie) {

@@ -19,8 +19,7 @@ import amo.randomFilm.configuration.Configuration;
  */
 public class FilenameFilter {
     
-    private static final Pattern KNWON_EXTENSIONS = Pattern.compile(Configuration.getInstance().getProperty(
-            "knownExtensions"));
+    private static final Pattern KNWON_EXTENSIONS = Pattern.compile(Configuration.getInstance().getProperty("knownExtensions"));
     
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     
@@ -75,25 +74,27 @@ public class FilenameFilter {
             if (file == null) { // skip, if null
                 continue;
                 
-            } else if (file.isDirectory()) { // recurse into directory
-                logger.debug("Adding directory: " + file.getAbsolutePath());
-                List<MovieFile> moviesInDir = addDirectory(file);
-                if (moviesInDir != null) {
-                    movieTitleList.addAll(moviesInDir);
-                }
-                
-            } else { // add, if is movie
-                String ext = getExtension(file);
-                
-                if (KNWON_EXTENSIONS.matcher(ext.toLowerCase()).matches()) {
-                    logger.debug("Adding movie file: " + file);
-                    movieTitleList.add(getFilmName(file));
+            } else
+                if (file.isDirectory()) { // recurse into directory
+                    logger.debug("Adding directory: " + file.getAbsolutePath());
+                    List<MovieFile> moviesInDir = addDirectory(file);
+                    if (moviesInDir != null) {
+                        movieTitleList.addAll(moviesInDir);
+                    }
                     
-                } else { // extension not known ...
-                    logger.info("File " + file.getAbsolutePath() + " is not a Movie.");
+                } else { // add, if is movie
+                    logger.debug("Adding file: " + file.getAbsolutePath());
+                    String ext = getExtension(file);
+                    
+                    if (ext != null && KNWON_EXTENSIONS.matcher(ext.toLowerCase()).matches()) {
+                        logger.debug("Adding movie file: " + file);
+                        movieTitleList.add(getFilmName(file));
+                        
+                    } else { // extension not known ...
+                        logger.info("File " + file.getAbsolutePath() + " is not a Movie.");
+                    }
+                    
                 }
-                
-            }
         }
         
         return movieTitleList;
@@ -123,14 +124,15 @@ public class FilenameFilter {
         
         return moviesFound;
     }
-
+    
     private static String getDvdMovieFile(File videoTs_FilePath) {
         String folderPath = videoTs_FilePath.getAbsolutePath();
         
         // split into folders and file
         String file_sep = FILE_SEPARATOR;
-        if (file_sep.equals("\\"))
+        if (file_sep.equals("\\")) {
             file_sep += "\\";
+        }
         String[] folderNames = folderPath.split(file_sep);
         String parentFolderName = folderNames[folderNames.length - 1]; // filename
         
@@ -171,10 +173,10 @@ public class FilenameFilter {
     private static File getDvdIndex(File fileFolder) {
         File[] filesInFolder = fileFolder.listFiles();
         File videoTitleSetManagerInformation = null;
-        for (int i = 0; i < filesInFolder.length; i++) {
+        for (File element : filesInFolder) {
             // System.out.println("getDvdIndex: " + filesInFolder[i].getName());
-            if (filesInFolder[i].getName().toUpperCase().equals("VIDEO_TS.IFO")) {
-                videoTitleSetManagerInformation = filesInFolder[i];
+            if (element.getName().toUpperCase().equals("VIDEO_TS.IFO")) {
+                videoTitleSetManagerInformation = element;
             }
         }
         return videoTitleSetManagerInformation;

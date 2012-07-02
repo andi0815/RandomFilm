@@ -20,7 +20,7 @@ public class YearPanel extends JLabel implements Updateable {
     }
     
     private void doUpdate(String year) {
-        this.setText("YEAR: " + year);
+        this.setText("JAHR: " + year);
     }
     
     @Override

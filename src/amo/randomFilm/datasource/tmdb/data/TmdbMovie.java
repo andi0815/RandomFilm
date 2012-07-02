@@ -225,6 +225,7 @@ public class TmdbMovie extends GsonObject implements Movie {
                 this.extInfo = TmdbFacade.getInfo(this.id);
             } catch (MovieDataProviderException e) {
                 logger.warn("Encountered problems fetching extended Movie Info: " + e.getMessage());
+                return null;
             }
         }
         return this.extInfo.getGenres();

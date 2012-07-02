@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -41,9 +43,9 @@ import amo.randomFilm.model.FilenameFilter;
 import amo.randomFilm.model.MovieDataProvider;
 import amo.randomFilm.model.MovieFile;
 import amo.randomFilm.model.UnknownTypes;
+import amo.randomFilm.model.sorting.MovieTitleComparator;
 
-public class ListOfMoviesPresenter implements DropTargetListener, DragSourceListener, DragGestureListener,
-        ActionListener {
+public class ListOfMoviesPresenter implements DropTargetListener, DragSourceListener, DragGestureListener, ActionListener {
     
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(ListOfMoviesPresenter.class);
@@ -53,7 +55,8 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     
     private ListOfMoviesView view;
     
-    List<MoviePanelBasicPresenter> moviePresenters = new ArrayList<MoviePanelBasicPresenter>();
+    Set<MoviePanelBasicPresenter> moviePresenters = new TreeSet<MoviePanelBasicPresenter>(new MovieTitleComparator());
+    
     // FIXME: inject ...
     private MovieDataProvider movieDataProvider = TmdbFacade.getInstance();
     
@@ -77,10 +80,11 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     @Override
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
         Transferable tr = dropTargetDragEvent.getTransferable();
-        if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+        if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
             dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-        else
+        } else {
             dropTargetDragEvent.rejectDrag();
+        }
         
     }
     
@@ -135,8 +139,8 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     private void addMovie(MovieFile movieFile) {
         MoviePanelWithButtonsView movieView = new MoviePanelWithButtonsView(movieFile);
         this.view.addData(movieView);
-        MoviePanelBasicPresenter moviePanelPresenter = new MoviePanelWithButtonsPresenter(movieFile.getFile(),
-                movieFile.getTitle(), movieView, this, this.movieDataProvider);
+        MoviePanelBasicPresenter moviePanelPresenter = new MoviePanelWithButtonsPresenter(movieFile.getFile(), movieFile.getTitle(), movieView, this,
+                this.movieDataProvider);
         this.moviePresenters.add(moviePanelPresenter);
     }
     
@@ -202,76 +206,76 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
     public void actionPerformed(ActionEvent e) {
         
         if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT_ALL)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_SELECT_ALL + " -> " + e + " Source: "
-                    + e.getSource());
+            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_SELECT_ALL + " -> " + e + " Source: " + e.getSource());
             Iterator<MoviePanelBasicPresenter> presenters = this.moviePresenters.iterator();
             while (presenters.hasNext()) {
                 presenters.next().getView().setSelected(true);
             }
             
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT_NOTHING)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_SELECT_NOTHING + " -> " + e + " Source: "
-                    + e.getSource());
-            Iterator<MoviePanelBasicPresenter> presenters = this.moviePresenters.iterator();
-            while (presenters.hasNext()) {
-                presenters.next().getView().setSelected(false);
-            }
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_REMOVE_SELECTED)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_REMOVE_SELECTED + " -> " + e + " Source: "
-                    + e.getSource());
-            List<MoviePanelBasicPresenter> presentersToRemove = new ArrayList<MoviePanelBasicPresenter>();
-            Iterator<MoviePanelBasicPresenter> presenters = this.moviePresenters.iterator();
-            while (presenters.hasNext()) {
-                MoviePanelBasicPresenter presenter = presenters.next();
-                if (presenter.getView().isSelected()) {
-                    presentersToRemove.add(presenter);
+        } else
+            if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT_NOTHING)) {
+                logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_SELECT_NOTHING + " -> " + e + " Source: " + e.getSource());
+                Iterator<MoviePanelBasicPresenter> presenters = this.moviePresenters.iterator();
+                while (presenters.hasNext()) {
+                    presenters.next().getView().setSelected(false);
                 }
-            }
-            for (MoviePanelBasicPresenter presenter : presentersToRemove) {
-                this.removeMovie(presenter);
-            }
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_REMOVE_ALL)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_REMOVE_ALL + " -> " + e + " Source: "
-                    + e.getSource());
-            
-            this.view.removeAllMovies();
-            this.moviePresenters.clear();
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_GO)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_GO + " -> " + e + " Source: " + e.getSource());
-            this.startRandomMovie();
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP + " -> " + e + " Source: "
-                    + e.getSource());
-            this.setAlwaysOnTop(false);
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP)) {
-            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP + " -> " + e + " Source: "
-                    + e.getSource());
-            this.setAlwaysOnTop(true);
-            
-        } else if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ADD_TITLE)
-        // also catch enter in textField :
-                || (e.getSource() instanceof JTextField && ((JTextField) e.getSource()).getName().equals(
-                        GuiConstants.LABEL_BTN_ADD_TITLE))) {
-            
-            logger.debug("Got Action Event: " + GuiConstants.LABEL_BTN_ADD_TITLE + " -> " + e + " Source: "
-                    + e.getSource());
-            if (this.titleTextField != null) {
                 
-                this.addMovie(new MovieFile(UnknownTypes.getUnknownFile(), this.titleTextField.getText()));
-                this.titleTextField.setText("");
-            } else {
-                logger.error("titleTextField has not been set, cannot get text from input field!");
-            }
-            
-        } else {
-            logger.warn("Got Unknown Event: " + e + " Source: " + e.getSource());
-            
-        }
+            } else
+                if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_REMOVE_SELECTED)) {
+                    logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_REMOVE_SELECTED + " -> " + e + " Source: " + e.getSource());
+                    List<MoviePanelBasicPresenter> presentersToRemove = new ArrayList<MoviePanelBasicPresenter>();
+                    Iterator<MoviePanelBasicPresenter> presenters = this.moviePresenters.iterator();
+                    while (presenters.hasNext()) {
+                        MoviePanelBasicPresenter presenter = presenters.next();
+                        if (presenter.getView().isSelected()) {
+                            presentersToRemove.add(presenter);
+                        }
+                    }
+                    for (MoviePanelBasicPresenter presenter : presentersToRemove) {
+                        this.removeMovie(presenter);
+                    }
+                    
+                } else
+                    if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_REMOVE_ALL)) {
+                        logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_REMOVE_ALL + " -> " + e + " Source: " + e.getSource());
+                        
+                        this.view.removeAllMovies();
+                        this.moviePresenters.clear();
+                        
+                    } else
+                        if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_GO)) {
+                            logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_GO + " -> " + e + " Source: " + e.getSource());
+                            this.startRandomMovie();
+                            
+                        } else
+                            if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP)) {
+                                logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP + " -> " + e + " Source: " + e.getSource());
+                                this.setAlwaysOnTop(false);
+                                
+                            } else
+                                if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP)) {
+                                    logger.warn("Got Action Event: " + GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP + " -> " + e + " Source: " + e.getSource());
+                                    this.setAlwaysOnTop(true);
+                                    
+                                } else
+                                    if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_ADD_TITLE)
+                                    // also catch enter in textField :
+                                            || (e.getSource() instanceof JTextField && ((JTextField) e.getSource()).getName().equals(
+                                                    GuiConstants.LABEL_BTN_ADD_TITLE))) {
+                                        
+                                        logger.debug("Got Action Event: " + GuiConstants.LABEL_BTN_ADD_TITLE + " -> " + e + " Source: " + e.getSource());
+                                        if (this.titleTextField != null) {
+                                            
+                                            this.addMovie(new MovieFile(UnknownTypes.getUnknownFile(), this.titleTextField.getText()));
+                                            this.titleTextField.setText("");
+                                        } else {
+                                            logger.error("titleTextField has not been set, cannot get text from input field!");
+                                        }
+                                        
+                                    } else {
+                                        logger.warn("Got Unknown Event: " + e + " Source: " + e.getSource());
+                                        
+                                    }
         
     }
     
@@ -291,10 +295,13 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
         }
         Random random = new Random();
         int movieIndex = random.nextInt(this.moviePresenters.size());
-        MoviePanelBasicPresenter moviePresenter = this.moviePresenters.get(movieIndex);
+        Iterator<MoviePanelBasicPresenter> moviesIterator = this.moviePresenters.iterator();
+        for (int i = 0; i < movieIndex; i++) {
+            moviesIterator.next();
+        }
+        MoviePanelBasicPresenter moviePresenter = moviesIterator.next();
         logger.info("Randomly chose Movie: " + moviePresenter.getFilmName() + " (" + moviePresenter.getFile() + ")");
-        if (Dialogs.showStartFilmDialog(moviePresenter.getFilmName(), moviePresenter.getFile().getName(),
-                moviePresenter.getIconImage(), this.parentFrame)) {
+        if (Dialogs.showStartFilmDialog(moviePresenter.getFilmName(), moviePresenter.getFile().getName(), moviePresenter.getIconImage(), this.parentFrame)) {
             String executableName = moviePresenter.getExecutableName();
             this.parentFrame.setAlwaysOnTop(false);
             
@@ -302,11 +309,11 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
                 String filmPath = moviePresenter.getFile().getPath();
                 String command = executableName + " \"" + filmPath + "\"";
                 try {
-                    Process child = Runtime.getRuntime().exec(command);
+                    // Process child =
+                    Runtime.getRuntime().exec(command);
                 } catch (IOException e1) {
                     // FIXME: i18n !
-                    Dialogs.showWarning("Kann Datei: " + filmPath + " nicht starten.\nGrund:\n" + e1.getMessage(),
-                            this.parentFrame);
+                    Dialogs.showWarning("Kann Datei: " + filmPath + " nicht starten.\nGrund:\n" + e1.getMessage(), this.parentFrame);
                 }
             }
         } else {

@@ -31,9 +31,9 @@ public class RuntimePanel extends JLabel implements Updateable {
     
     private void doUpdate(int runtimeLength) {
         if (runtimeLength != UnknownTypes.INT) {
-            this.setText("RUNTIME: " + runtimeLength + " min");
+            this.setText("LAUFZEIT: " + runtimeLength + " min");
         } else {
-            this.setText("RUNTIME: " + UnknownTypes.STRING);
+            this.setText("LAUFZEIT: " + UnknownTypes.STRING);
         }
     }
     

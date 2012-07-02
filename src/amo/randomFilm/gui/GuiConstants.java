@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.configuration.Configuration;
+
 /**
  * @author Andreas Monger (andreas.monger@gmail.com)
  * @date 23.10.2011
@@ -26,9 +28,11 @@ public class GuiConstants {
         // unused!
     }
     
-    /* =====================
-     *  STYLE
-     =======================*/
+    /*
+     * =====================
+     * STYLE
+     * =======================
+     */
     
     public static final Color BG_COLOR = Color.WHITE;
     
@@ -44,9 +48,11 @@ public class GuiConstants {
     
     public static final int HEIGHT_MIN_OF_FRAME = 500;
     
-    /* =====================
-     *  LABELS
-     =======================*/
+    /*
+     * =====================
+     * LABELS
+     * =======================
+     */
     
     public static final String LABEL_BTN_DELETE = "löschen";
     
@@ -88,9 +94,11 @@ public class GuiConstants {
     
     public static final String LABEL_NO_FILE_GIVEN = "Keine Datei ...";
     
-    /* =====================
-     *  IMAGES
-     =======================*/
+    /*
+     * =====================
+     * IMAGES
+     * =======================
+     */
     
     public static final String IMAGEPATH_BTN_DELETE = "images\\BTN_DELETE.png";
     
@@ -124,17 +132,27 @@ public class GuiConstants {
         return null;
     }
     
-    /* =====================
-     *  FONTS
-     =======================*/
+    /*
+     * =====================
+     * FONTS
+     * =======================
+     */
     
-    public static final Font FONT_NORMAL = new Font("Sans-Serif", Font.PLAIN, 12);
+    private static final String FONT_NAME = "Sans-Serif";
     
-    public static final Font FONT_BIG_BOLD = new Font("Sans-Serif", Font.BOLD, 18);
+    public static final Font FONT_NORMAL = new Font(FONT_NAME, Font.PLAIN, Configuration.getInstance().getIntProperty("fontsize.normal"));
     
-    /* =====================
-     *  IDENTIFIERS
-     =======================*/
+    public static final Font FONT_BIG_BOLD = new Font(FONT_NAME, Font.BOLD, Configuration.getInstance().getIntProperty("fontsize.heading"));
+    
+    public static final Font FONT_INFOSCREEN_NORMAL = new Font(FONT_NAME, Font.PLAIN, Configuration.getInstance().getIntProperty("fontsize.infoscreen"));
+    
+    public static final Font FONT_INFOSCREEN_BIG = new Font(FONT_NAME, Font.BOLD, FONT_INFOSCREEN_NORMAL.getSize() + 4);
+    
+    /*
+     * =====================
+     * IDENTIFIERS
+     * =======================
+     */
     
     public static final String UNKNOWN_FILE_PREFIX = "UNKNOWN_TITLE_OF_MOVIE.598765tzibjzb_";
     
