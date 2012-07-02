@@ -27,6 +27,10 @@ public class FilenameFilter {
     /** Logger Object for this Class */
     private static final Logger logger = Logger.getLogger(FilenameFilter.class);
     
+    private static final Pattern VOLUME_REGEX = Pattern.compile(Configuration.getInstance().getProperty("volumeRegex"));
+    
+    private static final Pattern PREFIX_REGEX = Pattern.compile(Configuration.getInstance().getProperty("prefixRegex"));
+    
     /**
      * Hidden Constructor.
      */
@@ -107,29 +111,7 @@ public class FilenameFilter {
         
         if (dvdVideoTsIfo != null) { // is DVD folder
             logger.debug("Directory is DVD-Folder: " + file.getAbsolutePath());
-            String folderPath = dvdVideoTsIfo.getAbsolutePath();
-            
-            // split into folders and file
-            String file_sep = FILE_SEPARATOR;
-            if (file_sep.equals("\\"))
-                file_sep += "\\";
-            String[] folderNames = folderPath.split(file_sep);
-            String parentFolderName = folderNames[folderNames.length - 1]; // filename
-            
-            if (folderNames.length >= 2) { // real parent folder
-                parentFolderName = folderNames[folderNames.length - 2];
-                
-                if (parentFolderName.toUpperCase().equals("VIDEO_TS") && folderNames.length >= 3) {
-                    // use parent Folder name, if this one has VIDEO_TS as name
-                    parentFolderName = folderNames[folderNames.length - 3];
-                }
-                
-                //
-                // FIXME: take one more parent.,. if folder is named Disc#, DVD#, Season?#,
-                // Staffel?# etc.
-                //
-                
-            }
+            String parentFolderName = getDvdMovieFile(dvdVideoTsIfo);
             
             logger.info("Found Movie: " + parentFolderName);
             moviesFound.add(getFilmName(file, parentFolderName));
@@ -140,6 +122,42 @@ public class FilenameFilter {
         }
         
         return moviesFound;
+    }
+
+    private static String getDvdMovieFile(File videoTs_FilePath) {
+        String folderPath = videoTs_FilePath.getAbsolutePath();
+        
+        // split into folders and file
+        String file_sep = FILE_SEPARATOR;
+        if (file_sep.equals("\\"))
+            file_sep += "\\";
+        String[] folderNames = folderPath.split(file_sep);
+        String parentFolderName = folderNames[folderNames.length - 1]; // filename
+        
+        if (folderNames.length >= 2) { // real parent folder
+            parentFolderName = folderNames[folderNames.length - 2];
+            
+            if (parentFolderName.toUpperCase().equals("VIDEO_TS") && folderNames.length >= 3) {
+                // use parent Folder name, if this one has VIDEO_TS as name
+                parentFolderName = folderNames[folderNames.length - 3];
+            }
+            
+            //
+            // FIXME: take one more parent.,. if folder is named Disc#, DVD#, Season?#,
+            // Staffel?# etc.
+            //
+            if (VOLUME_REGEX.matcher(parentFolderName.toLowerCase()).matches() && folderNames.length >= 4) {
+                // use parent Folder name, if this one has a volume description as name
+                parentFolderName = folderNames[folderNames.length - 4];
+            }
+            
+            // remove unnecessary (single symbol) prefixes
+            if (PREFIX_REGEX.matcher(parentFolderName).matches()) {
+                parentFolderName = parentFolderName.substring(1);
+            }
+            
+        }
+        return parentFolderName;
     }
     
     /**
