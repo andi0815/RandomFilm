@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
+import amo.randomFilm.RandomFilm;
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.GenrePanel;
 import amo.randomFilm.gui.panels.moviepanel.PosterPanel;
@@ -121,6 +122,7 @@ public class MovieDetailsView {
         
         this.detailsDialog.doLayout();
         this.detailsDialog.pack();
+        this.detailsDialog.setAlwaysOnTop(RandomFilm.isAlwaysOnTop());
         Dialogs.centerWindow(this.detailsDialog);
         
     }

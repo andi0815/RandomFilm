@@ -60,10 +60,11 @@ public class Dialogs {
                 options[1] // Object initialValue
                 );
         
-        if (i == 0)
+        if (i == 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
     
     /**
@@ -107,8 +108,8 @@ public class Dialogs {
             newWidth = (int) (MAX_SIZE * scaleFactor);
             newHeight = MAX_SIZE;
         }
-        logger.debug("Scaling from: " + filmIcon.getWidth(null) + "," + filmIcon.getHeight(null) + " TO (SF="
-                + scaleFactor + "): " + newWidth + "," + newHeight);
+        logger.debug("Scaling from: " + filmIcon.getWidth(null) + "," + filmIcon.getHeight(null) + " TO (SF=" + scaleFactor + "): " + newWidth + ","
+                + newHeight);
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(filmIcon, 0, 0, newWidth, newHeight, null);
@@ -124,10 +125,11 @@ public class Dialogs {
                 options[1] // Object initialValue
                 );
         
-        if (i == 0)
+        if (i == 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
     
     public static void centerWindow(Window window) {

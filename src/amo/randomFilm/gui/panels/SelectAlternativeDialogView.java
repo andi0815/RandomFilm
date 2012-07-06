@@ -18,15 +18,19 @@ import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 public class SelectAlternativeDialogView {
     
     private ListOfMoviesView selectionView;
+    
     private JPanel view;
+    
     private JButton btnOK;
+    
     private JButton btnCancel;
+    
     private SelectionHandler selectionHandler = new SelectionHandler();
     
     public SelectAlternativeDialogView() {
         this.selectionView = new ListOfMoviesView();
-        JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(),
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane moviepanel = new JScrollPane(this.selectionView.getComponent(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         // at least three items should be visible
         // moviepanel.setMinimumSize(new Dimension(0, GuiConstants.HEIGHT_MOVIE_PANEL * 3));
         
@@ -38,11 +42,11 @@ public class SelectAlternativeDialogView {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         layout.setHorizontalGroup(//
-                layout.createParallelGroup(//
-                        GroupLayout.Alignment.TRAILING).addComponent(moviepanel)//
-                        .addGroup(layout.createSequentialGroup() //
-                                .addComponent(this.btnCancel)//
-                                .addComponent(this.btnOK)));
+        layout.createParallelGroup(//
+                GroupLayout.Alignment.TRAILING).addComponent(moviepanel)//
+                .addGroup(layout.createSequentialGroup() //
+                        .addComponent(this.btnCancel)//
+                        .addComponent(this.btnOK)));
         layout.setVerticalGroup(layout.createSequentialGroup() //
                 .addComponent(moviepanel) //
                 .addGroup( //
@@ -58,8 +62,7 @@ public class SelectAlternativeDialogView {
         this.view.setBackground(GuiConstants.BG_COLOR);
         
         this.view.doLayout();
-        System.out.println(" ============== SIZE : " + view.getPreferredSize().getWidth() + " / "
-                + view.getPreferredSize().getHeight());
+        System.out.println(" ============== SIZE : " + this.view.getPreferredSize().getWidth() + " / " + this.view.getPreferredSize().getHeight());
     }
     
     // public void setData(List<? extends Movie> movies) {

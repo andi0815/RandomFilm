@@ -303,17 +303,20 @@ public class ListOfMoviesPresenter implements DropTargetListener, DragSourceList
         logger.info("Randomly chose Movie: " + moviePresenter.getFilmName() + " (" + moviePresenter.getFile() + ")");
         if (Dialogs.showStartFilmDialog(moviePresenter.getFilmName(), moviePresenter.getFile().getName(), moviePresenter.getIconImage(), this.parentFrame)) {
             String executableName = moviePresenter.getExecutableName();
+            logger.info("Starting movie: " + executableName);
             this.parentFrame.setAlwaysOnTop(false);
             
             if (executableName != null && !executableName.equals("")) {
                 String filmPath = moviePresenter.getFile().getPath();
                 String command = executableName + " \"" + filmPath + "\"";
                 try {
+                    logger.info("Starting Command: '" + command + "'");
                     // Process child =
                     Runtime.getRuntime().exec(command);
                 } catch (IOException e1) {
                     // FIXME: i18n !
                     Dialogs.showWarning("Kann Datei: " + filmPath + " nicht starten.\nGrund:\n" + e1.getMessage(), this.parentFrame);
+                    logger.error("Could not start movie! Cause: " + e1);
                 }
             }
         } else {

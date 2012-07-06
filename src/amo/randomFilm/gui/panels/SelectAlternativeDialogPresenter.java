@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 
 import org.apache.log4j.Logger;
 
+import amo.randomFilm.RandomFilm;
 import amo.randomFilm.gui.GuiConstants;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelBasicView;
 import amo.randomFilm.gui.panels.moviepanel.MoviePanelWithButtonsPresenter;
@@ -32,8 +33,8 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
     
     private MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter;
     
-    public SelectAlternativeDialogPresenter(SelectAlternativeDialogView selectionDialogPanelView,
-            List<? extends Movie> listOfAlternatives, MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter) {
+    public SelectAlternativeDialogPresenter(SelectAlternativeDialogView selectionDialogPanelView, List<? extends Movie> listOfAlternatives,
+            MoviePanelWithButtonsPresenter moviePanelWithButtonsPresenter) {
         // init View
         this.selectionDialogPanelView = selectionDialogPanelView;
         this.selectionDialogPanelView.addActionListener(this);
@@ -47,6 +48,7 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
         this.jDialog.setTitle(GuiConstants.LABEL_CHOOSE_ALTERNATIVE);
         this.jDialog.setMinimumSize(new Dimension(GuiConstants.WIDTH_MIN_OF_FRAME, GuiConstants.HEIGHT_MIN_OF_FRAME));
         // jDialog.doLayout();
+        this.jDialog.setAlwaysOnTop(RandomFilm.isAlwaysOnTop());
         this.jDialog.pack();
         
         Dialogs.centerWindow(this.jDialog);
@@ -66,12 +68,10 @@ public class SelectAlternativeDialogPresenter implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         logger.warn("Got ActionEvent from: " + e.getActionCommand());
         if (e.getActionCommand().equals(GuiConstants.LABEL_BTN_SELECT)) {
-            logger.warn("Got ActionEvent:  SELECT "
-                    + this.selectionDialogPanelView.getSelectedMovie().getData().getMovieTitle() + " - "
+            logger.warn("Got ActionEvent:  SELECT " + this.selectionDialogPanelView.getSelectedMovie().getData().getMovieTitle() + " - "
                     + this.selectionDialogPanelView.getSelectedMovie().getFile());
             if (this.selectionDialogPanelView.getSelectedMovie() != null) {
-                this.moviePanelWithButtonsPresenter.setSelectedMovie(this.selectionDialogPanelView.getSelectedMovie()
-                        .getData());
+                this.moviePanelWithButtonsPresenter.setSelectedMovie(this.selectionDialogPanelView.getSelectedMovie().getData());
             }
             this.jDialog.setVisible(false);
             Dialogs.centerWindow(this.jDialog);

@@ -14,6 +14,9 @@ import amo.randomFilm.gui.MainFrame;
 
 public class RandomFilm {
     
+    /** Main Window instance */
+    private static MainFrame mainFrame = null;
+    
     /**
      * @param args
      */
@@ -46,7 +49,7 @@ public class RandomFilm {
         // System.out.println("Screen Size: " + d);
         // System.out.println("Screen Resolution: " + tk.getScreenResolution());
         
-        MainFrame mainFrame = new MainFrame();
+        mainFrame = new MainFrame();
         mainFrame.init(GuiConstants.WIDTH_OF_FRAME);
         mainFrame.setMinimumSize(new Dimension(GuiConstants.WIDTH_MIN_OF_FRAME, GuiConstants.HEIGHT_MIN_OF_FRAME));
         mainFrame.setExtendedState(JFrame.MAXIMIZED_VERT);
@@ -59,10 +62,29 @@ public class RandomFilm {
         // System.out.println("Insets left: " + screenInsets.left);
         // System.out.println("Insets top: " + screenInsets.top);
         // System.out.println("Insets bottom: " + screenInsets.bottom);
-        //        
+        //
         // mainFrame.setPreferredSize(new Dimension((int) mainFrame.getSize().getWidth() +
         // screenInsets.right,
         // (int) mainFrame.getSize().getHeight() + screenInsets.bottom));
         
+    }
+    
+    /**
+     * @return <code>true</code> if main window is set to "Always On Top", <code>false</code>
+     *         otherwise.
+     */
+    public static boolean isAlwaysOnTop() {
+        synchronized (mainFrame) {
+            return mainFrame.isAlwaysOnTop();
+        }
+    }
+    
+    /**
+     * Sets main window's value for "Always On Top" to the given value.
+     */
+    public static void setAlwaysOnTop(boolean isAlwaysOnTop) {
+        synchronized (mainFrame) {
+            mainFrame.setAlwaysOnTop(isAlwaysOnTop);
+        }
     }
 }

@@ -115,7 +115,7 @@ public class FilenameFilter {
             String parentFolderName = getDvdMovieFile(dvdVideoTsIfo);
             
             logger.info("Found Movie: " + parentFolderName);
-            moviesFound.add(getFilmName(file, parentFolderName));
+            moviesFound.add(getFilmName(dvdVideoTsIfo, parentFolderName));
             
         } else { // no DVD Folder
             logger.debug("NO DVD found adding items ...");

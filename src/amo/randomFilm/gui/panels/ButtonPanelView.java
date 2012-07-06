@@ -20,14 +20,17 @@ public class ButtonPanelView extends JComponent {
     private static final long serialVersionUID = 1L;
     
     JButton btnMarkAll;
+    
     JButton btnMarkNone;
     
     JButton btnDelete;
+    
     JButton btnDeleteAll;
     
     JButton btnStart;
     
     JButton btnExit;
+    
     JButton btnAlwaysOnTop;
     
     public ButtonPanelView() {
@@ -89,38 +92,12 @@ public class ButtonPanelView extends JComponent {
         
     }
     
-//    public void resizeComponent(int width, int height) {
-//        int btnWidth = (int) (width * 0.45);
-//        int btnHeight = 38;
-//        int btnX = 4;
-//        int btnY = 6;
-//        
-//        this.btnMarkAll.setBounds(btnX, btnY, btnWidth, btnHeight);
-//        btnY += btnHeight + 4;
-//        this.btnMarkNone.setBounds(btnX, btnY, btnWidth, btnHeight);
-//        
-//        btnX = width - (btnWidth + 20);
-//        btnY = 6;
-//        
-//        this.btnDelete.setBounds(btnX, btnY, btnWidth, btnHeight);
-//        btnY += btnHeight + 4;
-//        this.btnDeleteAll.setBounds(btnX, btnY, btnWidth, btnHeight);
-//        
-//        btnY += btnHeight + 13;
-//        this.btnStart.setBounds(btnX, btnY, btnWidth, btnHeight);
-//        
-//        this.btnMarkAll.repaint();
-//        this.btnMarkNone.repaint();
-//        this.btnDelete.repaint();
-//        this.btnDeleteAll.repaint();
-//        this.btnStart.repaint();
-//    }
-    
     public void setAlwaysOnTopEnabled(boolean isEnabled) {
-        if (isEnabled)
+        if (isEnabled) {
             this.btnAlwaysOnTop.setText(GuiConstants.LABEL_BTN_DISABLE_ALWAYS_ON_TOP);
-        else
+        } else {
             this.btnAlwaysOnTop.setText(GuiConstants.LABEL_BTN_ENABLE_ALWAYS_ON_TOP);
+        }
     }
     
     public void addActionListener(ActionListener listener) {
