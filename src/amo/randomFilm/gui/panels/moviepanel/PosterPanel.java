@@ -65,8 +65,7 @@ public class PosterPanel extends JPanel implements Updateable {
             this.image = image;
         } else {
             this.image = LOADING_IMAGE;
-            logger.debug("LOADING-IMAGE DIMENSION: " + LOADING_IMAGE.getWidth(null) + ","
-                    + LOADING_IMAGE.getHeight(null));
+            logger.debug("LOADING-IMAGE DIMENSION: " + LOADING_IMAGE.getWidth(null) + "," + LOADING_IMAGE.getHeight(null));
         }
         logger.debug("setting new image: " + this.image);
         if (image != null) {
@@ -107,8 +106,7 @@ public class PosterPanel extends JPanel implements Updateable {
         }
         
         // draw
-        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null), this.image
-                .getHeight(null), null);
+        g.drawImage(this.image, 0, y, currentWidth, currentHeight + y, 0, 0, this.image.getWidth(null), this.image.getHeight(null), null);
         
     }
     
@@ -128,14 +126,16 @@ public class PosterPanel extends JPanel implements Updateable {
     
     @Override
     public Dimension getPreferredSize() {
-        // calculate current aspect ratio
-        double dy = (double) this.getHeight() / this.imageHeight;
-        int currentWidth, currentHeight;
-        // logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
-        currentWidth = (int) (this.imageWidth * dy);
-        currentHeight = this.getHeight();
+        // // calculate current aspect ratio
+        // double dy = (double) this.getHeight() / this.imageHeight;
+        // int currentWidth, currentHeight;
+        // // logger.debug("PAINT - dx: " + dx + " / dy: " + dy + " \t-->SCALE by Y");
+        // currentWidth = (int) (this.imageWidth * dy);
+        // currentHeight = this.getHeight();
+        //
+        // return new Dimension(currentWidth, currentHeight);
         
-        return new Dimension(currentWidth, currentHeight);
+        return new Dimension((int) (this.getHeight() * 0.8), this.getHeight());
     }
     
 }

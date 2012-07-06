@@ -80,10 +80,8 @@ public class MoviePanelWithButtonsView extends MoviePanelBasicView {
                 .createSequentialGroup()
                 .addComponent(this.poster)
                 .addGroup(
-                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel)
-                                .addComponent(this.starRater).addComponent(this.runtimePanel)
-                                .addComponent(this.yearPanel).addComponent(this.genrePanel)
-                                .addComponent(this.pathPanel)) //
+                        layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.titlePanel).addComponent(this.starRater)
+                                .addComponent(this.runtimePanel).addComponent(this.yearPanel).addComponent(this.genrePanel).addComponent(this.pathPanel)) //
                 .addComponent(this.btnInfo) //
                 .addComponent(this.btnAlternatives) //
                 .addComponent(this.btnDelete));
